@@ -1,0 +1,66 @@
+<!DOCTYPE HTML>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <title>Image Coordinates to CSV</title>
+  <meta name="description" content="Upload your Images and find specific coordinates to be exported onto a CSV file." />
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+  <header>📍 Image Coordinates to CSV Tool</header>
+  <main>
+    <section>
+      <label>Upload Image</label>
+      <input type="file" id="inputImage" />
+    </section>
+
+    <section class="row">
+      <label style="flex:1;">Current Item Name</label>
+      <input type="text" id="currentItemName" style="flex:2;">
+      <button onclick="resetCount()">Next</button>
+    </section>
+
+    <section>
+      <label>Current Item Data</label>
+      <textarea id="currentOutput" name="currentOutput" rows="4" placeholder="Click image to capture points"></textarea>
+      <button onclick="document.getElementById('currentOutput').value = ''">
+        Reset Current
+      </button>
+    </section>
+
+    <section class="row">
+      <label style="flex:1;">Stored Data</label>
+      <input type="text" name="store" id="store" readonly style="flex:3;">
+      <button onclick="document.getElementById('store').value = ''">Clear</button>
+    </section>
+
+    <section>
+      <label>Output Preview</label>
+      <div id="previewTableContainer"></div>
+      <br />
+      <input type="submit" id="outputButton" onclick="displayOutput()" value="📄 Generate Table Preview">
+    </section>
+
+    <section id="file">
+      <label>Export as CSV</label>
+      <div class="row">
+        <input type="text" id="fileName" placeholder="image-coordinates">
+        <input type="submit" id="downloadButton" onclick="download()" value="⬇️ Download CSV">
+      </div>
+      <!-- hidden textarea to hold the CSV -->
+      <textarea id="output" style="display:none"></textarea>
+    </section>
+
+    <canvas id="canvas"></canvas>
+  </main>
+
+  <div class="footer" id="results">
+    Move mouse over image to show mouse location and pixel values
+  </div>
+
+  <script src="script.js"></script>
+</body>
+
+</html>
