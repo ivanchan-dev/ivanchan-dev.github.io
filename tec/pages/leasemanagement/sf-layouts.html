@@ -1,0 +1,2800 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+  <title>EC Lease — Salesforce Page Layouts</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600;9..40,700&display=swap"
+    rel="stylesheet" />
+  <style>
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0
+    }
+
+    :root {
+      --ink: #0d1117;
+      --ink2: #1f2328;
+      --ink3: #656d76;
+      --ink4: #9198a1;
+      --ink5: #d0d7de;
+      --bg: #f6f8fa;
+      --bg2: #ffffff;
+      --bg3: #f0f3f7;
+      --rule: #d0d7de;
+      --rule2: #eaeef2;
+      --opp: #9a3412;
+      --opp-b: #fdba74;
+      --opp-lt: #fff7ed;
+      --lc: #5b21b6;
+      --lc-b: #c4b5fd;
+      --lc-lt: #f5f3ff;
+      --ls: #14532d;
+      --ls-b: #86efac;
+      --ls-lt: #f0fdf4;
+      --ctr: #0c4a6e;
+      --ctr-b: #7dd3fc;
+      --ctr-lt: #f0f9ff;
+      --raw: #1e3a5f;
+      --raw-b: #93c5fd;
+      --raw-lt: #eff6ff;
+      --fml: #14532d;
+      --fml-b: #6ee7b7;
+      --fml-lt: #ecfdf5;
+      --cpy: #78350f;
+      --cpy-b: #fde68a;
+      --cpy-lt: #fffbeb;
+      --sys: #3b0764;
+      --sys-b: #d8b4fe;
+      --sys-lt: #faf5ff;
+      --loc: #831843;
+      --loc-b: #f9a8d4;
+      --loc-lt: #fdf2f8;
+      --rup: #134e4a;
+      --rup-b: #5eead4;
+      --rup-lt: #f0fdfa;
+      --mono: "IBM Plex Mono", monospace;
+      --sans: "IBM Plex Sans", system-ui, sans-serif;
+    }
+
+    html {
+      background: var(--bg);
+      font-family: var(--sans);
+      font-size: 13px;
+      color: var(--ink);
+      -webkit-font-smoothing: antialiased
+    }
+
+    /* ── TOPBAR ── */
+    .topbar {
+      height: 48px;
+      background: var(--ink);
+      display: flex;
+      align-items: center;
+      padding: 0 16px;
+      gap: 16px;
+      position: sticky;
+      top: 0;
+      z-index: 500
+    }
+
+    .brand {
+      font-family: var(--mono);
+      font-size: 12px;
+      font-weight: 500;
+      color: #fff;
+      letter-spacing: .04em;
+      border-right: 1px solid rgba(255, 255, 255, .1);
+      padding-right: 14px
+    }
+
+    .brand em {
+      color: #7dd3fc;
+      font-style: normal
+    }
+
+    .topnav {
+      display: flex;
+      height: 48px;
+      gap: 0;
+      overflow-x: auto
+    }
+
+    .tn {
+      height: 48px;
+      padding: 0 13px;
+      display: flex;
+      align-items: center;
+      font-size: 11px;
+      font-weight: 500;
+      color: rgba(255, 255, 255, .45);
+      cursor: pointer;
+      border-bottom: 2px solid transparent;
+      white-space: nowrap;
+      transition: color .1s
+    }
+
+    .tn:hover {
+      color: #fff
+    }
+
+    .tn.on {
+      color: #fff;
+      border-bottom-color: #7dd3fc
+    }
+
+    .topright {
+      margin-left: auto;
+      display: flex;
+      gap: 8px;
+      align-items: center
+    }
+
+    /* ── OBJ SWITCHER ── */
+    .obj-bar {
+      background: var(--ink2);
+      display: flex;
+      padding: 0 14px;
+      border-bottom: 1px solid rgba(255, 255, 255, .06)
+    }
+
+    .ob {
+      height: 38px;
+      padding: 0 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 11px;
+      font-weight: 600;
+      color: rgba(255, 255, 255, .4);
+      cursor: pointer;
+      border-bottom: 2px solid transparent;
+      margin-bottom: -1px;
+      white-space: nowrap;
+      letter-spacing: .04em;
+      text-transform: uppercase;
+      transition: all .12s
+    }
+
+    .ob:hover {
+      color: rgba(255, 255, 255, .8)
+    }
+
+    .ob.on {
+      color: #fff;
+      border-bottom-color: var(--accent)
+    }
+
+    .ob-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      flex-shrink: 0
+    }
+
+    /* ── PAGE ── */
+    .page {
+      display: none
+    }
+
+    .page.on {
+      display: block
+    }
+
+    /* ── RECORD HEADER ── */
+    .rec-hdr {
+      background: #fff;
+      border-bottom: 1px solid var(--rule);
+      padding: 0 16px
+    }
+
+    .rec-top {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      padding: 12px 0 0
+    }
+
+    .obj-chip {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-family: var(--mono);
+      font-size: 9px;
+      font-weight: 600;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      padding: 3px 10px;
+      border-radius: 100px;
+      border: 1px solid;
+      flex-shrink: 0;
+      margin-top: 2px
+    }
+
+    .rec-title {
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--ink);
+      letter-spacing: -.02em;
+      flex: 1
+    }
+
+    .rec-sub {
+      font-family: var(--mono);
+      font-size: 10px;
+      color: var(--ink4);
+      margin-top: 3px
+    }
+
+    .rec-btns {
+      display: flex;
+      gap: 6px;
+      margin-top: 2px;
+      flex-shrink: 0
+    }
+
+    /* Stage path */
+    .stages {
+      display: flex;
+      gap: 0;
+      padding: 10px 0 0;
+      overflow-x: auto
+    }
+
+    .stg {
+      flex: 1;
+      min-width: 80px;
+      height: 22px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--mono);
+      font-size: 9.5px;
+      font-weight: 500;
+      background: var(--bg);
+      border: 1px solid var(--rule2);
+      color: var(--ink4);
+      clip-path: polygon(0 0, calc(100% - 6px) 0, 100% 50%, calc(100% - 6px) 100%, 0 100%, 6px 50%);
+      padding: 0 10px;
+      white-space: nowrap;
+      cursor: pointer;
+      letter-spacing: .02em
+    }
+
+    .stg:first-child {
+      clip-path: polygon(0 0, calc(100% - 6px) 0, 100% 50%, calc(100% - 6px) 100%, 0 100%)
+    }
+
+    .stg.done {
+      background: var(--ls-lt);
+      border-color: var(--ls-b);
+      color: var(--ls)
+    }
+
+    .stg.curr {
+      color: #fff
+    }
+
+    /* ── BODY ── */
+    .rec-body {
+      display: grid;
+      grid-template-columns: 1fr 272px;
+      min-height: calc(100vh - 210px)
+    }
+
+    .main {
+      padding: 14px 16px;
+      overflow-y: auto
+    }
+
+    .side {
+      padding: 12px;
+      background: var(--bg);
+      border-left: 1px solid var(--rule)
+    }
+
+    /* ── BUTTONS ── */
+    .btn {
+      height: 26px;
+      padding: 0 11px;
+      border: 1px solid;
+      border-radius: 5px;
+      font-size: 11px;
+      font-weight: 500;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      white-space: nowrap;
+      font-family: var(--sans);
+      transition: filter .1s
+    }
+
+    .btn:hover {
+      filter: brightness(.94)
+    }
+
+    .bp {
+      background: var(--ink);
+      border-color: var(--ink);
+      color: #fff
+    }
+
+    .bs {
+      background: #fff;
+      border-color: var(--rule);
+      color: var(--ink2)
+    }
+
+    .bsm {
+      height: 22px;
+      padding: 0 8px;
+      font-size: 10px
+    }
+
+    /* ── SECTION HEADERS ── */
+    .sec-hd {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--ink3);
+      letter-spacing: .05em;
+      text-transform: uppercase;
+      font-family: var(--mono);
+      margin: 0 0 8px;
+      padding-bottom: 6px;
+      border-bottom: 1px solid var(--rule2);
+      display: flex;
+      align-items: center;
+      gap: 8px
+    }
+
+    /* ── CARDS ── */
+    .card {
+      background: #fff;
+      border: 1px solid var(--rule);
+      border-radius: 6px;
+      margin-bottom: 10px;
+      overflow: hidden;
+      transition: box-shadow .12s
+    }
+
+    .card:hover {
+      box-shadow: 0 1px 6px rgba(0, 0, 0, .07)
+    }
+
+    .card-hd {
+      padding: 8px 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      cursor: pointer;
+      user-select: none;
+      gap: 8px;
+      border-bottom: 1px solid var(--rule)
+    }
+
+    .card-hd-l {
+      display: flex;
+      align-items: center;
+      gap: 8px
+    }
+
+    .card-title {
+      font-size: 11.5px;
+      font-weight: 600;
+      color: var(--ink)
+    }
+
+    .card-stg {
+      font-family: var(--mono);
+      font-size: 9px;
+      font-weight: 600;
+      padding: 2px 7px;
+      border-radius: 100px;
+      border: 1px solid
+    }
+
+    .card-count {
+      font-family: var(--mono);
+      font-size: 10px;
+      background: var(--bg);
+      border: 1px solid var(--rule2);
+      padding: 1px 6px;
+      border-radius: 100px;
+      color: var(--ink4)
+    }
+
+    .chev {
+      font-size: 11px;
+      color: var(--ink5);
+      transition: transform .16s
+    }
+
+    .chev.open {
+      transform: rotate(180deg)
+    }
+
+    .card-body {
+      display: block
+    }
+
+    .card-body.hide {
+      display: none
+    }
+
+    /* ── FIELD GRID ── */
+    .fg {
+      display: grid;
+      grid-template-columns: 1fr 1fr
+    }
+
+    .fi {
+      padding: 7px 14px;
+      border-bottom: 1px solid var(--rule2)
+    }
+
+    .fi:nth-child(odd) {
+      border-right: 1px solid var(--rule2)
+    }
+
+    .fi.full {
+      grid-column: 1/-1
+    }
+
+    .fi.sh {
+      grid-column: 1/-1;
+      padding: 4px 14px 3px;
+      background: var(--bg);
+      border-bottom: 1px solid var(--rule);
+      border-top: 1px solid var(--rule);
+      margin-top: 2px;
+      display: flex;
+      align-items: center;
+      gap: 7px
+    }
+
+    .sh-lbl {
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      color: var(--ink4);
+      font-family: var(--mono)
+    }
+
+    .fl {
+      font-size: 9.5px;
+      font-weight: 600;
+      color: var(--ink4);
+      margin-bottom: 2px;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      flex-wrap: wrap;
+      line-height: 1.4
+    }
+
+    .fv {
+      font-size: 11.5px;
+      color: var(--ink)
+    }
+
+    .fv.lk {
+      color: #0969da;
+      cursor: pointer
+    }
+
+    .fv.lk:hover {
+      text-decoration: underline
+    }
+
+    .fv.mt {
+      color: var(--ink4);
+      font-style: italic;
+      font-size: 11px
+    }
+
+    .fv.au {
+      color: var(--fml);
+      font-weight: 600;
+      font-family: var(--mono);
+      font-size: 10.5px
+    }
+
+    .fv.ok {
+      color: var(--ls);
+      font-weight: 600
+    }
+
+    .fv.warn {
+      color: #b45309;
+      font-weight: 600
+    }
+
+    .fv.sys {
+      color: var(--sys);
+      font-weight: 600
+    }
+
+    /* ── FIELD BADGES ── */
+    .fb {
+      display: inline-flex;
+      font-family: var(--mono);
+      font-size: 8px;
+      font-weight: 600;
+      padding: 1px 5px;
+      border-radius: 2px;
+      letter-spacing: .03em;
+      white-space: nowrap
+    }
+
+    .fb-raw {
+      background: var(--raw-lt);
+      color: var(--raw);
+      border: 1px solid var(--raw-b)
+    }
+
+    .fb-fml {
+      background: var(--fml-lt);
+      color: var(--fml);
+      border: 1px solid var(--fml-b)
+    }
+
+    .fb-cpy {
+      background: var(--cpy-lt);
+      color: var(--cpy);
+      border: 1px solid var(--cpy-b)
+    }
+
+    .fb-sys {
+      background: var(--sys-lt);
+      color: var(--sys);
+      border: 1px solid var(--sys-b)
+    }
+
+    .fb-loc {
+      background: var(--loc-lt);
+      color: var(--loc);
+      border: 1px solid var(--loc-b)
+    }
+
+    .fb-rup {
+      background: var(--rup-lt);
+      color: var(--rup);
+      border: 1px solid var(--rup-b)
+    }
+
+    .fb-ro {
+      background: var(--bg);
+      color: var(--ink3);
+      border: 1px solid var(--rule2)
+    }
+
+    /* ── APPROVAL TRACK ── */
+    .appr {
+      padding: 10px 14px;
+      border-bottom: 1px solid var(--rule2)
+    }
+
+    .appr-lbl {
+      font-family: var(--mono);
+      font-size: 9px;
+      font-weight: 600;
+      letter-spacing: .07em;
+      text-transform: uppercase;
+      color: var(--ink4);
+      margin-bottom: 7px
+    }
+
+    .appr-steps {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      flex-wrap: wrap
+    }
+
+    .as {
+      font-family: var(--mono);
+      font-size: 9.5px;
+      font-weight: 600;
+      padding: 3px 9px;
+      border-radius: 100px;
+      border: 1px solid
+    }
+
+    .as.done {
+      background: var(--ls-lt);
+      border-color: var(--ls-b);
+      color: var(--ls)
+    }
+
+    .as.curr {
+      background: var(--ctr-lt);
+      border-color: var(--ctr-b);
+      color: var(--ctr)
+    }
+
+    .as.pend {
+      background: var(--bg);
+      border-color: var(--rule);
+      color: var(--ink4)
+    }
+
+    /* ── METRICS ── */
+    .metrics {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      border-bottom: 1px solid var(--rule)
+    }
+
+    .met {
+      padding: 10px 12px;
+      border-right: 1px solid var(--rule);
+      text-align: center
+    }
+
+    .met:last-child {
+      border-right: none
+    }
+
+    .met-v {
+      font-family: var(--mono);
+      font-size: 15px;
+      font-weight: 600;
+      color: #0969da;
+      letter-spacing: -.01em
+    }
+
+    .met-l {
+      font-size: 9.5px;
+      color: var(--ink4);
+      margin-top: 2px;
+      font-weight: 500;
+      letter-spacing: .02em
+    }
+
+    /* ── RELATED LIST ── */
+    .rl {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 11px
+    }
+
+    .rl thead th {
+      padding: 5px 10px;
+      text-align: left;
+      font-size: 9px;
+      font-weight: 700;
+      color: var(--ink4);
+      border-bottom: 2px solid var(--rule);
+      text-transform: uppercase;
+      letter-spacing: .05em;
+      font-family: var(--mono);
+      white-space: nowrap
+    }
+
+    .rl thead th.r {
+      text-align: right
+    }
+
+    .rl tbody tr {
+      border-bottom: 1px solid var(--rule2);
+      transition: background .07s
+    }
+
+    .rl tbody tr:hover {
+      background: var(--bg)
+    }
+
+    .rl tbody td {
+      padding: 6px 10px;
+      color: var(--ink2)
+    }
+
+    .rl tbody td.r {
+      text-align: right;
+      font-family: var(--mono);
+      font-size: 11px
+    }
+
+    .rl tbody td.lk {
+      color: #0969da;
+      cursor: pointer;
+      font-weight: 500
+    }
+
+    .rl tfoot td {
+      padding: 6px 10px;
+      background: var(--bg);
+      border-top: 2px solid var(--rule);
+      font-weight: 600;
+      font-family: var(--mono);
+      font-size: 11px;
+      text-align: right
+    }
+
+    .yr {
+      display: inline-block;
+      font-family: var(--mono);
+      font-size: 9px;
+      font-weight: 600;
+      padding: 1px 6px;
+      border-radius: 2px
+    }
+
+    .y1 {
+      background: #dbeafe;
+      color: #1e40af
+    }
+
+    .y2 {
+      background: #dcfce7;
+      color: #166534
+    }
+
+    .y3 {
+      background: #ede9fe;
+      color: #6d28d9
+    }
+
+    .y4 {
+      background: #fef9c3;
+      color: #854d0e
+    }
+
+    .pct {
+      color: #166534;
+      font-weight: 600;
+      font-family: var(--mono)
+    }
+
+    .rf {
+      color: #b45309;
+      font-weight: 500;
+      font-family: var(--mono)
+    }
+
+    /* ── LC ROW ── */
+    .lc-row {
+      display: grid;
+      grid-template-columns: 9px 1fr auto auto;
+      gap: 9px;
+      align-items: center;
+      padding: 8px 14px;
+      border-bottom: 1px solid var(--rule2);
+      cursor: pointer;
+      transition: background .08s
+    }
+
+    .lc-row:hover {
+      background: var(--bg)
+    }
+
+    .lc-d {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      flex-shrink: 0
+    }
+
+    .lcs {
+      font-family: var(--mono);
+      font-size: 9px;
+      font-weight: 700;
+      padding: 2px 7px;
+      border-radius: 100px
+    }
+
+    .lcs-d {
+      background: var(--opp-lt);
+      color: var(--opp);
+      border: 1px solid var(--opp-b)
+    }
+
+    .lcs-a {
+      background: var(--ls-lt);
+      color: var(--ls);
+      border: 1px solid var(--ls-b)
+    }
+
+    /* ── SIDEBAR ── */
+    .sc {
+      background: #fff;
+      border: 1px solid var(--rule);
+      border-radius: 5px;
+      margin-bottom: 9px;
+      overflow: hidden
+    }
+
+    .sc-hd {
+      padding: 7px 11px;
+      font-size: 10.5px;
+      font-weight: 600;
+      color: var(--ink);
+      border-bottom: 1px solid var(--rule);
+      background: var(--bg);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-family: var(--mono);
+      letter-spacing: .02em
+    }
+
+    .sc-it {
+      padding: 6px 11px;
+      border-bottom: 1px solid var(--rule2);
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      font-size: 11px;
+      gap: 8px
+    }
+
+    .sc-it:last-child {
+      border-bottom: none
+    }
+
+    .sc-lb {
+      color: var(--ink4);
+      font-size: 9.5px;
+      font-weight: 600;
+      flex-shrink: 0;
+      font-family: var(--mono)
+    }
+
+    .sc-vl {
+      color: var(--ink);
+      font-weight: 500;
+      text-align: right;
+      font-size: 11px
+    }
+
+    .sc-vl.lk {
+      color: #0969da;
+      cursor: pointer
+    }
+
+    .sc-vl.ok {
+      color: var(--ls);
+      font-weight: 600
+    }
+
+    .sc-vl.warn {
+      color: #b45309;
+      font-weight: 600
+    }
+
+    .sc-vl.mt {
+      color: var(--ink4);
+      font-style: italic
+    }
+
+    /* ── STATUS BADGE ── */
+    .status-pill {
+      font-family: var(--mono);
+      font-size: 9.5px;
+      font-weight: 600;
+      padding: 3px 9px;
+      border-radius: 100px;
+      border: 1px solid;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px
+    }
+
+    .sp-draft {
+      background: var(--opp-lt);
+      color: var(--opp);
+      border-color: var(--opp-b)
+    }
+
+    .sp-active {
+      background: var(--ls-lt);
+      color: var(--ls);
+      border-color: var(--ls-b)
+    }
+
+    .sp-plan {
+      background: var(--lc-lt);
+      color: var(--lc);
+      border-color: var(--lc-b)
+    }
+
+    .sp-fit {
+      background: var(--ctr-lt);
+      color: var(--ctr);
+      border-color: var(--ctr-b)
+    }
+
+    /* ── BANNER ── */
+    .banner {
+      padding: 8px 12px;
+      border-radius: 4px;
+      border: 1px solid;
+      font-size: 11px;
+      line-height: 1.6;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: flex-start;
+      gap: 8px
+    }
+
+    .bn-blue {
+      background: var(--ctr-lt);
+      border-color: var(--ctr-b);
+      color: var(--ctr)
+    }
+
+    .bn-gold {
+      background: var(--cpy-lt);
+      border-color: var(--opp-b);
+      color: #78350f
+    }
+
+    .bn-green {
+      background: var(--ls-lt);
+      border-color: var(--ls-b);
+      color: var(--ls)
+    }
+
+    .bn-purple {
+      background: var(--lc-lt);
+      border-color: var(--lc-b);
+      color: var(--lc)
+    }
+
+    /* ── LEGEND ── */
+    .legend {
+      display: flex;
+      gap: 9px;
+      flex-wrap: wrap;
+      padding: 7px 14px;
+      background: var(--bg);
+      border-bottom: 1px solid var(--rule)
+    }
+
+    .leg {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 9.5px;
+      color: var(--ink4)
+    }
+
+    /* ── ACTIVITY ── */
+    .act {
+      display: flex;
+      gap: 9px;
+      padding: 8px 0;
+      border-bottom: 1px solid var(--rule2)
+    }
+
+    .act:last-child {
+      border-bottom: none
+    }
+
+    .act-av {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 9px;
+      font-weight: 700;
+      color: #fff;
+      font-family: var(--mono)
+    }
+
+    .act-who {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--ink)
+    }
+
+    .act-when {
+      font-size: 9.5px;
+      color: var(--ink4);
+      white-space: nowrap;
+      font-family: var(--mono)
+    }
+
+    .act-txt {
+      font-size: 10.5px;
+      color: var(--ink2);
+      line-height: 1.5;
+      margin-top: 2px
+    }
+
+    .act-tag {
+      display: inline-block;
+      font-size: 9px;
+      font-weight: 600;
+      padding: 1px 5px;
+      border-radius: 2px;
+      background: var(--ctr-lt);
+      color: var(--ctr);
+      margin-top: 3px;
+      font-family: var(--mono)
+    }
+
+    /* ── TOAST ── */
+    .toast {
+      position: fixed;
+      bottom: 16px;
+      right: 16px;
+      background: var(--ink);
+      color: #f0f6ff;
+      padding: 9px 14px;
+      border-radius: 5px;
+      font-size: 11px;
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      box-shadow: 0 4px 18px rgba(0, 0, 0, .25);
+      z-index: 999;
+      transform: translateY(80px);
+      opacity: 0;
+      transition: all .22s;
+      pointer-events: none;
+      font-family: var(--mono)
+    }
+
+    .toast.show {
+      transform: translateY(0);
+      opacity: 1
+    }
+
+    .td {
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: #7dd3fc;
+      flex-shrink: 0
+    }
+
+    @keyframes fadeUp {
+      from {
+        opacity: 0;
+        transform: translateY(6px)
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0)
+      }
+    }
+
+    .page.on .card {
+      animation: fadeUp .17s ease both
+    }
+
+    .page.on .card:nth-child(2) {
+      animation-delay: .04s
+    }
+
+    .page.on .card:nth-child(3) {
+      animation-delay: .08s
+    }
+
+    .page.on .card:nth-child(4) {
+      animation-delay: .12s
+    }
+
+    .page.on .card:nth-child(5) {
+      animation-delay: .16s
+    }
+
+    .page.on .card:nth-child(6) {
+      animation-delay: .2s
+    }
+
+    @media(max-width:860px) {
+      .rec-body {
+        grid-template-columns: 1fr
+      }
+
+      .side {
+        border-left: none;
+        border-top: 1px solid var(--rule)
+      }
+
+      .fg {
+        grid-template-columns: 1fr
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- TOPBAR -->
+  <div class="topbar">
+    <div class="brand">EC <em>Salesforce</em></div>
+    <div class="topnav">
+      <div class="tn on">Opportunities</div>
+      <div class="tn">Sites</div>
+      <div class="tn">Contracts</div>
+      <div class="tn">Reports</div>
+    </div>
+    <div class="topright">
+      <button class="btn bs bsm" onclick="toast('Settings')">⚙</button>
+      <div
+        style="width:26px;height:26px;border-radius:50%;background:linear-gradient(135deg,#0969da,#6e40c9);display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;color:#fff;cursor:pointer;font-family:var(--mono)">
+        AK</div>
+    </div>
+  </div>
+
+  <!-- OBJECT BAR -->
+  <div class="obj-bar">
+    <div class="ob on" id="ob-opp" style="--accent:var(--opp-b)" onclick="setPage('opp',this)">
+      <div class="ob-dot" style="background:var(--opp-b)"></div>Opportunity
+    </div>
+    <div class="ob" id="ob-lc" style="--accent:var(--lc-b)" onclick="setPage('lc',this)">
+      <div class="ob-dot" style="background:var(--lc-b)"></div>LeaseSite__c
+    </div>
+    <div class="ob" id="ob-lease" style="--accent:var(--ls-b)" onclick="setPage('lease',this)">
+      <div class="ob-dot" style="background:var(--ls-b)"></div>Lease (Contract)
+    </div>
+    <div class="ob" id="ob-site" style="--accent:var(--ctr-b)" onclick="setPage('site',this)">
+      <div class="ob-dot" style="background:var(--ctr-b)"></div>Site__c
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════
+     OPPORTUNITY PAGE LAYOUT
+══════════════════════════════════════ -->
+  <div class="page on" id="page-opp">
+    <div class="rec-hdr">
+      <div class="rec-top">
+        <div class="obj-chip" style="background:var(--opp-lt);color:var(--opp);border-color:var(--opp-b)">
+          <div style="width:6px;height:6px;border-radius:50%;background:var(--opp)"></div>Opportunity
+        </div>
+        <div style="flex:1">
+          <div class="rec-title">BJS.CRB — Beijing CRB Tower · Shared Lease 2026</div>
+          <div class="rec-sub">Lease Opportunity · Lease Negotiation · IM: Sarah Chen</div>
+        </div>
+        <div class="rec-btns">
+          <button class="btn bs bsm" onclick="toast('Edit')">✏ Edit</button>
+          <button class="btn bs bsm" onclick="toast('Renew')">↻ Renew</button>
+          <button class="btn bp bsm">Advance Stage ›</button>
+        </div>
+      </div>
+      <div class="stages">
+        <div class="stg done">Board Approved</div>
+        <div class="stg done">Feasibility</div>
+        <div class="stg done">Pre-Lease</div>
+        <div class="stg curr" style="background:var(--opp)">Lease Negotiation</div>
+        <div class="stg">Lease Signed</div>
+      </div>
+      <div style="height:9px"></div>
+    </div>
+
+    <div class="rec-body">
+      <div class="main">
+
+        <!-- Approval Status -->
+        <div class="card">
+          <div class="card-hd" onclick="tog(this)">
+            <div class="card-hd-l"><span class="card-title">Approval Status</span><span
+                class="fb fb-sys">System-managed</span></div>
+            <span class="chev open">▾</span>
+          </div>
+          <div class="card-body">
+            <div class="appr">
+              <div class="appr-lbl">Lease Negotiation Sub-stage <span class="fb fb-sys">Lease_Approval_Status__c</span>
+              </div>
+              <div class="appr-steps">
+                <div class="as done">✓ Draft Initial</div><span style="color:var(--ink5)">›</span>
+                <div class="as done">✓ Draft Final</div><span style="color:var(--ink5)">›</span>
+                <div class="as curr">● Approved</div><span style="color:var(--ink5)">›</span>
+                <div class="as pend">Signed</div>
+              </div>
+            </div>
+            <div class="appr" style="border-bottom:none">
+              <div class="appr-lbl">Binding Pre-Lease Sub-stage <span
+                  class="fb fb-sys">Binding_PreLease_Status__c</span></div>
+              <div class="appr-steps">
+                <div class="as done">✓ Draft Initial</div><span style="color:var(--ink5)">›</span>
+                <div class="as done">✓ Draft Final</div><span style="color:var(--ink5)">›</span>
+                <div class="as done">✓ Approved</div><span style="color:var(--ink5)">›</span>
+                <div class="as done">✓ Signed</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- SECTION 1: Site Identity — Board Approved -->
+        <div class="card">
+          <div class="card-hd" onclick="tog(this)">
+            <div class="card-hd-l">
+              <span class="card-title">Site Identity & Location</span>
+              <span class="card-stg" style="background:var(--opp-lt);color:var(--opp);border-color:var(--opp-b)">Board
+                Approved</span>
+              <span class="card-count">25 fields</span>
+            </div><span class="chev open">▾</span>
+          </div>
+          <div class="card-body">
+            <div class="legend">
+              <div class="leg"><span class="fb fb-raw">RAW</span> IM team input</div>
+              <div class="leg"><span class="fb fb-fml">FORMULA</span> Auto-derived</div>
+              <div class="leg"><span class="fb fb-sys">SYSTEM</span> Auto-prefilled</div>
+            </div>
+            <div class="fg">
+              <div class="fi sh"><span class="sh-lbl">Core Identity</span></div>
+              <div class="fi">
+                <div class="fl">Site Code <span class="fb fb-raw">RAW</span></div>
+                <div class="fv">BJS.CRB.01</div>
+              </div>
+              <div class="fi">
+                <div class="fl">Site Name <span class="fb fb-raw">RAW</span></div>
+                <div class="fv">Beijing CRB Tower</div>
+              </div>
+              <div class="fi">
+                <div class="fl">Site Type <span class="fb fb-raw">RAW</span></div>
+                <div class="fv">Business Centre</div>
+              </div>
+              <div class="fi">
+                <div class="fl">Is Titan Site <span class="fb fb-sys">Auto-prefilled from Region</span></div>
+                <div class="fv ok">✓ Yes</div>
+              </div>
+              <div class="fi">
+                <div class="fl">Netsuite Entity <span class="fb fb-raw">RAW</span></div>
+                <div class="fv">EC China Operations</div>
+              </div>
+              <div class="fi">
+                <div class="fl">Site – Combined <span class="fb fb-raw">RAW</span></div>
+                <div class="fv mt">—</div>
+              </div>
+              <div class="fi">
+                <div class="fl">Phased Expansion <span class="fb fb-raw">RAW</span></div>
+                <div class="fv">No</div>
+              </div>
+              <div class="fi">
+                <div class="fl">IM PIC <span class="fb fb-raw">Lookup (User)</span></div>
+                <div class="fv lk">Sarah Chen</div>
+              </div>
+              <div class="fi sh"><span class="sh-lbl">Location <span class="fb fb-raw" style="font-size:8px">All →
+                    Site__c on creation</span></span></div>
+              <div class="fi">
+                <div class="fl">Region <span class="fb fb-raw">RAW</span></div>
+                <div class="fv">Greater China</div>
+              </div>
+              <div class="fi">
+                <div class="fl">Market <span class="fb fb-raw">RAW</span></div>
+                <div class="fv">China</div>
+              </div>
+              <div class="fi">
+                <div class="fl">City <span class="fb fb-raw">RAW</span></div>
+                <div class="fv">Beijing</div>
+              </div>
+              <div class="fi">
+                <div class="fl">Building Name <span class="fb fb-raw">RAW</span></div>
+                <div class="fv">China Resources Building T1</div>
+              </div>
+              <div class="fi">
+                <div class="fl">Building Floor(s) <span class="fb fb-raw">RAW</span></div>
+                <div class="fv">Floor 12</div>
+              </div>
+              <div class="fi">
+                <div class="fl">JLL Subdistrict <span class="fb fb-raw">RAW</span></div>
+                <div class="fv">Zhongguancun</div>
+              </div>
+              <div class="fi">
+                <div class="fl">Sub Market <span class="fb fb-raw">RAW</span></div>
+                <div class="fv">Beijing CBD</div>
+              </div>
+              <div class="fi">
+                <div class="fl">District <span class="fb fb-raw">RAW</span></div>
+                <div class="fv">Haidian</div>
+              </div>
+              <div class="fi sh"><span class="sh-lbl">Dates & Capacity</span></div>
+              <div class="fi">
+                <div class="fl">Board Approval Date <span class="fb fb-raw">RAW</span></div>
+                <div class="fv">15 Jan 2026</div>
+              </div>
+              <div class="fi">
+                <div class="fl">Site Handover Date <span class="fb fb-raw">RAW</span></div>
+                <div class="fv">28 Feb 2026</div>
+              </div>
+              <div class="fi">
+                <div class="fl">Site Opening Date <span class="fb fb-raw">RAW</span></div>
+                <div class="fv">31 Mar 2026</div>
+              </div>
+              <div class="fi">
+                <div class="fl">Opening Year <span class="fb fb-fml">FORMULA</span></div>
+                <div class="fv au">2026 ⚡</div>
+              </div>
+              <div class="fi">
+                <div class="fl">Opening WS Count <span class="fb fb-raw">RAW</span></div>
+                <div class="fv">220</div>
+              </div>
+              <div class="fi">
+                <div class="fl">Area Unit <span class="fb fb-raw">RAW → LeaseSite</span></div>
+                <div class="fv">PSF</div>
+              </div>
+              <div class="fi">
+                <div class="fl">Payment Schedule <span class="fb fb-raw">RAW → LeaseSite</span></div>
+                <div class="fv">Monthly</div>
+              </div>
+              <div class="fi">
+                <div class="fl">Site Area (Gross) <span class="fb fb-raw">RAW</span></div>
+                <div class="fv">2,640 m²</div>
+              </div>
+              <div class="fi">
+                <div class="fl">Site Area (Net) <span class="fb fb-raw">RAW → LeaseSite.Actual_Area</span></div>
+                <div class="fv">2,200 m²</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- SECTION 2: Lease & Landlord — Feasibility -->
+        <div class="card">
+          <div class="card-hd" onclick="tog(this)">
+            <div class="card-hd-l">
+              <span class="card-title">Lease & Landlord Details</span>
+              <span class="card-stg"
+                style="background:var(--cpy-lt);color:var(--cpy);border-color:var(--opp-b)">Feasibility</span>
+              <span class="card-count">23 fields</span>
+            </div><span class="chev open">▾</span>
+          </div>
+          <div class="card-body">
+            <div class="legend">
+              <div class="leg"><span class="fb fb-raw">RAW</span> IM input</div>
+              <div class="leg"><span class="fb fb-fml">FORMULA</span> Auto-calculated</div>
+            </div>
+            <div class="fg">
+              <div class="fi sh"><span class="sh-lbl">Landlord</span></div>
+              <div class="fi">
+                <div class="fl">Parent Landlord Name <span class="fb fb-raw">RAW → Lease</span></div>
+                <div class="fv">CITIC Pacific Ltd</div>
+              </div>
+              <div class="fi">
+                <div class="fl">Landlord Entity <span class="fb fb-raw">Lookup (Account) → Lease</span></div>
+                <div class="fv lk">CITIC Real Estate Co.</div>
+              </div>
+              <div class="fi">
+                <div class="fl">Broker Name <span class="fb fb-raw">RAW → Lease</span></div>
+                <div class="fv mt">—</div>
+              </div>
+              <div class="fi">
+                <div class="fl">Local Unit for Rental Calc <span class="fb fb-raw">RAW → LeaseSite</span></div>
+                <div class="fv">PSF / Month</div>
+              </div>
+              <div class="fi sh"><span class="sh-lbl">Lease Dates <span class="fb fb-raw" style="font-size:8px">All →
+                    LeaseSite Start/End</span></span></div>
+              <div class="fi">
+                <div class="fl">Lease Commencement Date <span class="fb fb-raw">RAW</span></div>
+                <div class="fv">31 Mar 2026</div>
+              </div>
+              <div class="fi">
+                <div class="fl">Lease Expiry Date <span class="fb fb-raw">RAW</span></div>
+                <div class="fv">30 Nov 2029</div>
+              </div>
+              <div class="fi">
+                <div class="fl">TEC Lock-In Date <span class="fb fb-raw">RAW</span></div>
+                <div class="fv">31 Mar 2026</div>
+              </div>
+              <div class="fi">
+                <div class="fl">Landlord Lock-In Date <span class="fb fb-raw">RAW</span></div>
+                <div class="fv">31 Mar 2026</div>
+              </div>
+              <div class="fi">
+                <div class="fl">Lock-in Period (Months) <span class="fb fb-raw">RAW</span></div>
+                <div class="fv">24</div>
+              </div>
+              <div class="fi">
+                <div class="fl">Lock-in Expiry Date <span class="fb fb-raw">RAW</span></div>
+                <div class="fv">31 Mar 2028</div>
+              </div>
+              <div class="fi">
+                <div class="fl">Lease Term in Months <span class="fb fb-fml">FORMULA</span></div>
+                <div class="fv au">44 months ⚡</div>
+              </div>
+              <div class="fi">
+                <div class="fl">Possession Date <span class="fb fb-raw">RAW</span></div>
+                <div class="fv">28 Feb 2026</div>
+              </div>
+              <div class="fi sh"><span class="sh-lbl">Financial</span></div>
+              <div class="fi">
+                <div class="fl">Total Security Deposit (LCY) <span class="fb fb-raw">RAW</span></div>
+                <div class="fv">CNY 7,527,000</div>
+              </div>
+              <div class="fi">
+                <div class="fl">Monthly Rental <span class="fb fb-raw">RAW</span></div>
+                <div class="fv">CNY 2,299,000</div>
+              </div>
+              <div class="fi">
+                <div class="fl">Mgmt Fee (Monthly, LCY) <span class="fb fb-raw">RAW</span></div>
+                <div class="fv">CNY 285,000</div>
+              </div>
+              <div class="fi">
+                <div class="fl">Mgmt Fee Escalation Rate (%) <span class="fb fb-raw">RAW</span></div>
+                <div class="fv">3.00%</div>
+              </div>
+              <div class="fi">
+                <div class="fl">Face Rent After Discount <span class="fb fb-raw">RAW</span></div>
+                <div class="fv mt">—</div>
+              </div>
+              <div class="fi">
+                <div class="fl">Rent Type <span class="fb fb-raw">RAW</span></div>
+                <div class="fv">Gross</div>
+              </div>
+              <div class="fi">
+                <div class="fl">HQ Contract Ref <span class="fb fb-raw">RAW</span></div>
+                <div class="fv mt">—</div>
+              </div>
+              <div class="fi sh"><span class="sh-lbl">Pre-opening Dates</span></div>
+              <div class="fi">
+                <div class="fl">Pre-opening Date From <span class="fb fb-raw">RAW</span></div>
+                <div class="fv">01 Feb 2026</div>
+              </div>
+              <div class="fi">
+                <div class="fl">Pre-opening Date To <span class="fb fb-raw">RAW</span></div>
+                <div class="fv">30 Mar 2026</div>
+              </div>
+              <div class="fi">
+                <div class="fl">Site Refurbishment From <span class="fb fb-raw">RAW</span></div>
+                <div class="fv mt">—</div>
+              </div>
+              <div class="fi">
+                <div class="fl">Site Refurbishment To <span class="fb fb-raw">RAW</span></div>
+                <div class="fv mt">—</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- SECTION 3: Legal, Broker, Clauses — Lease Negotiation -->
+        <div class="card">
+          <div class="card-hd" onclick="tog(this)">
+            <div class="card-hd-l">
+              <span class="card-title">Legal Entities, Broker & Clauses</span>
+              <span class="card-stg" style="background:var(--raw-lt);color:var(--raw);border-color:var(--raw-b)">Lease
+                Negotiation</span>
+              <span class="card-count">18 fields</span>
+            </div><span class="chev open">▾</span>
+          </div>
+          <div class="card-body">
+            <div class="fg">
+              <div class="fi sh"><span class="sh-lbl">Legal Entities (Final) <span class="fb fb-raw"
+                    style="font-size:8px">All → Lease__c at signing</span></span></div>
+              <div class="fi">
+                <div class="fl">Landlord Entity – Latest <span class="fb fb-raw">Lookup (Account)</span></div>
+                <div class="fv lk">CITIC Real Estate Co.</div>
+              </div>
+              <div class="fi">
+                <div class="fl">Parent Landlord Name – Latest <span class="fb fb-raw">RAW</span></div>
+                <div class="fv">CITIC Pacific Ltd</div>
+              </div>
+              <div class="fi">
+                <div class="fl">TEC Legal Entity – Latest <span class="fb fb-raw">Lookup (Account)</span></div>
+                <div class="fv lk">EC (Beijing) Ltd</div>
+              </div>
+              <div class="fi">
+                <div class="fl">TEC Legal Entity (Confirmed) <span class="fb fb-raw">Lookup (Account)</span></div>
+                <div class="fv lk">EC (Beijing) Ltd</div>
+              </div>
+              <div class="fi sh"><span class="sh-lbl">Broker <span class="fb fb-raw" style="font-size:8px">All →
+                    Lease__c</span></span></div>
+              <div class="fi">
+                <div class="fl">Broker Fee (LCY) <span class="fb fb-raw">RAW</span></div>
+                <div class="fv">CNY 480,000</div>
+              </div>
+              <div class="fi">
+                <div class="fl">Amount Payable to Broker <span class="fb fb-raw">RAW</span></div>
+                <div class="fv">CNY 480,000</div>
+              </div>
+              <div class="fi">
+                <div class="fl">Broker Payout Date <span class="fb fb-raw">RAW</span></div>
+                <div class="fv">30 Apr 2026</div>
+              </div>
+              <div class="fi sh"><span class="sh-lbl">Green Building <span class="fb fb-raw" style="font-size:8px">→
+                    Site__c</span></span></div>
+              <div class="fi">
+                <div class="fl">Green Building Cert <span class="fb fb-raw">RAW</span></div>
+                <div class="fv">LEED Gold</div>
+              </div>
+              <div class="fi">
+                <div class="fl">Certification Award <span class="fb fb-raw">RAW</span></div>
+                <div class="fv">2022</div>
+              </div>
+              <div class="fi">
+                <div class="fl">Certification Expiry Date <span class="fb fb-raw">RAW</span></div>
+                <div class="fv">31 Dec 2027</div>
+              </div>
+              <div class="fi sh"><span class="sh-lbl">Renewal Options <span class="fb fb-raw" style="font-size:8px">All
+                    → Lease__c</span></span></div>
+              <div class="fi">
+                <div class="fl">Option to Renew? <span class="fb fb-raw">Checkbox</span></div>
+                <div class="fv ok">✓ Yes</div>
+              </div>
+              <div class="fi">
+                <div class="fl">Renewal Period (Months) <span class="fb fb-raw">RAW</span></div>
+                <div class="fv">6</div>
+              </div>
+              <div class="fi">
+                <div class="fl">Renewal Term in Months <span class="fb fb-raw">RAW</span></div>
+                <div class="fv">36</div>
+              </div>
+              <div class="fi">
+                <div class="fl">Rolling Security Deposit? <span class="fb fb-raw">Checkbox</span></div>
+                <div class="fv">No</div>
+              </div>
+              <div class="fi sh"><span class="sh-lbl">Clauses <span class="fb fb-raw" style="font-size:8px">→
+                    Lease__c</span></span></div>
+              <div class="fi">
+                <div class="fl">Clause Number (Mandatory) <span class="fb fb-raw">RAW</span></div>
+                <div class="fv">§12.3</div>
+              </div>
+              <div class="fi full">
+                <div class="fl">Clause Details (Mandatory) <span class="fb fb-raw">Text Area</span></div>
+                <div class="fv" style="font-size:11px">Early termination right with 6 months notice after Year 2,
+                  penalty = 2 months rent.</div>
+              </div>
+              <div class="fi">
+                <div class="fl">Clause Number (Optional) <span class="fb fb-raw">RAW</span></div>
+                <div class="fv mt">—</div>
+              </div>
+              <div class="fi full">
+                <div class="fl">Clause Details (Optional) <span class="fb fb-raw">Text Area</span></div>
+                <div class="fv mt">—</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Site Lease Records related list -->
+        <div class="card">
+          <div class="card-hd" onclick="tog(this)">
+            <div class="card-hd-l"><span class="card-title">Site Lease Records</span><span class="card-count">2</span>
+            </div>
+            <div style="display:flex;gap:5px;align-items:center"><button class="btn bs bsm"
+                onclick="event.stopPropagation();toast('Add site')">+ Add Site</button><span class="chev open">▾</span>
+            </div>
+          </div>
+          <div class="card-body">
+            <div class="lc-row" onclick="setPage('lc',document.getElementById('ob-lc'))">
+              <div class="lc-d" style="background:var(--opp)"></div>
+              <div>
+                <div style="font-size:11.5px;font-weight:600;color:#0969da">BJS.CRB.01 · Floor 12 · 2,200 m²</div>
+                <div style="font-size:9.5px;color:var(--ink4);margin-top:1px;font-family:var(--mono)">31 Mar 2026 → 30
+                  Nov 2029 · CNY 2,299,000/mo · Import #2 ✓</div>
+              </div>
+              <div class="lcs lcs-d">Draft</div>
+              <div style="font-size:11px;color:var(--ink5)">›</div>
+            </div>
+            <div class="lc-row">
+              <div class="lc-d" style="background:var(--lc)"></div>
+              <div>
+                <div style="font-size:11.5px;font-weight:600;color:#0969da">BJS.CRB.02 · Floor 13 · 2,200 m²</div>
+                <div style="font-size:9.5px;color:var(--opp);margin-top:1px;font-family:var(--mono)">⚠ No Finance import
+                  yet · Parent ID: BJS.CRB.02-202603</div>
+              </div>
+              <div class="lcs lcs-d">Draft</div>
+              <div style="font-size:11px;color:var(--ink5)">›</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Activity -->
+        <div class="card">
+          <div class="card-hd" onclick="tog(this)">
+            <div class="card-hd-l"><span class="card-title">Activity</span></div>
+            <div style="display:flex;gap:5px;align-items:center"><button class="btn bs bsm"
+                onclick="event.stopPropagation();toast('Log call')">Log Call</button><button class="btn bs bsm"
+                onclick="event.stopPropagation();toast('Task')">Task</button><span class="chev open">▾</span></div>
+          </div>
+          <div class="card-body">
+            <div style="padding:8px 14px">
+              <div class="act">
+                <div class="act-av" style="background:#0969da">SC</div>
+                <div>
+                  <div style="display:flex;justify-content:space-between;gap:8px"><span class="act-who">Sarah
+                      Chen</span><span class="act-when">Today 14:14</span></div>
+                  <div class="act-txt">Landlord confirmed approval. Execution copies expected by month end.</div><span
+                    class="act-tag">CALL</span>
+                </div>
+              </div>
+              <div class="act">
+                <div class="act-av" style="background:#0d6d6e">FI</div>
+                <div>
+                  <div style="display:flex;justify-content:space-between;gap:8px"><span class="act-who">Finance
+                      Import</span><span class="act-when">12 Mar 2026</span></div>
+                  <div class="act-txt">Definitive rent schedule imported (Import #2) for BJS.CRB.01. BJS.CRB.02 pending.
+                  </div><span class="act-tag">IMPORT #2</span>
+                </div>
+              </div>
+              <div class="act">
+                <div class="act-av" style="background:#6e40c9">⚡</div>
+                <div>
+                  <div style="display:flex;justify-content:space-between;gap:8px"><span class="act-who">Flow
+                      01</span><span class="act-when">10 Jan 2026</span></div>
+                  <div class="act-txt">2 Site__c records (Planned) + 2 LeaseSite__c records (Draft) auto-created on
+                    save.</div><span class="act-tag">AUTOMATION</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- /main -->
+      <div class="side">
+        <div class="sc">
+          <div class="sc-hd">Deal</div>
+          <div class="sc-it"><span class="sc-lb">Stage</span><span class="sc-vl warn">Lease Negotiation</span></div>
+          <div class="sc-it"><span class="sc-lb">Sub-stage</span><span class="sc-vl">Approved (3/4)</span></div>
+          <div class="sc-it"><span class="sc-lb">Type</span><span class="sc-vl">Shared Lease</span></div>
+          <div class="sc-it"><span class="sc-lb">Landlord</span><span class="sc-vl lk">CITIC Pacific</span></div>
+          <div class="sc-it"><span class="sc-lb">IM PIC</span><span class="sc-vl lk">Sarah Chen</span></div>
+          <div class="sc-it"><span class="sc-lb">Close Date</span><span class="sc-vl">31 Dec 2026</span></div>
+        </div>
+        <div class="sc">
+          <div class="sc-hd">Sites (2)</div>
+          <div class="sc-it"><span class="sc-lb">BJS.CRB.01</span><span class="sc-vl ok">Import ✓</span></div>
+          <div class="sc-it"><span class="sc-lb">BJS.CRB.02</span><span class="sc-vl warn">⚠ Pending</span></div>
+        </div>
+        <div class="sc">
+          <div class="sc-hd">Checklist</div>
+          <div class="sc-it"><span class="sc-lb">Site 1 Rent Sched.</span><span class="sc-vl ok">✓</span></div>
+          <div class="sc-it"><span class="sc-lb">Site 1 Mgmt Fee</span><span class="sc-vl ok">✓</span></div>
+          <div class="sc-it"><span class="sc-lb">Site 2 Rent Sched.</span><span class="sc-vl warn">⚠</span></div>
+          <div class="sc-it"><span class="sc-lb">Legal Entities</span><span class="sc-vl ok">✓</span></div>
+          <div class="sc-it"><span class="sc-lb">Clauses</span><span class="sc-vl ok">✓</span></div>
+          <div class="sc-it"><span class="sc-lb">Green Cert</span><span class="sc-vl ok">✓</span></div>
+        </div>
+        <div class="sc">
+          <div class="sc-hd">Related</div>
+          <div class="sc-it"><span class="sc-lb">Sites</span><span class="sc-vl lk"
+              onclick="setPage('site',document.getElementById('ob-site'))">BJS.CRB →</span></div>
+          <div class="sc-it"><span class="sc-lb">Contract</span><span class="sc-vl mt">After signing</span></div>
+        </div>
+      </div>
+    </div><!-- /rec-body -->
+  </div><!-- /page-opp -->
+
+  <!-- ══════════════════════════════════════
+     LEASESITE__C PAGE LAYOUT
+══════════════════════════════════════ -->
+  <div class="page" id="page-lc">
+    <div class="rec-hdr">
+      <div class="rec-top">
+        <div class="obj-chip" style="background:var(--lc-lt);color:var(--lc);border-color:var(--lc-b)">
+          <div style="width:6px;height:6px;border-radius:50%;background:var(--lc)"></div>LeaseSite__c
+        </div>
+        <div style="flex:1">
+          <div class="rec-title">BJS.CRB.01 · Floor 12 · 2,200 m²</div>
+          <div class="rec-sub">LeaseSite__c · Draft · Parent ID: BJS.CRB.01-202603 · Opportunity: BJS.CRB Renewal 2026
+          </div>
+        </div>
+        <div class="rec-btns">
+          <span class="status-pill sp-draft">Draft</span>
+          <button class="btn bs bsm" onclick="toast('Edit')">✏ Edit</button>
+          <button class="btn bp bsm" onclick="setPage('opp',document.getElementById('ob-opp'))">← Source Deal</button>
+        </div>
+      </div>
+      <div style="height:9px"></div>
+    </div>
+    <div class="rec-body">
+      <div class="main">
+
+        <div class="banner bn-purple">
+          <span>⚡</span><span><strong>Auto-created by Flow 01</strong> at Board Approved. Finance imports
+            Monthly_Lease__c rows against <code
+              style="background:rgba(0,0,0,.07);padding:1px 5px;border-radius:2px;font-family:var(--mono)">Record_Id__c = BJS.CRB.01-202603</code>.
+            Status advances to Active when Opportunity reaches Lease Signed (Flow 03).</span>
+        </div>
+
+        <div class="card">
+          <div class="card-hd" onclick="tog(this)">
+            <div class="card-hd-l"><span class="card-title">Summary</span></div><span class="chev open">▾</span>
+          </div>
+          <div class="card-body">
+            <div class="metrics">
+              <div class="met">
+                <div class="met-v">2,200</div>
+                <div class="met-l">Actual Area m²</div>
+              </div>
+              <div class="met">
+                <div class="met-v">44 mo</div>
+                <div class="met-l">Lease Term</div>
+              </div>
+              <div class="met">
+                <div class="met-v" style="color:var(--opp)">Draft</div>
+                <div class="met-l">Status</div>
+              </div>
+              <div class="met">
+                <div class="met-v" style="color:var(--ls)">✓ Done</div>
+                <div class="met-l">Import #2</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-hd" onclick="tog(this)">
+            <div class="card-hd-l"><span class="card-title">Record Details</span><span class="fb fb-sys">Auto-populated
+                from Opportunity</span></div>
+            <span class="chev open">▾</span>
+          </div>
+          <div class="card-body">
+            <div class="legend">
+              <div class="leg"><span class="fb fb-sys">SYSTEM</span> Set by Flow</div>
+              <div class="leg"><span class="fb fb-cpy">COPIED</span> From Opportunity</div>
+              <div class="leg"><span class="fb fb-fml">FORMULA</span> Auto-calculated</div>
+              <div class="leg"><span class="fb fb-raw">RAW</span> IM input (post-signing only)</div>
+            </div>
+            <div class="fg">
+              <div class="fi sh"><span class="sh-lbl">Relationships</span></div>
+              <div class="fi">
+                <div class="fl">Source Opportunity <span class="fb fb-sys">Lookup · Flow 01</span></div>
+                <div class="fv lk" onclick="setPage('opp',document.getElementById('ob-opp'))">BJS.CRB Renewal 2026</div>
+              </div>
+              <div class="fi">
+                <div class="fl">Site <span class="fb fb-sys">Master-Detail · Flow 01</span></div>
+                <div class="fv lk" onclick="setPage('site',document.getElementById('ob-site'))">BJS.CRB.01</div>
+              </div>
+              <div class="fi">
+                <div class="fl">Lease (Contract) <span class="fb fb-sys">Lookup · Flow 03</span></div>
+                <div class="fv mt">— set at Lease Signed</div>
+              </div>
+              <div class="fi">
+                <div class="fl">Status <span class="fb fb-sys">Picklist · System</span></div>
+                <div class="fv warn">Draft</div>
+              </div>
+              <div class="fi sh"><span class="sh-lbl">Lease Dates <span class="fb fb-cpy" style="font-size:8px">Copied
+                    from Opportunity</span></span></div>
+              <div class="fi">
+                <div class="fl">Lease Start Date</div>
+                <div class="fv">31 Mar 2026</div>
+              </div>
+              <div class="fi">
+                <div class="fl">Lease End Date</div>
+                <div class="fv">30 Nov 2029</div>
+              </div>
+              <div class="fi">
+                <div class="fl">TEC Lock-In Date</div>
+                <div class="fv">31 Mar 2026</div>
+              </div>
+              <div class="fi">
+                <div class="fl">Landlord Lock-In Date</div>
+                <div class="fv">31 Mar 2026</div>
+              </div>
+              <div class="fi">
+                <div class="fl">Lease Term (Months) <span class="fb fb-fml">FORMULA</span></div>
+                <div class="fv au">44 ⚡</div>
+              </div>
+              <div class="fi sh"><span class="sh-lbl">Area & Commercial <span class="fb fb-cpy"
+                    style="font-size:8px">Copied from Opportunity</span></span></div>
+              <div class="fi">
+                <div class="fl">Area Unit</div>
+                <div class="fv">PSF</div>
+              </div>
+              <div class="fi">
+                <div class="fl">Actual Area (m²)</div>
+                <div class="fv">2,200</div>
+              </div>
+              <div class="fi">
+                <div class="fl">Payment Schedule</div>
+                <div class="fv">Monthly</div>
+              </div>
+              <div class="fi">
+                <div class="fl">Local Unit for Rental</div>
+                <div class="fv">PSF / Month</div>
+              </div>
+              <div class="fi">
+                <div class="fl">Parent External ID <span class="fb fb-sys">Ext ID · Finance key</span></div>
+                <div class="fv" style="font-family:var(--mono);font-size:10.5px">BJS.CRB.01-202603</div>
+              </div>
+              <div class="fi sh"><span class="sh-lbl">Early Termination <span class="fb fb-raw" style="font-size:8px">IM
+                    input if applicable</span></span></div>
+              <div class="fi">
+                <div class="fl">Termination Date <span class="fb fb-raw">RAW</span></div>
+                <div class="fv mt">—</div>
+              </div>
+              <div class="fi">
+                <div class="fl">Termination Party <span class="fb fb-raw">RAW</span></div>
+                <div class="fv mt">—</div>
+              </div>
+              <div class="fi full">
+                <div class="fl">Termination Reason <span class="fb fb-raw">Text Area</span></div>
+                <div class="fv mt">—</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Rent Schedule -->
+        <div class="card">
+          <div class="card-hd" onclick="tog(this)">
+            <div class="card-hd-l"><span class="card-title">Rent Schedule</span><span class="card-count">5
+                rows</span><span class="fb fb-ro">Read-only · auto-derived</span></div>
+            <span class="chev open">▾</span>
+          </div>
+          <div class="card-body">
+            <div
+              style="padding:5px 10px;background:var(--bg);border-bottom:1px solid var(--rule2);font-family:var(--mono);font-size:9.5px;color:var(--ink4);display:flex;gap:12px;flex-wrap:wrap">
+              <span>Area: <strong>2,200 m²</strong></span><span>Unit: <strong>PSF</strong></span><span>CCY:
+                <strong>CNY</strong></span>
+              <span style="margin-left:auto;color:var(--ls)">⚡ Last regenerated: 12 Mar 2026 · Import #2</span>
+            </div>
+            <table class="rl">
+              <thead>
+                <tr>
+                  <th>Year</th>
+                  <th class="r">Months</th>
+                  <th>Start Month</th>
+                  <th class="r">Monthly Rent</th>
+                  <th class="r">Per Unit</th>
+                  <th class="r">Incr.</th>
+                  <th class="r">Rent Free</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><span class="yr y1">Y1</span></td>
+                  <td class="r">8</td>
+                  <td>31-Mar-26</td>
+                  <td class="r">2,299,000</td>
+                  <td class="r">104.50</td>
+                  <td class="r">—</td>
+                  <td class="r rf">0.43</td>
+                </tr>
+                <tr style="background:var(--bg)">
+                  <td><span class="yr y1">Y1</span></td>
+                  <td class="r">12</td>
+                  <td>30-Nov-26</td>
+                  <td class="r">2,402,455</td>
+                  <td class="r">109.20</td>
+                  <td class="r pct">4.50%</td>
+                  <td class="r">—</td>
+                </tr>
+                <tr>
+                  <td><span class="yr y2">Y2</span></td>
+                  <td class="r">12</td>
+                  <td>30-Nov-27</td>
+                  <td class="r">2,510,566</td>
+                  <td class="r">114.12</td>
+                  <td class="r pct">4.50%</td>
+                  <td class="r">—</td>
+                </tr>
+                <tr style="background:var(--bg)">
+                  <td><span class="yr y3">Y3</span></td>
+                  <td class="r">12</td>
+                  <td>30-Nov-28</td>
+                  <td class="r">2,623,541</td>
+                  <td class="r">119.25</td>
+                  <td class="r pct">4.50%</td>
+                  <td class="r">—</td>
+                </tr>
+                <tr>
+                  <td><span class="yr y4">Y4</span></td>
+                  <td class="r">10</td>
+                  <td>30-Nov-29</td>
+                  <td class="r">2,741,600</td>
+                  <td class="r">124.62</td>
+                  <td class="r pct">4.50%</td>
+                  <td class="r">—</td>
+                </tr>
+              </tbody>
+              <tfoot>
+                <tr>
+                  <td colspan="3" style="text-align:left;font-weight:400;color:var(--ink4);font-family:var(--sans)">54
+                    months · 4.5% p.a. · 0.43 mo rent-free</td>
+                  <td>12,576,162</td>
+                  <td colspan="3"></td>
+                </tr>
+              </tfoot>
+            </table>
+          </div>
+        </div>
+
+        <!-- Mgmt Fee Schedule -->
+        <div class="card">
+          <div class="card-hd" onclick="tog(this)">
+            <div class="card-hd-l"><span class="card-title">Management Fee Schedule</span><span class="card-count">4
+                rows</span><span class="fb fb-ro">Auto-generated · read-only</span></div>
+            <span class="chev open">▾</span>
+          </div>
+          <div class="card-body">
+            <div style="display:grid;grid-template-columns:1fr 1fr;border-bottom:1px solid var(--rule2)">
+              <div style="padding:9px 14px;border-right:1px solid var(--rule2)">
+                <div class="fl">Base Monthly Fee (LCY) <span class="fb fb-cpy">Copied from Opp</span></div>
+                <div class="fv" style="font-size:13px;font-weight:600;margin-top:3px">CNY 285,000</div>
+              </div>
+              <div style="padding:9px 14px">
+                <div class="fl">Annual Escalation Rate <span class="fb fb-cpy">Copied from Opp</span></div>
+                <div class="fv" style="font-size:13px;font-weight:600;margin-top:3px">3.00%</div>
+                <div style="font-size:9.5px;color:var(--ink4);font-family:var(--mono);margin-top:2px">→ auto-generates
+                  year table</div>
+              </div>
+            </div>
+            <table class="rl">
+              <thead>
+                <tr>
+                  <th>Year</th>
+                  <th>Period</th>
+                  <th class="r">Monthly Fee</th>
+                  <th class="r">Annual Total</th>
+                  <th class="r">Incr.</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><span class="yr y1">Y1</span></td>
+                  <td>Mar 26 – Nov 27</td>
+                  <td class="r">285,000</td>
+                  <td class="r">3,420,000</td>
+                  <td class="r">—</td>
+                </tr>
+                <tr style="background:var(--bg)">
+                  <td><span class="yr y2">Y2</span></td>
+                  <td>Nov 27 – Nov 28</td>
+                  <td class="r">293,550</td>
+                  <td class="r">3,522,600</td>
+                  <td class="r pct">3.00%</td>
+                </tr>
+                <tr>
+                  <td><span class="yr y3">Y3</span></td>
+                  <td>Nov 28 – Nov 29</td>
+                  <td class="r">302,357</td>
+                  <td class="r">3,628,278</td>
+                  <td class="r pct">3.00%</td>
+                </tr>
+                <tr style="background:var(--bg)">
+                  <td><span class="yr y4">Y4</span></td>
+                  <td>Nov 29 end</td>
+                  <td class="r">311,427</td>
+                  <td class="r">3,737,127</td>
+                  <td class="r pct">3.00%</td>
+                </tr>
+              </tbody>
+              <tfoot>
+                <tr>
+                  <td colspan="2" style="text-align:left;font-weight:400;color:var(--ink4);font-family:var(--sans)">
+                    Auto-derived · never manually edited</td>
+                  <td></td>
+                  <td>14,307,005</td>
+                  <td></td>
+                </tr>
+              </tfoot>
+            </table>
+          </div>
+        </div>
+
+      </div><!-- /main -->
+      <div class="side">
+        <div class="sc">
+          <div class="sc-hd">Related</div>
+          <div class="sc-it"><span class="sc-lb">Opportunity</span><span class="sc-vl lk"
+              onclick="setPage('opp',document.getElementById('ob-opp'))">BJS.CRB Renewal →</span></div>
+          <div class="sc-it"><span class="sc-lb">Site</span><span class="sc-vl lk"
+              onclick="setPage('site',document.getElementById('ob-site'))">BJS.CRB.01 →</span></div>
+          <div class="sc-it"><span class="sc-lb">Contract</span><span class="sc-vl mt">After signing</span></div>
+        </div>
+        <div class="sc">
+          <div class="sc-hd">Finance Import</div>
+          <div class="sc-it"><span class="sc-lb">Import #1</span><span class="sc-vl ok">Done · 12 Feb</span></div>
+          <div class="sc-it"><span class="sc-lb">Import #2</span><span class="sc-vl ok">Done · 12 Mar</span></div>
+          <div class="sc-it"><span class="sc-lb">Upsert Key</span><span class="sc-vl"
+              style="font-family:var(--mono);font-size:9.5px">BJS.CRB.01-202603</span></div>
+          <div class="sc-it"><span class="sc-lb">Rows</span><span class="sc-vl">5 rate periods</span></div>
+        </div>
+        <div class="sc">
+          <div class="sc-hd">Status Lifecycle</div>
+          <div style="padding:9px 11px;font-size:11px;color:var(--ink2);line-height:1.9">
+            <div>🟡 <strong>Draft</strong> — pre-signing · Finance imports</div>
+            <div>🟢 <strong>Active</strong> — set by Flow 03 at signing</div>
+            <div>🔵 <strong>Holding</strong> — between leases</div>
+            <div>⚫ <strong>Expired</strong> — lease ended</div>
+            <div>🔴 <strong>Terminated</strong> — early exit (Flow 07)</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div><!-- /page-lc -->
+
+  <!-- ══════════════════════════════════════
+     LEASE (CONTRACT) PAGE LAYOUT
+══════════════════════════════════════ -->
+  <div class="page" id="page-lease">
+    <div class="rec-hdr">
+      <div class="rec-top">
+        <div class="obj-chip" style="background:var(--ls-lt);color:var(--ls);border-color:var(--ls-b)">
+          <div style="width:6px;height:6px;border-radius:50%;background:var(--ls)"></div>Lease (Contract)
+        </div>
+        <div style="flex:1">
+          <div class="rec-title">LC-2026-BJS-001 · Beijing CRB Tower</div>
+          <div class="rec-sub">Lease__c · Active · Auto-created by Flow 03 at Lease Signed · 2 sites</div>
+        </div>
+        <div class="rec-btns">
+          <span class="status-pill sp-active">Active</span>
+          <button class="btn bs bsm" onclick="toast('Edit')">✏ Edit</button>
+        </div>
+      </div>
+      <div style="height:9px"></div>
+    </div>
+    <div class="rec-body">
+      <div class="main">
+
+        <div class="banner bn-green">
+          <span>⚡</span><span><strong>Auto-created by Flow 03</strong> at Lease Signed. All fields copied from the
+            Opportunity at that moment. Only 3 fields are entered directly here: <strong>Lease Execution Date</strong>,
+            <strong>Site Close Date</strong> (optional), <strong>Date of Payment (Broker)</strong>.</span>
+        </div>
+
+        <div class="card">
+          <div class="card-hd" onclick="tog(this)">
+            <div class="card-hd-l"><span class="card-title">Summary</span></div><span class="chev open">▾</span>
+          </div>
+          <div class="card-body">
+            <div class="metrics">
+              <div class="met">
+                <div class="met-v">2</div>
+                <div class="met-l">Sites</div>
+              </div>
+              <div class="met">
+                <div class="met-v" style="color:var(--ls)">Active</div>
+                <div class="met-l">Status</div>
+              </div>
+              <div class="met">
+                <div class="met-v">Nov 2029</div>
+                <div class="met-l">Expiry</div>
+              </div>
+              <div class="met">
+                <div class="met-v">44 mo</div>
+                <div class="met-l">Term</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-hd" onclick="tog(this)">
+            <div class="card-hd-l"><span class="card-title">Contract Header</span><span class="fb fb-sys">Auto-created ·
+                fields from Opportunity</span></div>
+            <span class="chev open">▾</span>
+          </div>
+          <div class="card-body">
+            <div class="legend">
+              <div class="leg"><span class="fb fb-sys">SYSTEM</span> Flow 03</div>
+              <div class="leg"><span class="fb fb-cpy">COPIED</span> From Opportunity</div>
+              <div class="leg"><span class="fb fb-raw">RAW</span> Only 3 direct inputs</div>
+              <div class="leg"><span class="fb fb-rup">ROLL-UP</span> From LeaseSite children</div>
+            </div>
+            <div class="fg">
+              <div class="fi sh"><span class="sh-lbl">Identifiers</span></div>
+              <div class="fi">
+                <div class="fl">Lease Number <span class="fb fb-sys">Auto Number</span></div>
+                <div class="fv">LC-2026-BJS-001</div>
+              </div>
+              <div class="fi">
+                <div class="fl">Lease Name <span class="fb fb-sys">System</span></div>
+                <div class="fv">Beijing CRB Tower 2026</div>
+              </div>
+              <div class="fi">
+                <div class="fl">Source Opportunity <span class="fb fb-sys">Lookup · Flow 03</span></div>
+                <div class="fv lk" onclick="setPage('opp',document.getElementById('ob-opp'))">BJS.CRB Renewal 2026</div>
+              </div>
+              <div class="fi">
+                <div class="fl">Record Id (Ext ID) <span class="fb fb-sys">System</span></div>
+                <div class="fv" style="font-family:var(--mono);font-size:10px">LC-2026-BJS-001</div>
+              </div>
+              <div class="fi">
+                <div class="fl">HQ Contract Ref <span class="fb fb-cpy">Copied</span></div>
+                <div class="fv mt">—</div>
+              </div>
+              <div class="fi">
+                <div class="fl">Status <span class="fb fb-sys">System</span></div>
+                <div class="fv ok">Active</div>
+              </div>
+              <div class="fi">
+                <div class="fl">Currency <span class="fb fb-sys">System</span></div>
+                <div class="fv">CNY</div>
+              </div>
+              <div class="fi">
+                <div class="fl">Lease Structure <span class="fb fb-raw">RAW · IM sets</span></div>
+                <div class="fv">Shared</div>
+              </div>
+              <div class="fi">
+                <div class="fl">Site Count <span class="fb fb-rup">Roll-Up COUNT</span></div>
+                <div class="fv au">2 ⚡</div>
+              </div>
+              <div class="fi sh"><span class="sh-lbl">Parties <span class="fb fb-cpy" style="font-size:8px">All copied
+                    from Opportunity at Lease Signed</span></span></div>
+              <div class="fi">
+                <div class="fl">Landlord <span class="fb fb-cpy">Lookup (Account)</span></div>
+                <div class="fv lk">CITIC Real Estate Co.</div>
+              </div>
+              <div class="fi">
+                <div class="fl">Parent Landlord Name <span class="fb fb-cpy">Copied</span></div>
+                <div class="fv">CITIC Pacific Ltd</div>
+              </div>
+              <div class="fi">
+                <div class="fl">TEC Legal Entity <span class="fb fb-cpy">Lookup (Account)</span></div>
+                <div class="fv lk">EC (Beijing) Ltd</div>
+              </div>
+              <div class="fi">
+                <div class="fl">Previous Landlord <span class="fb fb-sys">Flow 09 · audit</span></div>
+                <div class="fv mt">—</div>
+              </div>
+              <div class="fi">
+                <div class="fl">Landlord Changed? <span class="fb fb-sys">Flow 09</span></div>
+                <div class="fv">No</div>
+              </div>
+              <div class="fi">
+                <div class="fl">Flow to Anaplan <span class="fb fb-raw">RAW · multi-landlord only</span></div>
+                <div class="fv mt">N/A</div>
+              </div>
+              <div class="fi">
+                <div class="fl">Sub-Lease Parent <span class="fb fb-raw">Lookup (Lease__c)</span></div>
+                <div class="fv mt">—</div>
+              </div>
+              <div class="fi sh"><span class="sh-lbl">Key Dates <span class="fb fb-cpy" style="font-size:8px">Copied
+                    from Opportunity</span></span></div>
+              <div class="fi">
+                <div class="fl">Lease Commencement Date</div>
+                <div class="fv">31 Mar 2026</div>
+              </div>
+              <div class="fi">
+                <div class="fl">Lease Expiry Date</div>
+                <div class="fv">30 Nov 2029</div>
+              </div>
+              <div class="fi">
+                <div class="fl">Site Opening Date</div>
+                <div class="fv">31 Mar 2026</div>
+              </div>
+              <div class="fi">
+                <div class="fl">Possession Date</div>
+                <div class="fv">28 Feb 2026</div>
+              </div>
+              <div class="fi">
+                <div class="fl">Pre-opening Date From</div>
+                <div class="fv">01 Feb 2026</div>
+              </div>
+              <div class="fi">
+                <div class="fl">Pre-opening Date To</div>
+                <div class="fv">30 Mar 2026</div>
+              </div>
+              <div class="fi sh"><span class="sh-lbl">Direct Inputs — IM Team enters here post-signing <span
+                    class="fb fb-raw" style="font-size:8px">Only these 3 fields</span></span></div>
+              <div class="fi">
+                <div class="fl">Lease Execution Date <span class="fb fb-raw">Required</span></div>
+                <div class="fv">31 Mar 2026</div>
+              </div>
+              <div class="fi">
+                <div class="fl">Site Close Date <span class="fb fb-raw">Optional</span></div>
+                <div class="fv mt">—</div>
+              </div>
+              <div class="fi">
+                <div class="fl">Date of Payment (Broker) <span class="fb fb-raw">Once paid</span></div>
+                <div class="fv">30 Apr 2026</div>
+              </div>
+              <div class="fi sh"><span class="sh-lbl">Financial <span class="fb fb-cpy" style="font-size:8px">Copied
+                    from Opportunity</span></span></div>
+              <div class="fi">
+                <div class="fl">Monthly Rental</div>
+                <div class="fv">CNY 2,299,000</div>
+              </div>
+              <div class="fi">
+                <div class="fl">Site Area (Sqm)</div>
+                <div class="fv">2,200</div>
+              </div>
+              <div class="fi">
+                <div class="fl">Site Area (Sqft)</div>
+                <div class="fv">23,681</div>
+              </div>
+              <div class="fi">
+                <div class="fl">Rent Type</div>
+                <div class="fv">Gross</div>
+              </div>
+              <div class="fi">
+                <div class="fl">Lock-in Period</div>
+                <div class="fv">24 months</div>
+              </div>
+              <div class="fi">
+                <div class="fl">Lock-in Expiry Date</div>
+                <div class="fv">31 Mar 2028</div>
+              </div>
+              <div class="fi sh"><span class="sh-lbl">Calculated Financials <span class="fb fb-fml"
+                    style="font-size:8px">Existing SF calculated fields</span></span></div>
+              <div class="fi">
+                <div class="fl">Eff. Rent / Sqft <span class="fb fb-fml">Calc</span></div>
+                <div class="fv au">104.50 ⚡</div>
+              </div>
+              <div class="fi">
+                <div class="fl">Eff. Rent / Sqm <span class="fb fb-fml">Calc</span></div>
+                <div class="fv au">1,045 ⚡</div>
+              </div>
+              <div class="fi">
+                <div class="fl">Rent Free <span class="fb fb-fml">Calc</span></div>
+                <div class="fv au">0.43 mo ⚡</div>
+              </div>
+              <div class="fi">
+                <div class="fl">Total Rental Value <span class="fb fb-fml">Calc</span></div>
+                <div class="fv au">CNY 120.4M ⚡</div>
+              </div>
+              <div class="fi">
+                <div class="fl">Total Effective Rent <span class="fb fb-fml">Calc</span></div>
+                <div class="fv au">CNY 115.2M ⚡</div>
+              </div>
+              <div class="fi sh"><span class="sh-lbl">Broker <span class="fb fb-cpy" style="font-size:8px">Copied from
+                    Opportunity</span></span></div>
+              <div class="fi">
+                <div class="fl">Broker Name</div>
+                <div class="fv">CBRE Beijing</div>
+              </div>
+              <div class="fi">
+                <div class="fl">Broker Fee (LCY)</div>
+                <div class="fv">CNY 480,000</div>
+              </div>
+              <div class="fi">
+                <div class="fl">Amount Payable to Broker</div>
+                <div class="fv">CNY 480,000</div>
+              </div>
+              <div class="fi">
+                <div class="fl">Broker Payout Date</div>
+                <div class="fv">30 Apr 2026</div>
+              </div>
+              <div class="fi sh"><span class="sh-lbl">Renewal <span class="fb fb-cpy" style="font-size:8px">Copied from
+                    Opportunity</span></span></div>
+              <div class="fi">
+                <div class="fl">Option to Renew?</div>
+                <div class="fv ok">✓ Yes</div>
+              </div>
+              <div class="fi">
+                <div class="fl">Renewal Period (Months)</div>
+                <div class="fv">6</div>
+              </div>
+              <div class="fi">
+                <div class="fl">Renewal Term in Months</div>
+                <div class="fv">36</div>
+              </div>
+              <div class="fi">
+                <div class="fl">Rolling Security Deposit?</div>
+                <div class="fv">No</div>
+              </div>
+              <div class="fi sh"><span class="sh-lbl">Clauses <span class="fb fb-cpy" style="font-size:8px">Copied from
+                    Opportunity</span></span></div>
+              <div class="fi">
+                <div class="fl">Clause Number (Mandatory)</div>
+                <div class="fv">§12.3</div>
+              </div>
+              <div class="fi full">
+                <div class="fl">Clause Details (Mandatory)</div>
+                <div class="fv" style="font-size:11px">Early termination right with 6 months notice after Year 2.</div>
+              </div>
+              <div class="fi">
+                <div class="fl">Clause Number (Optional)</div>
+                <div class="fv mt">—</div>
+              </div>
+              <div class="fi full">
+                <div class="fl">Clause Details (Optional)</div>
+                <div class="fv mt">—</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Site Lease Records on this contract -->
+        <div class="card">
+          <div class="card-hd" onclick="tog(this)">
+            <div class="card-hd-l"><span class="card-title">Site Lease Records</span><span class="card-count">2</span>
+            </div><span class="chev open">▾</span>
+          </div>
+          <div class="card-body">
+            <div class="lc-row" onclick="setPage('lc',document.getElementById('ob-lc'))">
+              <div class="lc-d" style="background:var(--ls)"></div>
+              <div>
+                <div style="font-size:11.5px;font-weight:600;color:#0969da">BJS.CRB.01 · Floor 12</div>
+                <div style="font-size:9.5px;color:var(--ink4);margin-top:1px;font-family:var(--mono)">31 Mar 2026 → 30
+                  Nov 2029 · 2,200 m²</div>
+              </div>
+              <div class="lcs lcs-a">Active</div>
+              <div style="font-size:11px;color:var(--ink5)">›</div>
+            </div>
+            <div class="lc-row">
+              <div class="lc-d" style="background:var(--ls)"></div>
+              <div>
+                <div style="font-size:11.5px;font-weight:600;color:#0969da">BJS.CRB.02 · Floor 13</div>
+                <div style="font-size:9.5px;color:var(--ink4);margin-top:1px;font-family:var(--mono)">31 Mar 2026 → 30
+                  Nov 2029 · 2,200 m²</div>
+              </div>
+              <div class="lcs lcs-a">Active</div>
+              <div style="font-size:11px;color:var(--ink5)">›</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Amendment log -->
+        <div class="card">
+          <div class="card-hd" onclick="tog(this)">
+            <div class="card-hd-l"><span class="card-title">Amendment Log</span><span class="card-count">0</span><span
+                class="fb fb-sys">Auto by Flow 09</span></div><span class="chev open">▾</span>
+          </div>
+          <div class="card-body">
+            <div style="padding:14px;text-align:center;color:var(--ink5);font-size:11px">No amendments. Created
+              automatically when Landlord (Account__c) changes on this record.</div>
+          </div>
+        </div>
+
+      </div><!-- /main -->
+      <div class="side">
+        <div class="sc">
+          <div class="sc-hd">Related</div>
+          <div class="sc-it"><span class="sc-lb">Opportunity</span><span class="sc-vl lk"
+              onclick="setPage('opp',document.getElementById('ob-opp'))">BJS.CRB Renewal →</span></div>
+          <div class="sc-it"><span class="sc-lb">Site 1</span><span class="sc-vl lk"
+              onclick="setPage('site',document.getElementById('ob-site'))">BJS.CRB.01 →</span></div>
+          <div class="sc-it"><span class="sc-lb">LeaseSites</span><span class="sc-vl lk"
+              onclick="setPage('lc',document.getElementById('ob-lc'))">2 Active →</span></div>
+        </div>
+        <div class="sc">
+          <div class="sc-hd">Direct Inputs Only</div>
+          <div style="padding:10px 11px;font-size:11px;color:var(--ink2);line-height:1.9">
+            Only <strong>3 fields</strong> entered directly:<br />
+            ✏ Lease Execution Date<br />
+            ✏ Site Close Date (optional)<br />
+            ✏ Date of Payment (Broker)<br />
+            <div style="margin-top:8px;font-size:9.5px;color:var(--ink4)">All other fields copied from Opportunity by
+              Flow 03.</div>
+          </div>
+        </div>
+        <div class="sc">
+          <div class="sc-hd">Flow 09 — Landlord Change</div>
+          <div style="padding:9px 11px;font-size:11px;color:var(--ink3);line-height:1.7">If Landlord (Account__c) is
+            updated on this record, Flow 09 captures the old value in Previous_Landlord__c and creates a
+            LeaseAmendment__c audit record.</div>
+        </div>
+      </div>
+    </div>
+  </div><!-- /page-lease -->
+
+  <!-- ══════════════════════════════════════
+     SITE__C PAGE LAYOUT
+══════════════════════════════════════ -->
+  <div class="page" id="page-site">
+    <div class="rec-hdr">
+      <div class="rec-top">
+        <div class="obj-chip" style="background:var(--ctr-lt);color:var(--ctr);border-color:var(--ctr-b)">
+          <div style="width:6px;height:6px;border-radius:50%;background:var(--ctr)"></div>Site__c
+        </div>
+        <div style="flex:1">
+          <div class="rec-title">BJS.CRB.01 — Beijing CRB Tower</div>
+          <div class="rec-sub">Site__c · Fitting Out · Anaplan sync active · Greater China</div>
+        </div>
+        <div class="rec-btns">
+          <span class="status-pill sp-fit">Fitting Out</span>
+          <button class="btn bs bsm" onclick="toast('Edit Site')">✏ Edit</button>
+        </div>
+      </div>
+      <div style="height:9px"></div>
+    </div>
+    <div class="rec-body">
+      <div class="main">
+
+        <div class="banner bn-blue">
+          <span>⚡</span><span><strong>Auto-created by Flow 01</strong> at Board Approved. Identity and location fields
+            are copied from the Opportunity. Operational fields (contact, address, hours) are entered directly by the
+            Local Team after Lease Signed. Anaplan sync source — <code
+              style="background:rgba(0,0,0,.06);padding:1px 4px;border-radius:2px;font-family:var(--mono)">Centre_Code__c</code>
+            is the primary key.</span>
+        </div>
+
+        <div class="card">
+          <div class="card-hd" onclick="tog(this)">
+            <div class="card-hd-l"><span class="card-title">Summary</span></div><span class="chev open">▾</span>
+          </div>
+          <div class="card-body">
+            <div class="metrics">
+              <div class="met">
+                <div class="met-v" style="color:var(--ctr)">Fitting Out</div>
+                <div class="met-l">Status</div>
+              </div>
+              <div class="met">
+                <div class="met-v">2,200</div>
+                <div class="met-l">Total Area m²</div>
+              </div>
+              <div class="met">
+                <div class="met-v" style="color:var(--opp)">Nov 2029</div>
+                <div class="met-l">Earliest Expiry</div>
+              </div>
+              <div class="met">
+                <div class="met-v" style="color:var(--ls)">Active</div>
+                <div class="met-l">Anaplan Sync</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Identity & Location -->
+        <div class="card">
+          <div class="card-hd" onclick="tog(this)">
+            <div class="card-hd-l"><span class="card-title">Site Identity & Location</span><span class="card-stg"
+                style="background:var(--cpy-lt);color:var(--cpy);border-color:var(--opp-b)">Copied from
+                Opportunity</span><span class="card-count">22 fields</span></div>
+            <span class="chev open">▾</span>
+          </div>
+          <div class="card-body">
+            <div class="legend">
+              <div class="leg"><span class="fb fb-cpy">COPIED</span> From Opportunity by Flow 01</div>
+              <div class="leg"><span class="fb fb-sys">SYSTEM</span> Auto-managed</div>
+              <div class="leg"><span class="fb fb-fml">FORMULA / ROLL-UP</span> Auto-calculated</div>
+            </div>
+            <div class="fg">
+              <div class="fi sh"><span class="sh-lbl">Identity</span></div>
+              <div class="fi">
+                <div class="fl">Site Code (Ext ID) <span class="fb fb-cpy">Anaplan key</span></div>
+                <div class="fv" style="font-family:var(--mono)">BJS.CRB.01</div>
+              </div>
+              <div class="fi">
+                <div class="fl">Site Name <span class="fb fb-cpy">Copied</span></div>
+                <div class="fv">Beijing CRB Tower</div>
+              </div>
+              <div class="fi">
+                <div class="fl">Site Type <span class="fb fb-cpy">Copied</span></div>
+                <div class="fv">Business Centre</div>
+              </div>
+              <div class="fi">
+                <div class="fl">Status <span class="fb fb-sys">Flow-managed</span></div>
+                <div class="fv sys">Fitting Out</div>
+              </div>
+              <div class="fi">
+                <div class="fl">Is Titan Site <span class="fb fb-sys">Auto-prefilled</span></div>
+                <div class="fv ok">✓ Yes</div>
+              </div>
+              <div class="fi">
+                <div class="fl">Netsuite Entity <span class="fb fb-cpy">Copied</span></div>
+                <div class="fv">EC China Operations</div>
+              </div>
+              <div class="fi">
+                <div class="fl">Subsidiary <span class="fb fb-raw">RAW</span></div>
+                <div class="fv">EC China</div>
+              </div>
+              <div class="fi">
+                <div class="fl">Shared Lease <span class="fb fb-raw">RAW</span></div>
+                <div class="fv ok">✓ Yes (2 floors)</div>
+              </div>
+              <div class="fi sh"><span class="sh-lbl">Location <span class="fb fb-cpy" style="font-size:8px">All copied
+                    from Opportunity</span></span></div>
+              <div class="fi">
+                <div class="fl">Region</div>
+                <div class="fv">Greater China</div>
+              </div>
+              <div class="fi">
+                <div class="fl">Market</div>
+                <div class="fv">China</div>
+              </div>
+              <div class="fi">
+                <div class="fl">City</div>
+                <div class="fv">Beijing</div>
+              </div>
+              <div class="fi">
+                <div class="fl">Country</div>
+                <div class="fv">China</div>
+              </div>
+              <div class="fi">
+                <div class="fl">Building Name</div>
+                <div class="fv">China Resources Building T1</div>
+              </div>
+              <div class="fi">
+                <div class="fl">Building Floor(s)</div>
+                <div class="fv">Floor 12</div>
+              </div>
+              <div class="fi">
+                <div class="fl">JLL Subdistrict</div>
+                <div class="fv">Zhongguancun</div>
+              </div>
+              <div class="fi">
+                <div class="fl">Sub Market</div>
+                <div class="fv">Beijing CBD</div>
+              </div>
+              <div class="fi">
+                <div class="fl">District</div>
+                <div class="fv">Haidian</div>
+              </div>
+              <div class="fi sh"><span class="sh-lbl">Dates & Capacity</span></div>
+              <div class="fi">
+                <div class="fl">Site Opening Date <span class="fb fb-cpy">Copied</span></div>
+                <div class="fv">31 Mar 2026</div>
+              </div>
+              <div class="fi">
+                <div class="fl">Site Handover Date <span class="fb fb-cpy">Copied</span></div>
+                <div class="fv">28 Feb 2026</div>
+              </div>
+              <div class="fi">
+                <div class="fl">Opening WS Count <span class="fb fb-cpy">Copied</span></div>
+                <div class="fv">220</div>
+              </div>
+              <div class="fi">
+                <div class="fl">Site Close Date <span class="fb fb-raw">RAW · optional</span></div>
+                <div class="fv mt">—</div>
+              </div>
+              <div class="fi sh"><span class="sh-lbl">Lease Aggregates <span class="fb fb-fml"
+                    style="font-size:8px">From active LeaseSite__c records</span></span></div>
+              <div class="fi">
+                <div class="fl">Total Actual Area (m²) <span class="fb fb-rup">Roll-Up SUM</span></div>
+                <div class="fv au">4,400 ⚡</div>
+              </div>
+              <div class="fi">
+                <div class="fl">Earliest Expiry Date <span class="fb fb-fml">Formula MIN</span></div>
+                <div class="fv au">30 Nov 2029 ⚡</div>
+              </div>
+              <div class="fi">
+                <div class="fl">Multi-Lease Site <span class="fb fb-fml">Formula Boolean</span></div>
+                <div class="fv au ok">Yes ⚡</div>
+              </div>
+              <div class="fi">
+                <div class="fl">Current Lease <span class="fb fb-sys">Lookup · Flow 03</span></div>
+                <div class="fv lk" onclick="setPage('lease',document.getElementById('ob-lease'))">LC-2026-BJS-001</div>
+              </div>
+              <div class="fi sh"><span class="sh-lbl">Anaplan Controls</span></div>
+              <div class="fi">
+                <div class="fl">Anaplan Freeze <span class="fb fb-sys">Flow 05/06</span></div>
+                <div class="fv ok">No — syncing</div>
+              </div>
+              <div class="fi">
+                <div class="fl">Renewal Status <span class="fb fb-raw">RAW</span></div>
+                <div class="fv">Not Started</div>
+              </div>
+              <div class="fi sh"><span class="sh-lbl">Green Building <span class="fb fb-cpy"
+                    style="font-size:8px">Copied from Opp at Lease Negotiation</span></span></div>
+              <div class="fi">
+                <div class="fl">Green Building Cert</div>
+                <div class="fv">LEED Gold</div>
+              </div>
+              <div class="fi">
+                <div class="fl">Certification Award / Expiry</div>
+                <div class="fv">2022 · Dec 2027</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Operational — Local Team -->
+        <div class="card">
+          <div class="card-hd" onclick="tog(this)">
+            <div class="card-hd-l"><span class="card-title">Operational Details</span><span class="card-stg"
+                style="background:var(--loc-lt);color:var(--loc);border-color:var(--loc-b)">Local Team ·
+                Post-signing</span><span class="card-count">20 fields</span></div>
+            <span class="chev open">▾</span>
+          </div>
+          <div class="card-body">
+            <div class="legend">
+              <div class="leg"><span class="fb fb-loc">LOCAL TEAM</span> Entered directly on this Site record after
+                Lease Signed, before Opening</div>
+            </div>
+            <div class="fg">
+              <div class="fi sh"><span class="sh-lbl">Contact</span></div>
+              <div class="fi">
+                <div class="fl">Reception Email <span class="fb fb-loc">LOCAL TEAM</span></div>
+                <div class="fv mt">— enter before opening</div>
+              </div>
+              <div class="fi">
+                <div class="fl">Phone Number <span class="fb fb-loc">LOCAL TEAM</span></div>
+                <div class="fv mt">—</div>
+              </div>
+              <div class="fi">
+                <div class="fl">Fax Number <span class="fb fb-loc">LOCAL TEAM</span></div>
+                <div class="fv mt">—</div>
+              </div>
+              <div class="fi">
+                <div class="fl">OPS Email <span class="fb fb-raw">RAW</span></div>
+                <div class="fv mt">—</div>
+              </div>
+              <div class="fi sh"><span class="sh-lbl">Address</span></div>
+              <div class="fi">
+                <div class="fl">Street <span class="fb fb-loc">LOCAL TEAM</span></div>
+                <div class="fv mt">—</div>
+              </div>
+              <div class="fi">
+                <div class="fl">State / Province <span class="fb fb-loc">LOCAL TEAM</span></div>
+                <div class="fv mt">—</div>
+              </div>
+              <div class="fi">
+                <div class="fl">ZIP Code / Post Code <span class="fb fb-loc">LOCAL TEAM</span></div>
+                <div class="fv mt">—</div>
+              </div>
+              <div class="fi">
+                <div class="fl">Site Address (Calc) <span class="fb fb-fml">FORMULA</span></div>
+                <div class="fv au mt">— auto when address entered ⚡</div>
+              </div>
+              <div class="fi">
+                <div class="fl">Localised Site Name <span class="fb fb-loc">LOCAL TEAM</span></div>
+                <div class="fv mt">—</div>
+              </div>
+              <div class="fi">
+                <div class="fl">Localised Site Address <span class="fb fb-loc">LOCAL TEAM</span></div>
+                <div class="fv mt">—</div>
+              </div>
+              <div class="fi sh"><span class="sh-lbl">Operating Hours — per day</span></div>
+              <div class="fi">
+                <div class="fl">Opening Time (Mon)</div>
+                <div class="fv mt">—</div>
+              </div>
+              <div class="fi">
+                <div class="fl">Closing Time (Mon)</div>
+                <div class="fv mt">—</div>
+              </div>
+              <div class="fi">
+                <div class="fl">Opening Time (Tue–Fri)</div>
+                <div class="fv mt">—</div>
+              </div>
+              <div class="fi">
+                <div class="fl">Opening Time (Sat)</div>
+                <div class="fv mt">—</div>
+              </div>
+              <div class="fi">
+                <div class="fl">Closing Time (Sat)</div>
+                <div class="fv mt">—</div>
+              </div>
+              <div class="fi">
+                <div class="fl">Opening Time (Sun)</div>
+                <div class="fv mt">—</div>
+              </div>
+              <div class="fi">
+                <div class="fl">Closing Time (Sun)</div>
+                <div class="fv mt">—</div>
+              </div>
+              <div class="fi sh"><span class="sh-lbl">Digital Go-Live</span></div>
+              <div class="fi">
+                <div class="fl">Mobile App Available Date <span class="fb fb-loc">LOCAL TEAM</span></div>
+                <div class="fv mt">—</div>
+              </div>
+              <div class="fi">
+                <div class="fl">Online Booking Date <span class="fb fb-loc">LOCAL TEAM</span></div>
+                <div class="fv mt">—</div>
+              </div>
+              <div class="fi">
+                <div class="fl">Timezone <span class="fb fb-raw">RAW</span></div>
+                <div class="fv">Asia/Shanghai</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- All LeaseSite records -->
+        <div class="card">
+          <div class="card-hd" onclick="tog(this)">
+            <div class="card-hd-l"><span class="card-title">All Site Lease Records</span><span class="card-count">3
+                total</span></div><span class="chev open">▾</span>
+          </div>
+          <div class="card-body">
+            <div
+              style="padding:5px 14px 4px;font-size:9px;font-weight:700;color:var(--ls);letter-spacing:.06em;text-transform:uppercase;font-family:var(--mono);border-bottom:1px solid var(--rule2)">
+              Active</div>
+            <div class="lc-row" onclick="setPage('lc',document.getElementById('ob-lc'))">
+              <div class="lc-d" style="background:var(--ls)"></div>
+              <div>
+                <div style="font-size:11.5px;font-weight:600;color:#0969da">2026 Renewal · Floor 12</div>
+                <div style="font-size:9.5px;color:var(--ink4);margin-top:1px;font-family:var(--mono)">31 Mar 2026 → 30
+                  Nov 2029 · 2,200 m²</div>
+              </div>
+              <div class="lcs lcs-a">Active</div>
+              <div style="font-size:11px;color:var(--ink5)">›</div>
+            </div>
+            <div class="lc-row">
+              <div class="lc-d" style="background:var(--ls)"></div>
+              <div>
+                <div style="font-size:11.5px;font-weight:600;color:#0969da">2021 Lease · Floor 12</div>
+                <div style="font-size:9.5px;color:var(--opp);margin-top:1px;font-family:var(--mono)">01 Apr 2021 → 31
+                  Mar 2026 · Expiring soon</div>
+              </div>
+              <div class="lcs lcs-a">Active</div>
+              <div style="font-size:11px;color:var(--ink5)">›</div>
+            </div>
+            <div
+              style="padding:5px 14px 4px;font-size:9px;font-weight:700;color:var(--ink4);letter-spacing:.06em;text-transform:uppercase;font-family:var(--mono);border-top:1px solid var(--rule2);border-bottom:1px solid var(--rule2)">
+              History</div>
+            <div class="lc-row" style="opacity:.6">
+              <div class="lc-d" style="background:var(--ink5)"></div>
+              <div>
+                <div style="font-size:11.5px;font-weight:500;color:var(--ink3)">2016 Lease · Floor 12</div>
+                <div style="font-size:9.5px;color:var(--ink5);margin-top:1px;font-family:var(--mono)">01 May 2016 → 31
+                  Mar 2021 · 1,800 m²</div>
+              </div>
+              <div class="lcs" style="background:var(--bg);color:var(--ink4);border:1px solid var(--rule)">Expired</div>
+              <div style="font-size:11px;color:var(--ink5)">›</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Change history -->
+        <div class="card">
+          <div class="card-hd" onclick="tog(this)">
+            <div class="card-hd-l"><span class="card-title">Site Change History</span><span
+                class="card-count">0</span><span class="fb fb-sys">Auto by Flow 10</span></div><span
+              class="chev open">▾</span>
+          </div>
+          <div class="card-body">
+            <div style="padding:14px;text-align:center;color:var(--ink5);font-size:11px">No changes logged.
+              SiteHistory__c records auto-created when Site Type changes.</div>
+          </div>
+        </div>
+
+      </div><!-- /main -->
+      <div class="side">
+        <div class="sc">
+          <div class="sc-hd">Site Info</div>
+          <div class="sc-it"><span class="sc-lb">Code</span><span class="sc-vl"
+              style="font-family:var(--mono)">BJS.CRB.01</span></div>
+          <div class="sc-it"><span class="sc-lb">Region</span><span class="sc-vl">Greater China</span></div>
+          <div class="sc-it"><span class="sc-lb">City</span><span class="sc-vl">Beijing</span></div>
+          <div class="sc-it"><span class="sc-lb">Is Titan</span><span class="sc-vl ok">Yes</span></div>
+          <div class="sc-it"><span class="sc-lb">Opening</span><span class="sc-vl">31 Mar 2026</span></div>
+          <div class="sc-it"><span class="sc-lb">WS Count</span><span class="sc-vl">220</span></div>
+        </div>
+        <div class="sc">
+          <div class="sc-hd">Anaplan Sync</div>
+          <div class="sc-it"><span class="sc-lb">Freeze</span><span class="sc-vl ok">No — syncing</span></div>
+          <div class="sc-it"><span class="sc-lb">Key (Ext ID)</span><span class="sc-vl"
+              style="font-family:var(--mono);font-size:10px">Centre_Code__c</span></div>
+          <div class="sc-it"><span class="sc-lb">Total Area</span><span class="sc-vl">4,400 m²</span></div>
+          <div class="sc-it"><span class="sc-lb">Earliest Expiry</span><span class="sc-vl warn">30 Nov 2029</span></div>
+          <div class="sc-it"><span class="sc-lb">Last Sync</span><span class="sc-vl">Today 06:00</span></div>
+        </div>
+        <div class="sc">
+          <div class="sc-hd">Related</div>
+          <div class="sc-it"><span class="sc-lb">Opportunity</span><span class="sc-vl lk"
+              onclick="setPage('opp',document.getElementById('ob-opp'))">BJS.CRB Renewal →</span></div>
+          <div class="sc-it"><span class="sc-lb">Contract</span><span class="sc-vl lk"
+              onclick="setPage('lease',document.getElementById('ob-lease'))">LC-2026-BJS-001 →</span></div>
+          <div class="sc-it"><span class="sc-lb">LeaseSites</span><span class="sc-vl lk"
+              onclick="setPage('lc',document.getElementById('ob-lc'))">3 records →</span></div>
+        </div>
+        <div class="sc">
+          <div class="sc-hd">⚠ Alerts</div>
+          <div style="padding:9px 11px;font-size:11px;color:var(--opp);font-weight:500;line-height:1.6">Active lease
+            expires in <strong>31 days</strong>. Renewal deal in Lease Negotiation.</div>
+        </div>
+        <div class="sc">
+          <div class="sc-hd">Status Lifecycle</div>
+          <div style="padding:9px 11px;font-size:11px;color:var(--ink2);line-height:1.9">
+            <div>🟣 <strong>Planned</strong> → Board Approved</div>
+            <div>🔵 <strong>Fitting Out</strong> → Lease Signed</div>
+            <div>🟢 <strong>Open</strong> → Opening Date</div>
+            <div>⚫ <strong>Closed</strong> → Site shut</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div><!-- /page-site -->
+
+  <!-- Toast -->
+  <div class="toast" id="toast">
+    <div class="td"></div><span id="tm">Done</span>
+  </div>
+
+  <script>
+    function setPage(id, el) {
+      document.querySelectorAll('.page').forEach(p => p.classList.remove('on'));
+      document.querySelectorAll('.ob').forEach(o => o.classList.remove('on'));
+      document.getElementById('page-' + id).classList.add('on');
+      if (el) el.classList.add('on');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+    function tog(hd) {
+      const b = hd.nextElementSibling;
+      const c = hd.querySelector('.chev');
+      b.classList.toggle('hide');
+      if (c) c.classList.toggle('open');
+    }
+    let tt;
+    function toast(msg) {
+      const t = document.getElementById('toast');
+      document.getElementById('tm').textContent = msg;
+      t.classList.add('show');
+      clearTimeout(tt);
+      tt = setTimeout(() => t.classList.remove('show'), 2600);
+    }
+  </script>
+</body>
+
+</html>
