@@ -263,6 +263,17 @@
       border-color: var(--muted);
     }
 
+    /* ── Two-column grid for reg fields ── */
+    .fields-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0 20px;
+    }
+
+    .fields-grid .field.full {
+      grid-column: 1 / -1;
+    }
+
     /* ── Status Box ── */
     .status {
       margin-top: 20px;
@@ -425,14 +436,71 @@
         <div class="status" id="otpStatus"></div>
       </div>
 
-      <!-- Step 3: Registering -->
+      <!-- Step 3: Registration Details -->
       <div id="step3" class="step-block" style="display:none">
-        <h1 class="step-heading">Creating your<br>account…</h1>
-        <p class="step-sub">Please wait while we complete your registration.</p>
-        <div class="status loading visible" id="regStatus"><span class="spinner"></span> Contacting registration
-          service…</div>
-        <div class="actions" style="margin-top:16px">
-          <button class="btn btn-reset" style="flex:1" onclick="reset()">↺ Start over</button>
+        <h1 class="step-heading">Complete your<br>profile</h1>
+        <p class="step-sub">Review and edit your details before submitting.</p>
+
+        <div class="fields-grid">
+          <div class="field">
+            <label>First Name</label>
+            <input type="text" id="reg_FirstName" value="Ivan" />
+          </div>
+          <div class="field">
+            <label>Last Name</label>
+            <input type="text" id="reg_LastName" value="Test Forty Eight" />
+          </div>
+          <div class="field full">
+            <label>Password</label>
+            <input type="password" id="reg_Password" value="Test1234" />
+          </div>
+          <div class="field">
+            <label>Nickname</label>
+            <input type="text" id="reg_Nickname" value="I48" />
+          </div>
+          <div class="field">
+            <label>Gender</label>
+            <input type="text" id="reg_Gender" value="male" />
+          </div>
+          <div class="field">
+            <label>Birth Year</label>
+            <input type="text" id="reg_BirthYear" value="1998" />
+          </div>
+          <div class="field">
+            <label>Birth Month</label>
+            <input type="text" id="reg_BirthMonth" value="6" />
+          </div>
+          <div class="field">
+            <label>City Code</label>
+            <input type="text" id="reg_CityCode" value="HKG" />
+          </div>
+          <div class="field">
+            <label>App Language</label>
+            <input type="text" id="reg_AppLanguageCode" value="en" />
+          </div>
+          <div class="field">
+            <label>Marketing Lang</label>
+            <input type="text" id="reg_MarketingLanguageCode" value="ja" />
+          </div>
+          <div class="field full">
+            <label>Sign Up Channel</label>
+            <input type="text" id="reg_SignUpChannel" value="MyTEC3" />
+          </div>
+          <div class="field full">
+            <label>Device ID</label>
+            <input type="text" id="reg_deviceId" value="Test" />
+          </div>
+          <div class="field full">
+            <label>Opt Out Marketing</label>
+            <input type="text" id="reg_IsOptOutMarketing" value="true" />
+          </div>
+        </div>
+
+        <div class="status" id="regStatus"></div>
+
+        <div class="actions">
+          <button class="btn btn-primary" id="regBtn" onclick="submitRegistration()">Create account</button>
+          <button class="btn btn-reset" onclick="reset()" title="Reset">↺</button>
         </div>
       </div>
 
@@ -613,7 +681,6 @@
         setLoading('otpBtn', false);
         document.getElementById('otpBtn').innerHTML = 'Verify';
         showStep(3);
-        await submitRegistration();
       } catch (e) {
         setStatus('otpStatus', 'Network error: ' + e.message, 'err');
         setLoading('otpBtn', false);
@@ -626,6 +693,21 @@
       const { clientId, clientSecret } = creds();
       const regStatus = document.getElementById('regStatus');
 
+      const g = id => document.getElementById(id)?.value.trim() ?? '';
+
+      // Parse booleans and numbers from text fields
+      const parseVal = v => {
+        if (v === 'true') return true;
+        if (v === 'false') return false;
+        const n = Number(v);
+        return isNaN(n) || v === '' ? v : n;
+      };
+
+      document.getElementById('regBtn').dataset.label = 'Create account';
+      setLoading('regBtn', true);
+      regStatus.className = 'status loading visible';
+      regStatus.innerHTML = '<span class="spinner"></span> Submitting registration…';
+
       try {
         const res = await fetch(`${BASE}/personmembers`, {
           method: 'POST',
@@ -633,19 +715,19 @@
           body: JSON.stringify({
             clientId, clientSecret,
             VerificationToken: state.token,
-            FirstName: 'Ivan',
-            LastName: 'Test Forty Eight',
-            Password: 'Test1234',
-            AppLanguageCode: 'en',
-            MarketingLanguageCode: 'ja',
-            CityCode: 'HKG',
-            BirthYear: 1998,
-            BirthMonth: 6,
-            Gender: 'male',
-            IsOptOutMarketing: true,
-            SignUpChannel: 'MyTEC3',
-            Nickname: 'I48',
-            deviceId: 'Test'
+            FirstName: g('reg_FirstName'),
+            LastName: g('reg_LastName'),
+            Password: g('reg_Password'),
+            AppLanguageCode: g('reg_AppLanguageCode'),
+            MarketingLanguageCode: g('reg_MarketingLanguageCode'),
+            CityCode: g('reg_CityCode'),
+            BirthYear: parseVal(g('reg_BirthYear')),
+            BirthMonth: parseVal(g('reg_BirthMonth')),
+            Gender: g('reg_Gender'),
+            IsOptOutMarketing: parseVal(g('reg_IsOptOutMarketing')),
+            SignUpChannel: g('reg_SignUpChannel'),
+            Nickname: g('reg_Nickname'),
+            deviceId: g('reg_deviceId')
           })
         });
         const data = await res.json().catch(() => ({}));
@@ -653,12 +735,16 @@
           const msg = data?.message || data?.error || `Error ${res.status}`;
           regStatus.className = 'status err visible';
           regStatus.innerHTML = '✕ Registration failed: ' + msg;
+          setLoading('regBtn', false);
+          document.getElementById('regBtn').innerHTML = 'Create account';
           return;
         }
         showStep('success');
       } catch (e) {
         regStatus.className = 'status err visible';
         regStatus.innerHTML = '✕ Network error: ' + e.message;
+        setLoading('regBtn', false);
+        document.getElementById('regBtn').innerHTML = 'Create account';
       }
     }
 
