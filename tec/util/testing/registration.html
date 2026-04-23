@@ -518,7 +518,7 @@
   </div><!-- /shell -->
 
   <script>
-    const BASE = 'https://delicate-math-ca2d.ivan-tec-account.workers.dev/api/v3';
+    const CORE_URL = 'https://delicate-math-ca2d.ivan-tec-account.workers.dev';
     let state = { email: '', token: '' };
 
     // ── Helpers ──────────────────────────────────────────
@@ -607,7 +607,7 @@
       clearStatus('emailStatus');
 
       try {
-        const res = await fetch(`${BASE}/verifications`, {
+        const res = await fetch(`${CORE_URL}/api/v3/verifications`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
@@ -657,7 +657,7 @@
       clearStatus('otpStatus');
 
       try {
-        const res = await fetch(`${BASE}/memberverifications`, {
+        const res = await fetch(`${CORE_URL}/api/v3/memberverifications`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ clientId, clientSecret, email: state.email, code })
@@ -709,7 +709,7 @@
       regStatus.innerHTML = '<span class="spinner"></span> Submitting registration…';
 
       try {
-        const res = await fetch(`${BASE}/personmembers`, {
+        const res = await fetch(`${CORE_URL}/api/v3/personmembers`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
