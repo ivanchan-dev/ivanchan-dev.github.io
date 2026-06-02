@@ -1,0 +1,1067 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Enabling Serviced Office (SO) Renovation Bundling</title>
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              50: '#f0f7ff',
+              100: '#e0effe',
+              500: '#0284c7',
+              600: '#0369a1',
+              700: '#075985',
+              900: '#0c4a6e',
+            },
+            slate: {
+              950: '#0b1329'
+            }
+          },
+          fontFamily: {
+            sans: ['Inter', 'system-ui', 'sans-serif'],
+          }
+        }
+      }
+    }
+  </script>
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+    rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: #0b1329;
+      color: #f8fafc;
+    }
+
+    .slide {
+      display: none !important;
+      opacity: 0;
+      transform: scale(0.98);
+      transition: opacity 0.4s ease-in-out, transform 0.4s ease-in-out;
+    }
+
+    .slide.active {
+      display: flex !important;
+      opacity: 1;
+      transform: scale(1);
+    }
+
+    /* Custom scrollbar for demo divs */
+    .custom-scrollbar::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+
+    .custom-scrollbar::-webkit-scrollbar-track {
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 4px;
+    }
+
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 4px;
+    }
+
+    .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+      background: rgba(255, 255, 255, 0.3);
+    }
+  </style>
+</head>
+
+<body class="min-h-screen flex flex-col justify-between selection:bg-brand-500 selection:text-white bg-[#0b1329]">
+
+  <!-- Top Status / Header -->
+  <header
+    class="px-6 py-4 flex justify-between items-center border-b border-slate-800/60 bg-slate-950/80 backdrop-blur-md z-10 w-full">
+    <div class="flex items-center gap-3">
+      <div
+        class="h-8 w-8 rounded-lg bg-gradient-to-tr from-brand-600 to-cyan-400 flex items-center justify-center shadow-lg shadow-brand-500/20">
+        <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
+            d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+        </svg>
+      </div>
+      <div>
+        <span class="text-xs uppercase tracking-wider text-slate-400 font-semibold block">Feature Release Deck</span>
+        <h1 class="text-sm font-bold text-white leading-none">SO Renovation Bundling</h1>
+      </div>
+    </div>
+    <div class="flex items-center gap-4">
+      <span class="text-xs text-slate-400 font-medium px-2.5 py-1 bg-slate-900 rounded-full border border-slate-800/80">
+        Scope: CRM &amp; Workflow
+      </span>
+      <button onclick="toggleFullscreen()"
+        class="p-1.5 rounded-md hover:bg-slate-800 text-slate-400 hover:text-white transition-colors"
+        title="Toggle Fullscreen">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5v-4m0 4h-4m4 0l-5-5" />
+        </svg>
+      </button>
+    </div>
+  </header>
+
+  <!-- Main Presentation Deck viewport -->
+  <main
+    class="flex-1 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex items-center justify-center min-h-[580px]">
+
+    <!-- Slide 1: Cover -->
+    <section id="slide-1" class="slide active w-full flex flex-col justify-center items-center text-center py-6">
+      <div
+        class="absolute inset-0 bg-[radial-gradient(circle_at_30%_30%,rgba(2,132,199,0.1),transparent_50%)] pointer-events-none">
+      </div>
+      <div class="space-y-6 max-w-4xl relative z-10 px-4">
+        <div
+          class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-brand-500/10 border border-brand-500/30 text-brand-400 text-xs font-semibold uppercase tracking-wider mb-2">
+          <span class="w-2 h-2 rounded-full bg-brand-400 animate-pulse"></span>
+          Now Ready for Implementation
+        </div>
+        <h2 class="text-4xl sm:text-6xl font-extrabold text-white tracking-tight leading-tight">
+          Enabling Serviced Office <br class="hidden sm:inline" />
+          <span class="text-transparent bg-clip-text bg-gradient-to-r from-brand-400 via-cyan-400 to-indigo-400">
+            Renovation Bundling
+          </span>
+        </h2>
+        <p class="text-slate-400 text-lg sm:text-xl max-w-2xl mx-auto font-light leading-relaxed">
+          Streamlining renovation cost capture, automated notifications, and strict compliance controls directly inside
+          the Serviced Office Bundle pipeline.
+        </p>
+        <div class="pt-8 flex flex-col sm:flex-row justify-center items-center gap-4">
+          <button onclick="nextSlide()"
+            class="group px-6 py-3 rounded-xl bg-gradient-to-r from-brand-600 to-brand-500 text-white font-semibold hover:from-brand-500 hover:to-brand-600 transition-all shadow-lg shadow-brand-500/20 hover:shadow-brand-500/30 flex items-center gap-2">
+            Explore the Deck
+            <svg class="w-4 h-4 transform group-hover:translate-x-1 transition-transform" fill="none"
+              stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+            </svg>
+          </button>
+          <span class="text-xs text-slate-500 font-medium">Use Left/Right arrow keys to navigate</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Slide 2: Executive Summary & Challenges -->
+    <section id="slide-2" class="slide w-full flex flex-col justify-center py-6">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center w-full max-w-6xl mx-auto px-4">
+        <div class="lg:col-span-5 space-y-6">
+          <div class="text-xs font-bold text-brand-400 uppercase tracking-widest">The Background</div>
+          <h3 class="text-3xl sm:text-4xl font-extrabold text-white leading-tight">Why Renovation Bundling?</h3>
+          <p class="text-slate-400 leading-relaxed">
+            Currently, Serviced Office (SO) bundles capture baseline operational costs, but custom renovation
+            investments are frequently tracked in siloed systems, leading to delayed billings and tracking disconnects.
+          </p>
+          <p class="text-slate-400 leading-relaxed">
+            By integrating Renovations natively into the SO workflow, we achieve centralized cost control, structured
+            handoffs to Capital Development, and unified downstream contract records.
+          </p>
+        </div>
+        <div class="lg:col-span-7 grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div
+            class="p-5 rounded-2xl bg-slate-900 border border-slate-800/80 hover:border-slate-700/80 transition-colors">
+            <div class="w-10 h-10 rounded-xl bg-amber-500/10 flex items-center justify-center text-amber-400 mb-4">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+              </svg>
+            </div>
+            <h4 class="text-base font-semibold text-white mb-1">Leakage Risk</h4>
+            <p class="text-sm text-slate-400">Renovations omitted in initial deal summaries fail to route to downstream
+              contract lines, reducing profitability tracking accuracy.</p>
+          </div>
+          <div
+            class="p-5 rounded-2xl bg-slate-900 border border-slate-800/80 hover:border-slate-700/80 transition-colors">
+            <div class="w-10 h-10 rounded-xl bg-red-500/10 flex items-center justify-center text-red-400 mb-4">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+              </svg>
+            </div>
+            <h4 class="text-base font-semibold text-white mb-1">Compliance Gaps</h4>
+            <p class="text-sm text-slate-400">Deals closing without verified contractor quotations cause operational
+              bottlenecks during project executions.</p>
+          </div>
+          <div
+            class="p-5 rounded-2xl bg-slate-900 border border-slate-800/80 hover:border-slate-700/80 transition-colors">
+            <div class="w-10 h-10 rounded-xl bg-blue-500/10 flex items-center justify-center text-blue-400 mb-4">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+              </svg>
+            </div>
+            <h4 class="text-base font-semibold text-white mb-1">Fragmented Systems</h4>
+            <p class="text-sm text-slate-400">Manual re-entry of renovation figures into monthly contract databases
+              increases transactional overhead.</p>
+          </div>
+          <div
+            class="p-5 rounded-2xl bg-slate-900 border border-slate-800/80 hover:border-slate-700/80 transition-colors">
+            <div class="w-10 h-10 rounded-xl bg-green-500/10 flex items-center justify-center text-green-400 mb-4">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+              </svg>
+            </div>
+            <h4 class="text-base font-semibold text-white mb-1">Optimized Solution</h4>
+            <p class="text-sm text-slate-400">A unified, automated, validated pipeline ensuring structured tracking from
+              day one of the deal setup.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Slide 3: UI/UX Enhancements (Interactive Mockup) -->
+    <section id="slide-3" class="slide w-full flex flex-col justify-center py-6">
+      <div class="grid grid-cols-1 xl:grid-cols-12 gap-6 items-center w-full max-w-6xl mx-auto px-4">
+        <div class="xl:col-span-4 space-y-4">
+          <span class="text-xs font-bold text-brand-400 uppercase tracking-widest">Interface Design</span>
+          <h3 class="text-3xl font-extrabold text-white leading-tight">UI/UX Interface Enhancements</h3>
+          <p class="text-slate-400 text-sm leading-relaxed">
+            We are introducing dedicated workspace regions within the Serviced Office Bundle screen to segregate and
+            review custom renovation budgets independently from core rent lines.
+          </p>
+          <ul class="space-y-2.5 text-xs text-slate-300">
+            <li class="flex items-start gap-2">
+              <span class="mt-0.5 text-brand-400 font-bold">1.</span>
+              <span><strong>Renovation Tab:</strong> Isolates specialized contractor budgets, scopes, and target
+                execution dates.</span>
+            </li>
+            <li class="flex items-start gap-2">
+              <span class="mt-0.5 text-brand-400 font-bold">2.</span>
+              <span><strong>Bundle Summary Group:</strong> Integrates renovation cost lines natively into the main
+                transaction totals.</span>
+            </li>
+          </ul>
+          <div class="p-3.5 bg-slate-900/60 border border-slate-800 rounded-xl">
+            <p class="text-xs text-slate-400 italic">
+              💡 <strong>Interactive Demo:</strong> Click the "Renovation" tab in the mockup to inspect the custom
+              pricing and compliance parameters.
+            </p>
+          </div>
+        </div>
+
+        <!-- Mockup Interactive Container -->
+        <div
+          class="xl:col-span-8 bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden shadow-2xl flex flex-col max-h-[460px]">
+          <!-- Window Header -->
+          <div class="bg-slate-950 px-4 py-3 border-b border-slate-800 flex justify-between items-center text-xs">
+            <div class="flex items-center gap-2">
+              <div class="flex gap-1.5">
+                <span class="w-3.5 h-3.5 rounded-full bg-red-500/20 border border-red-500/30"></span>
+                <span class="w-3.5 h-3.5 rounded-full bg-yellow-500/20 border border-yellow-500/30"></span>
+                <span class="w-3.5 h-3.5 rounded-full bg-green-500/20 border border-green-500/30"></span>
+              </div>
+              <span class="text-slate-400 font-mono ml-4">SO-2026-0982 | Bundle Wizard</span>
+            </div>
+            <span
+              class="text-brand-400 font-semibold bg-brand-500/10 px-2 py-0.5 rounded border border-brand-500/20">Drafting</span>
+          </div>
+
+          <!-- Tabs Nav -->
+          <div class="bg-slate-950/40 px-4 border-b border-slate-800/80 flex gap-2">
+            <button onclick="switchMockTab('general')" id="tab-btn-general"
+              class="px-4 py-2 text-xs font-semibold border-b-2 border-transparent text-slate-400 hover:text-slate-200 transition-all">
+              Workspace &amp; Rent
+            </button>
+            <button onclick="switchMockTab('renovation')" id="tab-btn-renovation"
+              class="px-4 py-2 text-xs font-semibold border-b-2 border-brand-500 text-brand-400 transition-all">
+              Renovation Details
+            </button>
+            <button onclick="switchMockTab('addons')" id="tab-btn-addons"
+              class="px-4 py-2 text-xs font-semibold border-b-2 border-transparent text-slate-400 hover:text-slate-200 transition-all">
+              Add-Ons &amp; IT
+            </button>
+          </div>
+
+          <!-- Tab Content Panel -->
+          <div class="p-5 flex-1 overflow-y-auto custom-scrollbar bg-slate-900/40">
+            <!-- Tab 1: Workspace & Rent (Hidden by default in presentation focus) -->
+            <div id="mock-tab-general" class="hidden space-y-4">
+              <div class="grid grid-cols-3 gap-3">
+                <div class="bg-slate-950 p-3 rounded-lg border border-slate-800/60">
+                  <span class="block text-[10px] text-slate-400 font-medium uppercase tracking-wide">Base Workspace
+                    Area</span>
+                  <span class="text-sm font-bold text-white">4,200 sq.ft.</span>
+                </div>
+                <div class="bg-slate-950 p-3 rounded-lg border border-slate-800/60">
+                  <span class="block text-[10px] text-slate-400 font-medium uppercase tracking-wide">Standard Monthly
+                    Rate</span>
+                  <span class="text-sm font-bold text-white">$21,500</span>
+                </div>
+                <div class="bg-slate-950 p-3 rounded-lg border border-slate-800/60">
+                  <span class="block text-[10px] text-slate-400 font-medium uppercase tracking-wide">Lease Term
+                    Requested</span>
+                  <span class="text-sm font-bold text-white">24 Months</span>
+                </div>
+              </div>
+              <div class="border border-slate-800 rounded-lg p-3 space-y-2 bg-slate-950/30">
+                <div class="flex justify-between text-xs font-semibold text-slate-300 pb-1.5 border-b border-slate-800">
+                  <span>Rent Line Items</span>
+                  <span>Monthly Ext.</span>
+                </div>
+                <div class="flex justify-between text-xs text-slate-400">
+                  <span>Serviced Office Suite 501</span>
+                  <span>$18,500.00</span>
+                </div>
+                <div class="flex justify-between text-xs text-slate-400">
+                  <span>Meeting Room Priority Pass</span>
+                  <span>$3,000.00</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Tab 2: Renovation (Active on load for demo) -->
+            <div id="mock-tab-renovation" class="space-y-4">
+              <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+                <div class="bg-slate-950 p-3 rounded-xl border border-slate-800">
+                  <span class="block text-[10px] text-slate-400 font-medium uppercase tracking-wide">Contractor
+                    Chosen</span>
+                  <span class="text-xs font-bold text-brand-400 block mt-1">Apex Build Group</span>
+                </div>
+                <div class="bg-slate-950 p-3 rounded-xl border border-slate-800">
+                  <span class="block text-[10px] text-slate-400 font-medium uppercase tracking-wide">Renovation Cost
+                    (Bundle)</span>
+                  <span class="text-xs font-bold text-emerald-400 block mt-1">$45,000.00</span>
+                </div>
+                <div class="bg-slate-950 p-3 rounded-xl border border-slate-800">
+                  <span class="block text-[10px] text-slate-400 font-medium uppercase tracking-wide">Amortization
+                    Period</span>
+                  <span class="text-xs font-bold text-slate-200 block mt-1">Amortized Over Term</span>
+                </div>
+              </div>
+
+              <!-- Custom Warning banner -->
+              <div class="p-2.5 rounded-lg bg-indigo-950/30 border border-indigo-500/20 flex gap-2 items-center">
+                <svg class="w-4 h-4 text-indigo-400 flex-shrink-0" fill="none" stroke="currentColor"
+                  viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                <span class="text-[10px] text-indigo-300 leading-snug">
+                  Adding items in this tab will automatically prompt for the "Renovation Quotation" document validation
+                  on Closed Won.
+                </span>
+              </div>
+
+              <!-- Scope and Spec section -->
+              <div class="border border-slate-800/80 rounded-xl p-3 bg-slate-950/30 space-y-2">
+                <div
+                  class="flex justify-between items-center text-xs font-bold text-slate-300 border-b border-slate-800/80 pb-2">
+                  <span>Bundled Renovation Line Items</span>
+                  <span class="text-[10px] text-emerald-400 font-semibold bg-emerald-500/10 px-2 py-0.5 rounded">1 Item
+                    Added</span>
+                </div>
+                <div class="flex justify-between items-center text-xs text-slate-400">
+                  <div>
+                    <p class="font-medium text-slate-300">SO Structural Renovation &amp; Paint</p>
+                    <p class="text-[10px] text-slate-500">Includes glass partition, custom acoustic panel installation,
+                      &amp; wiring</p>
+                  </div>
+                  <span class="font-semibold text-slate-200">$45,000.00</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Tab 3: Add-Ons (Hidden) -->
+            <div id="mock-tab-addons" class="hidden space-y-4">
+              <div class="border border-slate-800 rounded-lg p-3 space-y-2 bg-slate-950/30">
+                <div class="flex justify-between text-xs font-semibold text-slate-300 pb-1.5 border-b border-slate-800">
+                  <span>Peripheral &amp; Monthly Add-ons</span>
+                  <span>Rate</span>
+                </div>
+                <div class="flex justify-between text-xs text-slate-400">
+                  <span>High-Speed Dedicated IP Connection</span>
+                  <span>$450.00/mo</span>
+                </div>
+                <div class="flex justify-between text-xs text-slate-400">
+                  <span>Biometric Access Terminal Expansion</span>
+                  <span>$120.00/mo</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Bottom Summary Panel -->
+          <div
+            class="bg-slate-950 p-4 border-t border-slate-800 grid grid-cols-2 sm:grid-cols-3 gap-2 items-center text-xs">
+            <div>
+              <span class="text-[10px] text-slate-500 font-semibold uppercase block">Monthly Base Subtotal</span>
+              <span class="font-bold text-slate-300">$21,500.00 / month</span>
+            </div>
+            <div class="border-l border-slate-800 pl-4">
+              <span class="text-[10px] text-brand-400 font-semibold uppercase flex items-center gap-1">
+                <span class="w-1.5 h-1.5 rounded-full bg-brand-400"></span> Renovation cost (Bundle)
+              </span>
+              <span class="font-bold text-white">$45,000.00 (One-Time)</span>
+            </div>
+            <div
+              class="col-span-2 sm:col-span-1 border-t sm:border-t-0 sm:border-l border-slate-800 pt-2 sm:pt-0 sm:pl-4 flex justify-between sm:block items-center">
+              <span class="text-[10px] text-slate-400 font-semibold uppercase block">Aggregate Contract Value</span>
+              <span class="font-bold text-emerald-400 text-sm">$561,000.00</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Slide 4: Data Validation & Compliance (Interactive Simulation) -->
+    <section id="slide-4" class="slide w-full flex flex-col justify-center py-6">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center w-full max-w-6xl mx-auto px-4">
+        <div class="lg:col-span-4 space-y-4">
+          <span class="text-xs font-bold text-brand-400 uppercase tracking-widest">Compliance Engine</span>
+          <h3 class="text-3xl font-extrabold text-white leading-tight">Data Validation &amp; Restrictions</h3>
+          <p class="text-slate-400 text-sm leading-relaxed">
+            To maintain strict corporate oversight, two mandatory business rules protect downstream operations from
+            entering dirty or unapproved deal data:
+          </p>
+          <div class="space-y-3">
+            <div class="flex items-start gap-3">
+              <div class="p-1 rounded bg-rose-500/10 text-rose-400 mt-0.5">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M12 15v2m-6 4h12a2 2 0 002-2V9a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                </svg>
+              </div>
+              <div>
+                <h4 class="text-xs font-bold text-slate-200">Mandatory File Upload</h4>
+                <p class="text-[11px] text-slate-400">Triggered upon attempting to progress Opportunity Stage to
+                  <strong>Closed Won</strong> with any Renovation Item bundled. Requires a document specifically named
+                  <code>Renovation Quotation</code>.</p>
+              </div>
+            </div>
+            <div class="flex items-start gap-3">
+              <div class="p-1 rounded bg-indigo-500/10 text-indigo-400 mt-0.5">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636" />
+                </svg>
+              </div>
+              <div>
+                <h4 class="text-xs font-bold text-slate-200">Line Item Cap Limit</h4>
+                <p class="text-[11px] text-slate-400">Limits users to exactly <strong>one (1)</strong> Renovation
+                  Product record per Opportunity to prevent overlapping scopes of work on a single contract.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Simulation Area -->
+        <div class="lg:col-span-8 p-6 rounded-2xl bg-slate-900 border border-slate-800 space-y-4">
+          <div class="flex justify-between items-center border-b border-slate-800 pb-3">
+            <div>
+              <h4 class="text-sm font-bold text-white flex items-center gap-2">
+                <span class="w-2.5 h-2.5 rounded-full bg-amber-500"></span> Compliance Sandbox Simulation
+              </h4>
+              <p class="text-[10px] text-slate-400">Test the Opportunity validation rule in real-time below.</p>
+            </div>
+            <button onclick="resetSimulation()"
+              class="text-[10px] font-semibold text-slate-400 hover:text-white border border-slate-800 px-2.5 py-1 rounded hover:bg-slate-800 transition-all">
+              Reset Sim
+            </button>
+          </div>
+
+          <!-- Sandbox Steps -->
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <!-- Left Panel: State controls -->
+            <div class="space-y-3.5">
+              <div>
+                <span class="block text-[10px] text-slate-500 font-semibold uppercase tracking-wide mb-1.5">Step 1:
+                  Renovation Line Item Limit</span>
+                <div class="flex items-center justify-between p-3 bg-slate-950 rounded-xl border border-slate-800">
+                  <div>
+                    <p class="text-xs font-bold text-white">Active Line Items</p>
+                    <p id="item-counter" class="text-[10px] text-slate-400">1 of 1 Items Added</p>
+                  </div>
+                  <button id="add-item-btn" onclick="tryAddLineItem()"
+                    class="text-[10px] bg-slate-800 hover:bg-slate-700 font-semibold text-slate-300 px-3 py-1.5 rounded transition-colors">
+                    + Add Item
+                  </button>
+                </div>
+              </div>
+
+              <div>
+                <span class="block text-[10px] text-slate-500 font-semibold uppercase tracking-wide mb-1.5">Step 2:
+                  Quotation Attachment</span>
+                <div class="p-3 bg-slate-950 rounded-xl border border-slate-800 text-center space-y-2">
+                  <div class="flex justify-between items-center">
+                    <span class="text-xs font-semibold text-slate-300">File Storage Repo</span>
+                    <span id="file-status-badge"
+                      class="text-[9px] font-bold text-rose-400 bg-rose-500/10 px-1.5 py-0.5 rounded border border-rose-500/20">0
+                      Files</span>
+                  </div>
+                  <div id="drop-zone"
+                    class="border border-dashed border-slate-800 hover:border-slate-700 rounded-lg p-4 cursor-pointer transition-colors"
+                    onclick="simulateFileUpload()">
+                    <svg class="w-6 h-6 text-slate-500 mx-auto mb-1" fill="none" stroke="currentColor"
+                      viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+                    </svg>
+                    <p id="file-upload-text" class="text-[10px] text-slate-400">Click to upload <strong>"Renovation
+                        Quotation.pdf"</strong></p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Right Panel: Deal Stage / Validation Output -->
+            <div class="flex flex-col bg-slate-950 p-4 rounded-xl border border-slate-800 justify-between">
+              <div class="space-y-3">
+                <span class="block text-[10px] text-slate-500 font-semibold uppercase tracking-wide">Step 3: Deal
+                  Progress Check</span>
+                <div class="space-y-1.5">
+                  <p class="text-[10px] text-slate-400 font-medium">Pipeline Progression</p>
+                  <div class="grid grid-cols-3 gap-1 text-[10px] text-center font-bold">
+                    <div class="bg-brand-500/20 text-brand-400 py-1.5 rounded border border-brand-500/30">Proposal</div>
+                    <div class="bg-brand-500/20 text-brand-400 py-1.5 rounded border border-brand-500/30">Negotiation
+                    </div>
+                    <button onclick="tryCloseWon()"
+                      class="bg-slate-900 text-slate-400 hover:text-white py-1.5 rounded border border-slate-800 transition-colors"
+                      id="close-won-btn">
+                      Closed Won
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Custom Warning Box inside Mockup -->
+              <div id="sim-feedback-box"
+                class="mt-4 p-3 rounded-lg bg-slate-900 border border-slate-800 flex items-start gap-2.5">
+                <div class="p-1 rounded bg-slate-800 text-slate-400" id="sim-feedback-icon">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                </div>
+                <div>
+                  <h5 class="text-[11px] font-bold text-slate-300" id="sim-feedback-title">System Ready</h5>
+                  <p class="text-[10px] text-slate-500 leading-snug" id="sim-feedback-desc">Try progressing to 'Closed
+                    Won' with the pipeline above.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Slide 5: Downstream System Impact -->
+    <section id="slide-5" class="slide w-full flex flex-col justify-center py-6">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center w-full max-w-6xl mx-auto px-4">
+        <div class="lg:col-span-4 space-y-4">
+          <span class="text-xs font-bold text-brand-400 uppercase tracking-widest">Architectural Mapping</span>
+          <h3 class="text-3xl font-extrabold text-white leading-tight">Downstream Financial Flow</h3>
+          <p class="text-slate-400 text-sm leading-relaxed">
+            Values entered on the Opportunity object aren’t static. To ensure clean balance sheets and billing, specific
+            custom fields (buckets) are deployed to handle Renovations across related objects automatically.
+          </p>
+          <div class="p-3 bg-slate-900 border border-slate-800 rounded-xl space-y-1">
+            <span class="text-[10px] text-slate-400 font-semibold uppercase block">New Core API Fields</span>
+            <code class="text-[10px] text-emerald-400 font-mono block">renovation_cost_bundle__c</code>
+            <code class="text-[10px] text-cyan-400 font-mono block">renovation_cost_addon__c</code>
+          </div>
+        </div>
+
+        <!-- Downstream Mapping Diagram -->
+        <div class="lg:col-span-8 space-y-4">
+          <!-- Entity Cards Map -->
+          <div class="relative grid grid-cols-1 md:grid-cols-3 gap-4">
+            <!-- Entity 1 -->
+            <div class="p-4 rounded-xl bg-slate-900 border border-slate-800 space-y-3 relative z-10">
+              <div class="flex justify-between items-center">
+                <span class="text-xs font-bold text-brand-400">1. Opportunities</span>
+                <span class="w-2 h-2 rounded-full bg-brand-500"></span>
+              </div>
+              <p class="text-[11px] text-slate-400 leading-relaxed">The initial pricing capture. Custom fields isolate
+                renovation elements from baseline rents.</p>
+              <div class="space-y-1 text-[10px] font-mono p-2 bg-slate-950 rounded border border-slate-800">
+                <span class="text-slate-500 block">Schema Captured:</span>
+                <span class="text-emerald-400">✔ Bundle Field</span><br>
+                <span class="text-emerald-400">✔ Add-on Field</span>
+              </div>
+            </div>
+
+            <!-- Entity 2 -->
+            <div class="p-4 rounded-xl bg-slate-900 border border-slate-800 space-y-3 relative z-10">
+              <div class="flex justify-between items-center">
+                <span class="text-xs font-bold text-brand-400">2. Contracts</span>
+                <span class="w-2 h-2 rounded-full bg-brand-500"></span>
+              </div>
+              <p class="text-[11px] text-slate-400 leading-relaxed">Master document record tracking. Cost values map
+                directly here upon Opportunity close.</p>
+              <div class="space-y-1 text-[10px] font-mono p-2 bg-slate-950 rounded border border-slate-800">
+                <span class="text-slate-500 block">Schema Mapped:</span>
+                <span class="text-cyan-400">✔ Bundle Totals</span><br>
+                <span class="text-cyan-400">✔ Add-on Totals</span>
+              </div>
+            </div>
+
+            <!-- Entity 3 -->
+            <div class="p-4 rounded-xl bg-slate-900 border border-slate-800 space-y-3 relative z-10">
+              <div class="flex justify-between items-center">
+                <span class="text-xs font-bold text-brand-400">3. Monthly Contracts</span>
+                <span class="w-2 h-2 rounded-full bg-brand-500"></span>
+              </div>
+              <p class="text-[11px] text-slate-400 leading-relaxed">Amortized billing records. Renovation totals are
+                divided to feed billing items monthly.</p>
+              <div class="space-y-1 text-[10px] font-mono p-2 bg-slate-950 rounded border border-slate-800">
+                <span class="text-slate-500 block">Schema Amortized:</span>
+                <span class="text-indigo-400">✔ Monthly Renovation</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Flow arrow explanation -->
+          <div class="p-4 bg-slate-900/60 border border-slate-800/80 rounded-xl">
+            <div class="flex gap-4 items-center">
+              <div class="text-brand-400 bg-brand-500/10 p-2.5 rounded-lg flex-shrink-0">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+              </div>
+              <div>
+                <h4 class="text-xs font-bold text-slate-200">Consistency Advantage</h4>
+                <p class="text-[11px] text-slate-400 leading-relaxed">
+                  Eliminates billing leakage and custom invoice creation. Every penny captured during initial sales
+                  calculations is locked and pushed through the pipeline without human re-entry or transcription error
+                  risks.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Slide 6: Automated Notifications -->
+    <section id="slide-6" class="slide w-full flex flex-col justify-center py-6">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center w-full max-w-6xl mx-auto px-4">
+        <div class="lg:col-span-5 space-y-4">
+          <span class="text-xs font-bold text-brand-400 uppercase tracking-widest">Handoff automation</span>
+          <h3 class="text-3xl font-extrabold text-white leading-tight">Instant Procurement Handoff</h3>
+          <p class="text-slate-400 text-sm leading-relaxed">
+            To guarantee zero scheduling downtime, a trigger process fires instantly when the deal transitions to
+            <strong>Closed Won</strong>.
+          </p>
+          <p class="text-slate-400 text-sm leading-relaxed">
+            This workflow pushes structural design and contractor assignment notifications from Capital Development
+            straight to the Procurement and Project Execution Teams.
+          </p>
+          <div class="flex gap-3 text-xs bg-slate-900 border border-slate-800 p-3 rounded-xl items-center">
+            <span
+              class="flex-shrink-0 h-4 w-4 bg-emerald-500 rounded-full flex items-center justify-center text-slate-950 font-bold text-[9px]">✓</span>
+            <span class="text-slate-300">Automated, reliable, and hands-free delivery.</span>
+          </div>
+        </div>
+
+        <!-- Interactive Email Template Mockup -->
+        <div
+          class="lg:col-span-7 bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden shadow-2xl flex flex-col">
+          <div class="bg-slate-950 px-4 py-3 border-b border-slate-800 flex items-center gap-2 text-xs text-slate-400">
+            <span
+              class="w-3.5 h-3.5 rounded bg-brand-500/10 border border-brand-500/30 flex items-center justify-center text-brand-400 font-bold text-[9px]">@</span>
+            <span>Auto-Generated Email Dispatch Record</span>
+          </div>
+
+          <!-- Email Content Details -->
+          <div class="p-5 space-y-3.5 text-xs">
+            <div class="grid grid-cols-1 sm:grid-cols-6 gap-2 border-b border-slate-800/80 pb-3">
+              <span class="sm:col-span-1 text-slate-500 font-semibold uppercase tracking-wider text-[10px]">From:</span>
+              <span class="sm:col-span-5 font-medium text-slate-300">Capital Development Integration Service
+                &lt;capdev-sys@corp.internal&gt;</span>
+
+              <span class="sm:col-span-1 text-slate-500 font-semibold uppercase tracking-wider text-[10px]">To:</span>
+              <span class="sm:col-span-5 font-medium text-slate-300">Procurement Team &lt;procurement@corp.internal&gt;,
+                Project Team &lt;projects@corp.internal&gt;</span>
+
+              <span
+                class="sm:col-span-1 text-slate-500 font-semibold uppercase tracking-wider text-[10px]">Subject:</span>
+              <span class="sm:col-span-5 font-bold text-emerald-400">[CLOSED WON ALERT] Renovation Bundle Registered -
+                Opp ID: 9812A</span>
+            </div>
+
+            <!-- Email Body Simulated -->
+            <div
+              class="bg-slate-950 p-4 rounded-xl border border-slate-800/80 space-y-3 text-[11px] text-slate-300 leading-relaxed font-mono">
+              <p>Hi Team,</p>
+              <p>An opportunity containing a <strong>Bundled Renovation Element</strong> has successfully reached <span
+                  class="text-emerald-400 font-bold">Closed Won</span>.</p>
+              <div class="space-y-1 p-2.5 bg-slate-900 rounded border border-slate-800">
+                <p><strong class="text-slate-400">Account Name:</strong> Quantum Dynamics Inc.</p>
+                <p><strong class="text-slate-400">Assigned Workspace:</strong> Serviced Suite 501</p>
+                <p><strong class="text-slate-400">Renovation Amount (Bundle):</strong> $45,000.00 USD</p>
+                <p><strong class="text-slate-400">Contractor Assigned:</strong> Apex Build Group</p>
+              </div>
+              <p>The system has archived the validated <strong>"Renovation Quotation"</strong> document inside the CRM
+                file storage. You can access it immediately via the platform link.</p>
+              <p>Please initiate the construction site audit and contractor scheduling workflows within 48 hours.</p>
+              <p class="text-slate-500">Regards,<br>Corporate Systems Automation Node</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Slide 7: Implementation Roadmap & Wrap-up -->
+    <section id="slide-7" class="slide w-full flex flex-col justify-center py-6">
+      <div class="max-w-4xl mx-auto w-full px-4 text-center space-y-8">
+        <div class="space-y-3">
+          <span class="text-xs font-bold text-brand-400 uppercase tracking-widest">Next Steps</span>
+          <h3 class="text-3xl sm:text-4xl font-extrabold text-white">Feature Rollout Schedule</h3>
+          <p class="text-slate-400 max-w-xl mx-auto text-sm leading-relaxed">
+            Deploying these features will improve billing clarity and accelerate project cycles. Here is our target
+            timeline for the transition:
+          </p>
+        </div>
+
+        <!-- Timeline Steps -->
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-4 text-left relative">
+          <!-- Step 1 -->
+          <div class="p-4 bg-slate-900 rounded-xl border border-slate-800 space-y-2">
+            <span class="text-xs font-extrabold text-brand-400 block uppercase tracking-wide">Phase 1</span>
+            <h4 class="text-xs font-bold text-white">Sandbox Deployment</h4>
+            <p class="text-[10px] text-slate-400 leading-snug">Initial deployment of visual fields, page layout
+              adjustments, and basic object schemas inside Sandbox environments.</p>
+            <span
+              class="inline-block text-[9px] font-bold text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded">Complete</span>
+          </div>
+
+          <!-- Step 2 -->
+          <div class="p-4 bg-slate-900 rounded-xl border border-slate-800 space-y-2">
+            <span class="text-xs font-extrabold text-brand-400 block uppercase tracking-wide">Phase 2</span>
+            <h4 class="text-xs font-bold text-white">Compliance Rules Trigger</h4>
+            <p class="text-[10px] text-slate-400 leading-snug">Activation of document-matching validation mechanisms and
+              the 1-item limit logic on Opportunities.</p>
+            <span class="inline-block text-[9px] font-bold text-yellow-400 bg-yellow-500/10 px-2 py-0.5 rounded">In
+              Testing</span>
+          </div>
+
+          <!-- Step 3 -->
+          <div class="p-4 bg-slate-900 rounded-xl border border-slate-800 space-y-2">
+            <span class="text-xs font-extrabold text-brand-400 block uppercase tracking-wide">Phase 3</span>
+            <h4 class="text-xs font-bold text-white">Downstream Integration</h4>
+            <p class="text-[10px] text-slate-400 leading-snug">Linking database mappings between Opportunities,
+              Contracts, and Monthly Contracts for billing syncing.</p>
+            <span
+              class="inline-block text-[9px] font-bold text-slate-400 bg-slate-800 px-2 py-0.5 rounded">Scheduled</span>
+          </div>
+
+          <!-- Step 4 -->
+          <div class="p-4 bg-slate-900 rounded-xl border border-slate-800 space-y-2">
+            <span class="text-xs font-extrabold text-brand-400 block uppercase tracking-wide">Phase 4</span>
+            <h4 class="text-xs font-bold text-white">Team Training &amp; Rollout</h4>
+            <p class="text-[10px] text-slate-400 leading-snug">Host training workshops for sales agents and project
+              planners, followed by active production release.</p>
+            <span
+              class="inline-block text-[9px] font-bold text-slate-400 bg-slate-800 px-2 py-0.5 rounded">Scheduled</span>
+          </div>
+        </div>
+
+        <div class="pt-6">
+          <button onclick="goToSlide(1)"
+            class="text-xs font-semibold text-brand-400 hover:text-white border border-brand-500/20 hover:border-brand-500 bg-brand-500/15 px-4 py-2 rounded-xl transition-all">
+            Back to Title Slide
+          </button>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Bottom Controls Footer -->
+  <footer class="bg-slate-950/80 border-t border-slate-800/60 py-4 px-6 z-10 w-full mt-auto">
+    <div class="max-w-7xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-4">
+
+      <!-- Navigation buttons -->
+      <div class="flex items-center gap-3 order-2 sm:order-1">
+        <button onclick="prevSlide()"
+          class="p-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-400 hover:text-white transition-all border border-slate-800/80 flex items-center justify-center"
+          id="prev-btn" title="Previous Slide (Left Arrow)">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+          </svg>
+        </button>
+
+        <!-- Dot navigators -->
+        <div class="flex items-center gap-2 px-3">
+          <button onclick="goToSlide(1)" class="w-2.5 h-2.5 rounded-full bg-brand-500 transition-all duration-300"
+            id="dot-1" title="Slide 1"></button>
+          <button onclick="goToSlide(2)" class="w-2.5 h-2.5 rounded-full bg-slate-800 transition-all duration-300"
+            id="dot-2" title="Slide 2"></button>
+          <button onclick="goToSlide(3)" class="w-2.5 h-2.5 rounded-full bg-slate-800 transition-all duration-300"
+            id="dot-3" title="Slide 3"></button>
+          <button onclick="goToSlide(4)" class="w-2.5 h-2.5 rounded-full bg-slate-800 transition-all duration-300"
+            id="dot-4" title="Slide 4"></button>
+          <button onclick="goToSlide(5)" class="w-2.5 h-2.5 rounded-full bg-slate-800 transition-all duration-300"
+            id="dot-5" title="Slide 5"></button>
+          <button onclick="goToSlide(6)" class="w-2.5 h-2.5 rounded-full bg-slate-800 transition-all duration-300"
+            id="dot-6" title="Slide 6"></button>
+          <button onclick="goToSlide(7)" class="w-2.5 h-2.5 rounded-full bg-slate-800 transition-all duration-300"
+            id="dot-7" title="Slide 7"></button>
+        </div>
+
+        <button onclick="nextSlide()"
+          class="p-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-400 hover:text-white transition-all border border-slate-800/80 flex items-center justify-center"
+          id="next-btn" title="Next Slide (Right Arrow)">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+          </svg>
+        </button>
+      </div>
+
+      <!-- Slide index and instructions -->
+      <div class="order-1 sm:order-2 text-center sm:text-right">
+        <div class="text-sm font-bold text-white" id="slide-index">Slide 1 of 7</div>
+        <div class="text-[10px] text-slate-500 font-semibold tracking-wider uppercase mt-0.5">Use Keyboard Arrows, Click
+          Controls or Swipe</div>
+      </div>
+
+    </div>
+  </footer>
+
+  <!-- Presentation Engine Scripts -->
+  <script>
+    let currentSlide = 1;
+    const totalSlides = 7;
+
+    // Slide Navigation Logic
+    function updateSlides() {
+      // Loop slides and show active
+      for (let i = 1; i <= totalSlides; i++) {
+        const slideEl = document.getElementById(`slide-${i}`);
+        const dotEl = document.getElementById(`dot-${i}`);
+
+        if (i === currentSlide) {
+          slideEl.classList.add('active');
+          dotEl.classList.add('bg-brand-500', 'scale-125');
+          dotEl.classList.remove('bg-slate-800');
+        } else {
+          slideEl.classList.remove('active');
+          dotEl.classList.remove('bg-brand-500', 'scale-125');
+          dotEl.classList.add('bg-slate-800');
+        }
+      }
+
+      // Update footer index text
+      document.getElementById('slide-index').innerText = `Slide ${currentSlide} of ${totalSlides}`;
+
+      // Control button states
+      document.getElementById('prev-btn').disabled = (currentSlide === 1);
+      document.getElementById('prev-btn').style.opacity = (currentSlide === 1) ? "0.4" : "1";
+      document.getElementById('next-btn').disabled = (currentSlide === totalSlides);
+      document.getElementById('next-btn').style.opacity = (currentSlide === totalSlides) ? "0.4" : "1";
+    }
+
+    function nextSlide() {
+      if (currentSlide < totalSlides) {
+        currentSlide++;
+        updateSlides();
+      }
+    }
+
+    function prevSlide() {
+      if (currentSlide > 1) {
+        currentSlide--;
+        updateSlides();
+      }
+    }
+
+    function goToSlide(slideNum) {
+      currentSlide = slideNum;
+      updateSlides();
+    }
+
+    // Slide Keyboard Shortcuts
+    document.addEventListener('keydown', function (event) {
+      if (event.key === 'ArrowRight' || event.key === ' ') {
+        nextSlide();
+      } else if (event.key === 'ArrowLeft') {
+        prevSlide();
+      }
+    });
+
+    // Touch Swipe Event Support
+    let touchstartX = 0;
+    let touchendX = 0;
+
+    function handleGesture() {
+      if (touchendX < touchstartX - 50) {
+        nextSlide();
+      }
+      if (touchendX > touchstartX + 50) {
+        prevSlide();
+      }
+    }
+
+    document.addEventListener('touchstart', e => {
+      touchstartX = e.changedTouches[0].screenX;
+    });
+
+    document.addEventListener('touchend', e => {
+      touchendX = e.changedTouches[0].screenX;
+      handleGesture();
+    });
+
+
+    // Slide 3: Mockup Interactive Mechanics
+    function switchMockTab(tabId) {
+      // Hide all tabs
+      document.getElementById('mock-tab-general').classList.add('hidden');
+      document.getElementById('mock-tab-renovation').classList.add('hidden');
+      document.getElementById('mock-tab-addons').classList.add('hidden');
+
+      // Deactivate all buttons
+      document.getElementById('tab-btn-general').classList.remove('border-brand-500', 'text-brand-400');
+      document.getElementById('tab-btn-general').classList.add('border-transparent', 'text-slate-400');
+      document.getElementById('tab-btn-renovation').classList.remove('border-brand-500', 'text-brand-400');
+      document.getElementById('tab-btn-renovation').classList.add('border-transparent', 'text-slate-400');
+      document.getElementById('tab-btn-addons').classList.remove('border-brand-500', 'text-brand-400');
+      document.getElementById('tab-btn-addons').classList.add('border-transparent', 'text-slate-400');
+
+      // Show active tab and button
+      document.getElementById(`mock-tab-${tabId}`).classList.remove('hidden');
+      document.getElementById(`tab-btn-${tabId}`).classList.remove('border-transparent', 'text-slate-400');
+      document.getElementById(`tab-btn-${tabId}`).classList.add('border-brand-500', 'text-brand-400');
+    }
+
+
+    // Slide 4: Compliance Engine Simulation State
+    let lineItemCount = 1;
+    let fileUploaded = false;
+
+    function tryAddLineItem() {
+      if (lineItemCount >= 1) {
+        // Flash block feedback
+        updateSimFeedback(
+          "Error Triggered!",
+          "Your Opportunity contains 1 Renovation item. Downstream systems restrict users to exactly one (1) Renovation Item to ensure clean billing mapping.",
+          "rose"
+        );
+      } else {
+        lineItemCount = 1;
+        document.getElementById('item-counter').innerText = "1 of 1 Items Added";
+        updateSimFeedback(
+          "Line Item Fixed",
+          "Renovation Bundle item added. Stage progression restricted until quotation document is uploaded.",
+          "amber"
+        );
+      }
+    }
+
+    function simulateFileUpload() {
+      fileUploaded = true;
+      document.getElementById('file-status-badge').innerText = "1 File";
+      document.getElementById('file-status-badge').classList.remove('text-rose-400', 'bg-rose-500/10', 'border-rose-500/20');
+      document.getElementById('file-status-badge').classList.add('text-emerald-400', 'bg-emerald-500/10', 'border-emerald-500/20');
+
+      document.getElementById('file-upload-text').innerHTML = `Uploaded: <strong class="text-emerald-400">"Renovation Quotation.pdf"</strong>`;
+
+      updateSimFeedback(
+        "Document Stored Successfully",
+        "Compliance condition satisfied. 'Renovation Quotation' detected in file attachments. You are now free to proceed to Closed Won.",
+        "emerald"
+      );
+    }
+
+    function tryCloseWon() {
+      if (!fileUploaded) {
+        // Failed compliance condition
+        updateSimFeedback(
+          "Validation Rule Exception!",
+          "Stage Progression Prevented. Required attachment 'Renovation Quotation' is missing from Opportunity file repository.",
+          "rose"
+        );
+        document.getElementById('close-won-btn').classList.add('border-rose-500', 'text-rose-400');
+        document.getElementById('close-won-btn').classList.remove('border-slate-800', 'text-slate-400');
+      } else {
+        // Success
+        updateSimFeedback(
+          "Stage Set to Closed Won!",
+          "Opportunity updated successfully. Integration Node has sent notification email dispatch records to Procurement & Projects.",
+          "emerald"
+        );
+        document.getElementById('close-won-btn').className = "bg-emerald-500 text-slate-950 font-bold py-1.5 rounded border border-emerald-400 transition-colors";
+      }
+    }
+
+    function updateSimFeedback(title, desc, theme) {
+      const box = document.getElementById('sim-feedback-box');
+      const icon = document.getElementById('sim-feedback-icon');
+      const titleEl = document.getElementById('sim-feedback-title');
+      const descEl = document.getElementById('sim-feedback-desc');
+
+      titleEl.innerText = title;
+      descEl.innerText = desc;
+
+      // Reset theme classes
+      box.className = "mt-4 p-3 rounded-lg border flex items-start gap-2.5 transition-all duration-300 ";
+      icon.className = "p-1 rounded flex-shrink-0 ";
+
+      if (theme === 'rose') {
+        box.classList.add('bg-rose-950/20', 'border-rose-500/30');
+        icon.classList.add('bg-rose-500/10', 'text-rose-400');
+        icon.innerHTML = `<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>`;
+      } else if (theme === 'amber') {
+        box.classList.add('bg-amber-950/20', 'border-amber-500/30');
+        icon.classList.add('bg-amber-500/10', 'text-amber-400');
+        icon.innerHTML = `<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>`;
+      } else if (theme === 'emerald') {
+        box.classList.add('bg-emerald-950/20', 'border-emerald-500/30');
+        icon.classList.add('bg-emerald-500/10', 'text-emerald-400');
+        icon.innerHTML = `<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>`;
+      } else {
+        box.classList.add('bg-slate-900', 'border-slate-800');
+        icon.classList.add('bg-slate-800', 'text-slate-400');
+        icon.innerHTML = `<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>`;
+      }
+    }
+
+    function resetSimulation() {
+      lineItemCount = 1;
+      fileUploaded = false;
+
+      document.getElementById('item-counter').innerText = "1 of 1 Items Added";
+
+      document.getElementById('file-status-badge').innerText = "0 Files";
+      document.getElementById('file-status-badge').className = "text-xs font-bold text-rose-400 bg-rose-500/10 px-1.5 py-0.5 rounded border border-rose-500/20";
+
+      document.getElementById('file-upload-text').innerHTML = `Click to upload <strong>"Renovation Quotation.pdf"</strong>`;
+
+      document.getElementById('close-won-btn').className = "bg-slate-900 text-slate-400 hover:text-white py-1.5 rounded border border-slate-800 transition-colors";
+
+      updateSimFeedback(
+        "System Reset",
+        "Opportunity is drafted. Line items configured. Set pipeline stage to 'Closed Won' to test.",
+        "slate"
+      );
+    }
+
+    // Fullscreen Toggle Helper
+    function toggleFullscreen() {
+      if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen().catch(err => {
+          console.error(`Error attempting to enable fullscreen: ${err.message}`);
+        });
+      } else {
+        document.exitFullscreen();
+      }
+    }
+
+    // Initialize presentation view
+    window.onload = function () {
+      updateSlides();
+      // Start simulation fresh
+      resetSimulation();
+    }
+  </script>
+</body>
+
+</html>
