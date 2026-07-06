@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gigantic Countdown Timer</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background-color: #0f172a;
+      color: #f8fafc;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+      overflow: hidden;
+    }
+
+    /* Controls Panel */
+    .controls {
+      background-color: #1e293b;
+      padding: 1rem 2rem;
+      border-radius: 12px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+      margin-bottom: 3rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      z-index: 10;
+    }
+
+    label {
+      font-size: 1rem;
+      color: #94a3b8;
+      font-weight: 500;
+    }
+
+    input[type="datetime-local"] {
+      background-color: #0f172a;
+      color: #fff;
+      border: 1px solid #334155;
+      padding: 0.5rem 1rem;
+      border-radius: 6px;
+      font-size: 1rem;
+      outline: none;
+      color-scheme: dark;
+    }
+
+    input[type="datetime-local"]:focus {
+      border-color: #38bdf8;
+    }
+
+    /* Gigantic Display */
+    .countdown-container {
+      display: flex;
+      gap: 2rem;
+      flex-wrap: wrap;
+      justify-content: center;
+      align-items: center;
+      width: 100%;
+      max-width: 1400px;
+    }
+
+    .time-block {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+    }
+
+    .number {
+      font-size: clamp(4rem, 15vw, 16rem);
+      /* Dynamically scales up to be massive */
+      font-weight: 800;
+      line-height: 1;
+      letter-spacing: -0.05em;
+      color: #38bdf8;
+      text-shadow: 0 0 40px rgba(56, 189, 248, 0.2);
+    }
+
+    .label {
+      font-size: clamp(1rem, 2vw, 2rem);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: #64748b;
+      margin-top: 0.5rem;
+      font-weight: 600;
+    }
+
+    /* Message for completed or unset timers */
+    .message {
+      font-size: clamp(2rem, 6vw, 6rem);
+      font-weight: 700;
+      color: #ec4899;
+      text-align: center;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="controls">
+    <label prejudices for="target-date">Set Target Date & Time:</label>
+    <input type="datetime-local" id="target-date">
+  </div>
+
+  <div id="countdown" class="countdown-container hidden">
+    <div class="time-block">
+      <span class="number" id="days">00</span>
+      <span class="label">Days</span>
+    </div>
+    <div class="time-block">
+      <span class="number" id="hours">00</span>
+      <span class="label">Hours</span>
+    </div>
+    <div class="time-block">
+      <span class="number" id="minutes">00</span>
+      <span class="label">Minutes</span>
+    </div>
+    <div class="time-block">
+      <span class="number" id="seconds">00</span>
+      <span class="label">Seconds</span>
+    </div>
+  </div>
+
+  <div id="status-message" class="message">
+    Select a future date to begin
+  </div>
+
+  <script>
+    const dateInput = document.getElementById('target-date');
+    const countdownEl = document.getElementById('countdown');
+    const messageEl = document.getElementById('status-message');
+
+    const daysEl = document.getElementById('days');
+    const hoursEl = document.getElementById('hours');
+    const minutesEl = document.getElementById('minutes');
+    const secondsEl = document.getElementById('seconds');
+
+    let countdownInterval;
+
+    // Automatically set the input minimum to right now
+    const now = new Date();
+    now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
+    dateInput.min = now.toISOString().slice(0, 16);
+
+    function updateCountdown() {
+      const targetValue = dateInput.value;
+      if (!targetValue) return;
+
+      const targetDate = new Date(targetValue).getTime();
+      const currentTime = new Date().getTime();
+      const difference = targetDate - currentTime;
+
+      if (difference <= 0) {
+        clearInterval(countdownInterval);
+        countdownEl.classList.add('hidden');
+        messageEl.textContent = "Time's up! 🎉";
+        messageEl.classList.remove('hidden');
+        return;
+      }
+
+      // Time calculations
+      const days = Math.floor(difference / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
+      const seconds = Math.floor((difference % (1000 * 60)) / 1000);
+
+      // Display updates with leading zeros
+      daysEl.textContent = String(days).padStart(2, '0');
+      hoursEl.textContent = String(hours).padStart(2, '0');
+      minutesEl.textContent = String(minutes).padStart(2, '0');
+      secondsEl.textContent = String(seconds).padStart(2, '0');
+
+      messageEl.classList.add('hidden');
+      countdownEl.classList.remove('hidden');
+    }
+
+    dateInput.addEventListener('input', () => {
+      clearInterval(countdownInterval);
+      updateCountdown();
+      countdownInterval = setInterval(updateCountdown, 1000);
+    });
+  </script>
+</body>
+
+</html>
