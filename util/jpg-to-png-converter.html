@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JPG to PNG Converter</title>
+  <!-- Tailwind CSS for styling -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- JSZip for bundling files -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+</head>
+<body class="bg-gray-50 min-h-screen flex flex-col items-center justify-center p-6 text-gray-800">
+
+  <div class="w-full max-w-2xl bg-white rounded-xl shadow-md p-8">
+    <h1 class="text-3xl font-bold text-center mb-2 text-indigo-600">JPG to PNG Converter</h1>
+    <p class="text-sm text-gray-500 text-center mb-6">Upload up to 50 JPG images. They will be processed one by one safely in your browser.</p>
+
+    <!-- Upload Zone -->
+    <div class="border-2 border-dashed border-indigo-300 rounded-lg p-8 text-center cursor-pointer hover:border-indigo-500 transition-colors" id="drop-zone">
+      <input type="file" id="file-input" accept=".jpg, .jpeg" class="hidden" multiple />
+      <p class="text-base text-gray-600 mb-2">Drag & drop your JPG files here, or <span class="text-indigo-600 font-semibold underline">browse</span></p>
+      <p class="text-xs text-gray-400">Maximum 50 files. Only .jpg and .jpeg accepted.</p>
+    </div>
+
+    <!-- Progress & Controls -->
+    <div id="process-control" class="hidden mt-6 space-y-4">
+      <div class="flex justify-between items-center text-sm font-medium">
+        <span id="status-text" class="text-amber-600">Processing: 0 / 0</span>
+        <span id="percentage">0%</span>
+      </div>
+      <div class="w-full bg-gray-200 rounded-full h-2.5">
+        <div id="progress-bar" class="bg-indigo-600 h-2.5 rounded-full transition-all duration-300" style="width: 0%"></div>
+      </div>
+      <button id="download-zip" class="w-full py-3 bg-green-600 hover:bg-green-700 disabled:bg-gray-300 disabled:cursor-not-allowed text-white font-semibold rounded-lg text-center shadow transition-colors hidden">
+        Download All as ZIP
+      </button>
+    </div>
+
+    <!-- File Table / Summary -->
+    <div id="file-list-container" class="hidden mt-8">
+      <h3 class="font-semibold text-lg mb-3">Files list</h3>
+      <div class="max-h-60 overflow-y-auto border border-gray-100 rounded-lg">
+        <table class="w-full text-left border-collapse">
+          <thead>
+            <tr class="bg-gray-50 text-xs uppercase text-gray-500 font-semibold border-b">
+              <th class="p-3">Filename</th>
+              <th class="p-3 text-right">Status</th>
+            </tr>
+          </thead>
+          <tbody id="file-table-body" class="divide-y divide-gray-100 text-sm">
+            <!-- Dynamic list items -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <canvas id="canvas" class="hidden"></canvas>
+
+  <script>
+    const fileInput = document.getElementById('file-input');
+    const dropZone = document.getElementById('drop-zone');
+    const processControl = document.getElementById('process-control');
+    const statusText = document.getElementById('status-text');
+    const percentage = document.getElementById('percentage');
+    const progressBar = document.getElementById('progress-bar');
+    const downloadZipBtn = document.getElementById('download-zip');
+    const fileListContainer = document.getElementById('file-list-container');
+    const fileTableBody = document.getElementById('file-table-body');
+    const canvas = document.getElementById('canvas');
+    const ctx = canvas.getContext('2d');
+
+    let filesToProcess = [];
+    const zip = new JSZip();
+
+    // Trigger file dialog
+    dropZone.addEventListener('click', () => fileInput.click());
+
+    // Drag and drop handlers
+    dropZone.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      dropZone.classList.add('border-indigo-500', 'bg-indigo-50');
+    });
+
+    dropZone.addEventListener('dragleave', () => {
+      dropZone.classList.remove('border-indigo-500', 'bg-indigo-50');
+    });
+
+    dropZone.addEventListener('drop', (e) => {
+      e.preventDefault();
+      dropZone.classList.remove('border-indigo-500', 'bg-indigo-50');
+      handleFiles(e.dataTransfer.files);
+    });
+
+    fileInput.addEventListener('change', (e) => {
+      handleFiles(e.target.files);
+    });
+
+    function handleFiles(files) {
+      // Filter out non-JPG files and limit to 50
+      const validFiles = Array.from(files).filter(file => 
+        file.type === 'image/jpeg' || file.name.toLowerCase().endsWith('.jpg') || file.name.toLowerCase().endsWith('.jpeg')
+      );
+
+      if (validFiles.length === 0) {
+        alert("Please select valid JPG images.");
+        return;
+      }
+
+      if (validFiles.length > 50) {
+        alert("You can only upload a maximum of 50 files at once. The first 50 files will be processed.");
+        filesToProcess = validFiles.slice(0, 50);
+      } else {
+        filesToProcess = validFiles;
+      }
+
+      resetUI();
+      renderFileList();
+      processFilesSequentially();
+    }
+
+    function resetUI() {
+      processControl.classList.remove('hidden');
+      fileListContainer.classList.remove('hidden');
+      downloadZipBtn.classList.add('hidden');
+      downloadZipBtn.disabled = true;
+      progressBar.style.width = '0%';
+      percentage.textContent = '0%';
+      fileTableBody.innerHTML = '';
+      // Reset ZIP archive
+      for (let key in zip.files) {
+        delete zip.files[key];
+      }
+    }
+
+    function renderFileList() {
+      filesToProcess.forEach((file, index) => {
+        const row = document.createElement('tr');
+        row.id = `row-${index}`;
+        row.innerHTML = `
+          <td class="p-3 truncate max-w-xs font-medium text-gray-700">${file.name}</td>
+          <td class="p-3 text-right text-gray-400 font-semibold" id="status-${index}">Pending</td>
+        `;
+        fileTableBody.appendChild(row);
+      });
+    }
+
+    async function processFilesSequentially() {
+      const total = filesToProcess.length;
+      
+      for (let i = 0; i < total; i++) {
+        const file = filesToProcess[i];
+        updateProgress(i, total, `Processing file ${i + 1} of ${total}...`);
+        updateRowStatus(i, 'Processing...', 'text-amber-500');
+
+        try {
+          const blob = await convertJpgToPng(file);
+          const pngName = file.name.replace(/\.(jpe?g)$/i, '') + '.png';
+          
+          // Add standard PNG output to JSZip
+          zip.file(pngName, blob);
+          
+          updateRowStatus(i, 'Completed', 'text-green-600');
+        } catch (error) {
+          console.error(error);
+          updateRowStatus(i, 'Failed', 'text-red-500');
+        }
+      }
+
+      updateProgress(total, total, 'Conversion complete!');
+      downloadZipBtn.classList.remove('hidden');
+      downloadZipBtn.disabled = false;
+    }
+
+    function updateProgress(current, total, text) {
+      const percent = Math.round((current / total) * 100);
+      progressBar.style.width = `${percent}%`;
+      percentage.textContent = `${percent}%`;
+      statusText.textContent = text;
+      
+      if (current === total) {
+        statusText.className = 'text-green-600 font-bold';
+      } else {
+        statusText.className = 'text-amber-600';
+      }
+    }
+
+    function updateRowStatus(index, text, colorClass) {
+      const cell = document.getElementById(`status-${index}`);
+      if (cell) {
+        cell.textContent = text;
+        cell.className = `p-3 text-right font-semibold ${colorClass}`;
+      }
+    }
+
+    // Canvas-based single-file converting function
+    function convertJpgToPng(file) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = function(event) {
+          const img = new Image();
+          img.onload = function() {
+            canvas.width = img.width;
+            canvas.height = img.height;
+            
+            // Clear and draw image strictly keeping dimensions
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.drawImage(img, 0, 0);
+            
+            // Export inside Promise resolving as Blob
+            canvas.toBlob((blob) => {
+              if (blob) {
+                resolve(blob);
+              } else {
+                reject(new Error('Canvas conversion failed'));
+              }
+            }, 'image/png');
+          };
+          img.onerror = () => reject(new Error('Image failed to load'));
+          img.src = event.target.result;
+        };
+        reader.onerror = () => reject(new Error('File reading failed'));
+        reader.readAsDataURL(file);
+      });
+    }
+
+    // Zip and Download trigger
+    downloadZipBtn.addEventListener('click', async () => {
+      downloadZipBtn.disabled = true;
+      downloadZipBtn.textContent = 'Generating ZIP...';
+      
+      try {
+        const content = await zip.generateAsync({ type: 'blob' });
+        const url = URL.createObjectURL(content);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'converted_pngs.zip';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+      } catch (err) {
+        alert('Could not generate the zip file. Please try again.');
+        console.error(err);
+      } finally {
+        downloadZipBtn.disabled = false;
+        downloadZipBtn.textContent = 'Download All as ZIP';
+      }
+    });
+  </script>
+</body>
+</html>
