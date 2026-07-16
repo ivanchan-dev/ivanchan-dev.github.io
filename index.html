@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ivan Chan — GitHub Pages</title>
+  <style>
+    :root {
+      --bg: #f8f9fb;
+      --surface: #ffffff;
+      --text: #1f2937;
+      --text-secondary: #6b7280;
+      --accent: #3b82f6;
+      --accent-hover: #2563eb;
+      --border: #e5e7eb;
+      --folder: #f59e0b;
+      --file: #10b981;
+      --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
+      --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -4px rgba(0, 0, 0, 0.05);
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #0f172a;
+        --surface: #1e293b;
+        --text: #f1f5f9;
+        --text-secondary: #94a3b8;
+        --accent: #60a5fa;
+        --accent-hover: #3b82f6;
+        --border: #334155;
+        --folder: #fbbf24;
+        --file: #34d399;
+        --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2), 0 2px 4px -2px rgba(0, 0, 0, 0.2);
+        --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.25), 0 4px 6px -4px rgba(0, 0, 0, 0.2);
+      }
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 4rem 1.5rem;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 2.5rem;
+      max-width: 640px;
+    }
+
+    h1 {
+      font-size: 2.25rem;
+      font-weight: 700;
+      margin: 0 0 0.5rem;
+      letter-spacing: -0.025em;
+    }
+
+    p.lead {
+      font-size: 1.125rem;
+      color: var(--text-secondary);
+      margin: 0;
+    }
+
+    main {
+      width: 100%;
+      max-width: 720px;
+      background: var(--surface);
+      border-radius: 1rem;
+      box-shadow: var(--shadow-lg);
+      border: 1px solid var(--border);
+      padding: 2rem;
+    }
+
+    .tree {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+
+    .tree ul {
+      list-style: none;
+      margin: 0;
+      padding-left: 1.5rem;
+    }
+
+    .tree li + li {
+      margin-top: 0.25rem;
+    }
+
+    .tree-node {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem 0.75rem;
+      border-radius: 0.5rem;
+      transition: background 0.15s ease, color 0.15s ease;
+      user-select: none;
+    }
+
+    .tree-node:hover {
+      background: var(--bg);
+    }
+
+    .tree-node.folder {
+      cursor: pointer;
+      font-weight: 500;
+    }
+
+    .tree-node.file {
+      cursor: default;
+    }
+
+    .tree-node.file:hover {
+      background: transparent;
+    }
+
+    .chevron {
+      width: 1rem;
+      height: 1rem;
+      flex-shrink: 0;
+      transition: transform 0.2s ease;
+      color: var(--text-secondary);
+    }
+
+    .chevron.collapsed {
+      transform: rotate(-90deg);
+    }
+
+    .icon {
+      width: 1.25rem;
+      height: 1.25rem;
+      flex-shrink: 0;
+    }
+
+    .icon.folder {
+      color: var(--folder);
+    }
+
+    .icon.file {
+      color: var(--file);
+    }
+
+    .tree-node a {
+      color: var(--text);
+      text-decoration: none;
+      flex: 1;
+      margin: -0.5rem -0.75rem;
+      padding: 0.5rem 0.75rem;
+      border-radius: 0.5rem;
+      transition: color 0.15s ease, background 0.15s ease;
+    }
+
+    .tree-node a:hover {
+      color: var(--accent-hover);
+      background: var(--bg);
+    }
+
+    .tree-node.folder > a {
+      pointer-events: none;
+      background: transparent;
+    }
+
+    .children {
+      overflow: hidden;
+      transition: max-height 0.25s ease, opacity 0.2s ease;
+      max-height: 2000px;
+      opacity: 1;
+    }
+
+    .children.collapsed {
+      max-height: 0;
+      opacity: 0;
+    }
+
+    footer {
+      margin-top: 2.5rem;
+      text-align: center;
+      color: var(--text-secondary);
+      font-size: 0.875rem;
+    }
+
+    footer a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+
+    footer a:hover {
+      text-decoration: underline;
+    }
+
+    @media (max-width: 640px) {
+      body {
+        padding: 2rem 1rem;
+      }
+
+      h1 {
+        font-size: 1.75rem;
+      }
+
+      main {
+        padding: 1.25rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Ivan Chan</h1>
+    <p class="lead">A collection of work-related utilities and reference pages.</p>
+  </header>
+
+  <main>
+    <ul class="tree" id="tree"></ul>
+  </main>
+
+  <footer>
+    <p>Hosted on <a href="https://pages.github.com/">GitHub Pages</a>.</p>
+  </footer>
+
+  <script>
+    const folderIcon = `<svg class="icon folder" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M3 7a2 2 0 012-2h4l2 2h7a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2V7z"/></svg>`;
+    const fileIcon = `<svg class="icon file" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8l-6-6z"/><path fill="#fff" d="M14 2v6h6" opacity=".5"/></svg>`;
+    const chevronIcon = `<svg class="chevron" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/></svg>`;
+
+    function buildTree(entries) {
+      const root = {};
+
+      entries.forEach(entry => {
+        const path = entry.path;
+        const label = entry.label;
+        const parts = path.split("/").filter(Boolean);
+        const fileName = parts.pop();
+        let current = root;
+
+        parts.forEach(part => {
+          if (!current[part]) current[part] = {};
+          current = current[part];
+        });
+
+        current[fileName] = { __file: true, href: path, label };
+      });
+
+      return objectToTree(root);
+    }
+
+    function objectToTree(obj) {
+      return Object.entries(obj).map(([name, value]) => {
+        if (value.__file) {
+          return {
+            name: value.label || name,
+            type: "file",
+            href: value.href
+          };
+        }
+        return {
+          name,
+          type: "folder",
+          children: objectToTree(value)
+        };
+      });
+    }
+
+    function createTreeNode(item) {
+      const li = document.createElement("li");
+
+      if (item.type === "folder") {
+        const node = document.createElement("div");
+        node.className = "tree-node folder";
+        node.innerHTML = `${chevronIcon}${folderIcon}<span>${item.name}</span>`;
+
+        const childrenUl = document.createElement("ul");
+        childrenUl.className = "children";
+        item.children.forEach(child => {
+          childrenUl.appendChild(createTreeNode(child));
+        });
+
+        node.addEventListener("click", (e) => {
+          e.preventDefault();
+          const chevron = node.querySelector(".chevron");
+          const isCollapsed = childrenUl.classList.toggle("collapsed");
+          chevron.classList.toggle("collapsed", isCollapsed);
+        });
+
+        li.appendChild(node);
+        li.appendChild(childrenUl);
+      } else {
+        const node = document.createElement("div");
+        node.className = "tree-node file";
+        node.innerHTML = `<span style="width:1rem;flex-shrink:0"></span>${fileIcon}`;
+
+        const link = document.createElement("a");
+        link.href = item.href;
+        link.textContent = item.name;
+        node.appendChild(link);
+
+        li.appendChild(node);
+      }
+
+      return li;
+    }
+
+    const treeRoot = document.getElementById("tree");
+
+    fetch("pages.json")
+      .then(response => {
+        if (!response.ok) throw new Error("Could not load pages.json");
+        return response.json();
+      })
+      .then(entries => {
+        buildTree(entries).forEach(item => {
+          treeRoot.appendChild(createTreeNode(item));
+        });
+      })
+      .catch(error => {
+        treeRoot.innerHTML = `<li class="tree-node file"><span style="width:1rem;flex-shrink:0"></span>${fileIcon}<span style="color:var(--text-secondary)">Unable to load page list.</span></li>`;
+        console.error(error);
+      });
+  </script>
+</body>
+</html>

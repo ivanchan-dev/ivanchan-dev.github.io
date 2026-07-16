@@ -1,0 +1,34 @@
+[
+  {
+    "path": "util/big_clock.html",
+    "label": "Big Clock"
+  },
+  {
+    "path": "util/big_wheel.html",
+    "label": "Big Wheel"
+  },
+  {
+    "path": "util/jpg-to-png-converter.html",
+    "label": "JPG to PNG Converter"
+  },
+  {
+    "path": "tec/pages/leasemanagement/briefing.html",
+    "label": "Briefing"
+  },
+  {
+    "path": "tec/pages/leasemanagement/sf-layouts.html",
+    "label": "SF Layouts"
+  },
+  {
+    "path": "tec/util/imagecoord/index.html",
+    "label": "Image Coordinate Picker"
+  },
+  {
+    "path": "tec/util/testing/presentation.html",
+    "label": "Presentation"
+  },
+  {
+    "path": "tec/util/testing/registration.html",
+    "label": "Registration"
+  }
+]
