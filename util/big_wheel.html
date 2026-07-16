@@ -30,6 +30,7 @@
       align-items: center;
       min-height: 100vh;
       padding: 2rem;
+      overflow-x: hidden;
     }
 
     header {
@@ -53,6 +54,7 @@
       padding: 2rem;
       border-radius: 16px;
       box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+      z-index: 10;
     }
 
     @media (min-width: 768px) {
@@ -120,7 +122,6 @@
       height: 360px;
     }
 
-    /* The pointer pointing at the selection */
     .pointer {
       position: absolute;
       top: -15px;
@@ -152,7 +153,7 @@
       cursor: not-allowed;
     }
 
-    /* Modern transparent backdrop overlay */
+    /* Modal Backdrop Overlay */
     .winner-modal {
       display: none;
       position: fixed;
@@ -160,15 +161,14 @@
       left: 0;
       right: 0;
       bottom: 0;
-      background: rgba(15, 23, 42, 0.15);
-      /* Sleek, light overlay */
-      backdrop-filter: blur(5px);
+      background: rgba(15, 23, 42, 0.25);
+      backdrop-filter: blur(8px);
       justify-content: center;
       align-items: center;
       z-index: 100;
     }
 
-    /* Clean, modern popup card with absolutely no circular borders */
+    /* Winner Popup Card */
     .modal-content {
       background: white;
       padding: 2.5rem;
@@ -176,8 +176,9 @@
       text-align: center;
       max-width: 450px;
       width: 90%;
-      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.3);
       animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      z-index: 101;
     }
 
     @keyframes popIn {
@@ -193,9 +194,9 @@
     }
 
     .modal-content h2 {
-      font-size: 1.25rem;
+      font-size: 1.1rem;
       text-transform: uppercase;
-      letter-spacing: 0.05em;
+      letter-spacing: 0.08em;
       color: #64748b;
       margin-bottom: 0.5rem;
     }
@@ -207,6 +208,39 @@
       margin-bottom: 1.5rem;
       word-break: break-word;
       line-height: 1.1;
+    }
+
+    /* CSS Confetti Styles */
+    .confetti-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      pointer-events: none;
+      z-index: 99;
+      overflow: hidden;
+      display: none;
+    }
+
+    .confetti-piece {
+      position: absolute;
+      width: 10px;
+      height: 20px;
+      background: #ffd300;
+      top: -20px;
+      opacity: 0.85;
+      animation: fall linear infinite;
+    }
+
+    @keyframes fall {
+      0% {
+        transform: translateY(0) rotate(0deg);
+      }
+
+      100% {
+        transform: translateY(105vh) rotate(720deg);
+      }
     }
   </style>
 </head>
@@ -242,8 +276,9 @@
     </div>
   </div>
 
-  <!-- Confetti Library -->
-  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+  <!-- Pure HTML/CSS Confetti Container -->
+  <div class="confetti-container" id="confetti-container"></div>
+
   <script>
     const canvas = document.getElementById('wheel');
     const ctx = canvas.getContext('2d');
@@ -252,11 +287,11 @@
     const spinBtn = document.getElementById('spin-btn');
     const winnerModal = document.getElementById('winner-modal');
     const winnerText = document.getElementById('winner-text');
+    const confettiContainer = document.getElementById('confetti-container');
 
     let items = [];
     let isSpinning = false;
     let currentRotation = 0;
-    let confettiInterval;
 
     const colors = [
       '#f43f5e', '#ec4899', '#d946ef', '#a855f7',
@@ -365,45 +400,45 @@
         winnerText.innerText = winner;
         winnerModal.style.display = 'flex';
 
-        // Trigger dynamic side-cannons confetti effect
-        shootConfetti();
+        // Trigger safe custom CSS/JS confetti
+        startConfetti();
       }, 4000);
     });
 
-    // Fun confetti animation loop simulating continuous party cannons
-    function shootConfetti() {
-      const duration = 4 * 1000;
-      const animationEnd = Date.now() + duration;
-      const defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 110 };
+    // Custom CSS confetti engine (renders seamlessly, no canvas background bugs)
+    function startConfetti() {
+      confettiContainer.innerHTML = '';
+      confettiContainer.style.display = 'block';
 
-      function randomInRange(min, max) {
-        return Math.random() * (max - min) + min;
+      const confettiColors = ['#f43f5e', '#ec4899', '#3b82f6', '#0ea5e9', '#10b981', '#eab308', '#a855f7'];
+      const numberOfPieces = 150;
+
+      for (let i = 0; i < numberOfPieces; i++) {
+        const piece = document.createElement('div');
+        piece.classList.add('confetti-piece');
+
+        // Random horizontal positions, fall speeds, and rotations
+        piece.style.left = `${Math.random() * 100}vw`;
+        piece.style.backgroundColor = confettiColors[Math.floor(Math.random() * confettiColors.length)];
+
+        const sizeWidth = Math.random() * 8 + 6;
+        const sizeHeight = Math.random() * 12 + 8;
+        piece.style.width = `${sizeWidth}px`;
+        piece.style.height = `${sizeHeight}px`;
+
+        const duration = Math.random() * 3 + 2; // 2s to 5s fall duration
+        const delay = Math.random() * 2; // delayed enter staggered
+        piece.style.animationDuration = `${duration}s`;
+        piece.style.animationDelay = `${delay}s`;
+
+        confettiContainer.appendChild(piece);
       }
-
-      confettiInterval = setInterval(() => {
-        const timeLeft = animationEnd - Date.now();
-
-        if (timeLeft <= 0) {
-          return clearInterval(confettiInterval);
-        }
-
-        const particleCount = 50 * (timeLeft / duration);
-        // Confetti shooting from the left corner
-        confetti(Object.assign({}, defaults, {
-          particleCount,
-          origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 }
-        }));
-        // Confetti shooting from the right corner
-        confetti(Object.assign({}, defaults, {
-          particleCount,
-          origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 }
-        }));
-      }, 250);
     }
 
     function closeModal() {
       winnerModal.style.display = 'none';
-      clearInterval(confettiInterval);
+      confettiContainer.style.display = 'none';
+      confettiContainer.innerHTML = '';
     }
   </script>
 </body>
