@@ -1,11 +1,7 @@
 [
   {
-    "path": "util/big_clock.html",
-    "label": "Big Clock"
-  },
-  {
     "path": "util/big_wheel.html",
-    "label": "Big Wheel"
+    "label": "Wheel of Fortune"
   },
   {
     "path": "util/jpg-to-png-converter.html",
