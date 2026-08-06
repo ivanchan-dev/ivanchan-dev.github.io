@@ -8,6 +8,10 @@
     "label": "JPG to PNG Converter"
   },
   {
+      "path": "util/remove-bg.html",
+      "label": "Remove Background"
+  },
+  {
     "path": "tec/pages/leasemanagement/briefing.html",
     "label": "Briefing"
   },
