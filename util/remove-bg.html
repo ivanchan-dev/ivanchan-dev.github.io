@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Browser AI Background Remover</title>
+  <style>
+    :root {
+      --bg: #0f172a;
+      --card-bg: #1e293b;
+      --accent: #3b82f6;
+      --accent-hover: #2563eb;
+      --text: #f8fafc;
+      --text-dim: #94a3b8;
+      --border: #334155;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 2rem 1rem;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    header h1 {
+      font-size: 2rem;
+      margin-bottom: 0.5rem;
+    }
+
+    header p {
+      color: var(--text-dim);
+      font-size: 0.95rem;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 900px;
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+
+    /* Drop Zone */
+    .drop-zone {
+      background: var(--card-bg);
+      border: 2px dashed var(--border);
+      border-radius: 12px;
+      padding: 3rem 1.5rem;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .drop-zone:hover, .drop-zone.dragover {
+      border-color: var(--accent);
+      background: #1e293b;
+    }
+
+    .drop-zone svg {
+      width: 48px;
+      height: 48px;
+      fill: var(--text-dim);
+      margin-bottom: 1rem;
+    }
+
+    .drop-zone p {
+      margin-bottom: 0.5rem;
+      font-weight: 500;
+    }
+
+    .drop-zone span {
+      color: var(--text-dim);
+      font-size: 0.85rem;
+    }
+
+    input[type="file"] {
+      display: none;
+    }
+
+    /* Progress & Status */
+    .status-card {
+      display: none;
+      background: var(--card-bg);
+      border-radius: 12px;
+      padding: 1.5rem;
+      border: 1px solid var(--border);
+    }
+
+    .progress-bar-bg {
+      width: 100%;
+      height: 8px;
+      background: var(--border);
+      border-radius: 4px;
+      overflow: hidden;
+      margin-top: 0.75rem;
+    }
+
+    .progress-bar-fill {
+      width: 0%;
+      height: 100%;
+      background: var(--accent);
+      transition: width 0.2s ease;
+    }
+
+    /* Results Grid */
+    .results-grid {
+      display: none;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .preview-card {
+      background: var(--card-bg);
+      border-radius: 12px;
+      padding: 1rem;
+      border: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .preview-card h3 {
+      font-size: 0.9rem;
+      color: var(--text-dim);
+      margin-bottom: 0.75rem;
+      align-self: flex-start;
+    }
+
+    .img-wrapper {
+      width: 100%;
+      height: 280px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 8px;
+      overflow: hidden;
+      /* Checkerboard pattern for transparency */
+      background-color: #0f172a;
+      background-image: 
+        linear-gradient(45deg, #1e293b 25%, transparent 25%),
+        linear-gradient(-45deg, #1e293b 25%, transparent 25%),
+        linear-gradient(45deg, transparent 75%, #1e293b 75%),
+        linear-gradient(-45deg, transparent 75%, #1e293b 75%);
+      background-size: 20px 20px;
+      background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
+    }
+
+    .img-wrapper img {
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;
+    }
+
+    .btn {
+      background: var(--accent);
+      color: white;
+      border: none;
+      padding: 0.75rem 1.5rem;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      margin-top: 1rem;
+      width: 100%;
+      transition: background 0.2s ease;
+    }
+
+    .btn:hover {
+      background: var(--accent-hover);
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>AI Background Remover</h1>
+    <p>100% Client-Side • Private • No API Key Needed</p>
+  </header>
+
+  <div class="container">
+    <!-- Drag & Drop Area -->
+    <div class="drop-zone" id="dropZone">
+      <svg viewBox="0 0 24 24">
+        <path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM14 13v4h-4v-4H7l5-5 5 5h-3z"/>
+      </svg>
+      <p>Drag & drop your image here, or click to browse</p>
+      <span>Supports PNG, JPG, WEBP</span>
+      <input type="file" id="fileInput" accept="image/*" />
+    </div>
+
+    <!-- Processing Status -->
+    <div class="status-card" id="statusCard">
+      <p id="statusText">Initializing AI Model...</p>
+      <div class="progress-bar-bg">
+        <div class="progress-bar-fill" id="progressBar"></div>
+      </div>
+    </div>
+
+    <!-- Output Preview -->
+    <div class="results-grid" id="resultsGrid">
+      <div class="preview-card">
+        <h3>Original Image</h3>
+        <div class="img-wrapper">
+          <img id="originalImg" alt="Original" />
+        </div>
+      </div>
+
+      <div class="preview-card">
+        <h3>Background Removed</h3>
+        <div class="img-wrapper">
+          <img id="resultImg" alt="Result" />
+        </div>
+        <button class="btn" id="downloadBtn">Download PNG</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Load AI Background Removal via ES Modules -->
+  <script type="module">
+    import { removeBackground } from 'https://cdn.jsdelivr.net/npm/@imgly/background-removal@1.5.5/+esm';
+
+    const dropZone = document.getElementById('dropZone');
+    const fileInput = document.getElementById('fileInput');
+    const statusCard = document.getElementById('statusCard');
+    const statusText = document.getElementById('statusText');
+    const progressBar = document.getElementById('progressBar');
+    const resultsGrid = document.getElementById('resultsGrid');
+    const originalImg = document.getElementById('originalImg');
+    const resultImg = document.getElementById('resultImg');
+    const downloadBtn = document.getElementById('downloadBtn');
+
+    let currentResultBlob = null;
+
+    // Handle Drag and Drop
+    dropZone.addEventListener('click', () => fileInput.click());
+
+    dropZone.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      dropZone.classList.add('dragover');
+    });
+
+    dropZone.addEventListener('dragleave', () => {
+      dropZone.classList.remove('dragover');
+    });
+
+    dropZone.addEventListener('drop', (e) => {
+      e.preventDefault();
+      dropZone.classList.remove('dragover');
+      if (e.dataTransfer.files.length) {
+        processImage(e.dataTransfer.files[0]);
+      }
+    });
+
+    fileInput.addEventListener('change', (e) => {
+      if (e.target.files.length) {
+        processImage(e.target.files[0]);
+      }
+    });
+
+    async function processImage(file) {
+      if (!file.type.startsWith('image/')) {
+        alert('Please select an image file.');
+        return;
+      }
+
+      // Show processing state
+      statusCard.style.display = 'block';
+      resultsGrid.style.display = 'none';
+      progressBar.style.width = '0%';
+      statusText.innerText = 'Loading AI engine & assets...';
+
+      // Set original preview
+      originalImg.src = URL.createObjectURL(file);
+
+      try {
+        // Run AI removal with progress feedback
+        const blob = await removeBackground(file, {
+          progress: (key, current, total) => {
+            if (total > 0) {
+              const percent = Math.round((current / total) * 100);
+              progressBar.style.width = `${percent}%`;
+              statusText.innerText = `Processing (${key}): ${percent}%`;
+            }
+          }
+        });
+
+        currentResultBlob = blob;
+        resultImg.src = URL.createObjectURL(blob);
+
+        // Hide loader and show results
+        statusCard.style.display = 'none';
+        resultsGrid.style.display = 'grid';
+      } catch (error) {
+        console.error(error);
+        statusText.innerText = 'Error processing image. Please try another one.';
+        progressBar.style.width = '0%';
+      }
+    }
+
+    // Download Button Handler
+    downloadBtn.addEventListener('click', () => {
+      if (!currentResultBlob) return;
+      const link = document.createElement('a');
+      link.href = URL.createObjectURL(currentResultBlob);
+      link.download = 'no-background.png';
+      link.click();
+    });
+  </script>
+</body>
+</html>
