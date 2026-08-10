@@ -4,6 +4,10 @@
     "label": "Wheel of Fortune"
   },
   {
+    "path": "util/big-list.html",
+    "label": "List of Fortune"
+  },
+  {
     "path": "util/jpg-to-png-converter.html",
     "label": "JPG to PNG Converter"
   },

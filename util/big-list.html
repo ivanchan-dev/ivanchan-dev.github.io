@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Random Position Generator</title>
+  <style>
+    :root {
+      --primary: #6366f1;
+      --primary-hover: #4f46e5;
+      --bg: #f8fafc;
+      --card-bg: #ffffff;
+      --text: #0f172a;
+      --border: #e2e8f0;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+      padding: 2rem;
+      overflow-x: hidden;
+    }
+
+    header {
+      margin-bottom: 2rem;
+      text-align: center;
+    }
+
+    h1 {
+      font-size: 2.5rem;
+      color: var(--primary);
+      margin-bottom: 0.5rem;
+    }
+
+    .container {
+      display: flex;
+      flex-direction: column;
+      gap: 2rem;
+      max-width: 1000px;
+      width: 100%;
+      background: var(--card-bg);
+      padding: 2rem;
+      border-radius: 16px;
+      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+      z-index: 10;
+    }
+
+    @media (min-width: 768px) {
+      .container {
+        flex-direction: row;
+        align-items: flex-start;
+      }
+    }
+
+    .input-section {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    textarea {
+      width: 100%;
+      height: 250px;
+      padding: 1rem;
+      border: 2px solid var(--border);
+      border-radius: 8px;
+      font-size: 1rem;
+      resize: vertical;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    textarea:focus {
+      border-color: var(--primary);
+    }
+
+    button {
+      background-color: var(--primary);
+      color: white;
+      border: none;
+      padding: 0.75rem 1.5rem;
+      font-size: 1rem;
+      font-weight: 600;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background-color 0.2s, transform 0.1s;
+    }
+
+    button:hover {
+      background-color: var(--primary-hover);
+    }
+
+    button:active {
+      transform: scale(0.98);
+    }
+
+    button:disabled {
+      background-color: #cbd5e1;
+      cursor: not-allowed;
+    }
+
+    .results-section {
+      flex: 1.2;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .results-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .ranking-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      max-height: 420px;
+      overflow-y: auto;
+      padding-right: 0.5rem;
+    }
+
+    .placeholder-text {
+      text-align: center;
+      color: #94a3b8;
+      font-size: 1.1rem;
+      margin-top: 4rem;
+    }
+
+    .rank-card {
+      display: flex;
+      align-items: center;
+      background-color: #f1f5f9;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 0.85rem 1.2rem;
+      opacity: 0;
+      transform: translateY(15px);
+      transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    .rank-card.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Highlighting top rank */
+    .rank-card.top-rank {
+      background: linear-gradient(135deg, #6366f1, #4338ca);
+      color: white;
+      border-color: #4338ca;
+      box-shadow: 0 4px 12px rgba(99, 102, 241, 0.35);
+      transform: scale(1.02);
+    }
+
+    .badge {
+      font-weight: 800;
+      font-size: 1.1rem;
+      min-width: 45px;
+      height: 35px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(15, 23, 42, 0.08);
+      border-radius: 6px;
+      margin-right: 1rem;
+    }
+
+    .top-rank .badge {
+      background: rgba(255, 255, 255, 0.2);
+      color: #ffffff;
+    }
+
+    .item-name {
+      font-weight: 600;
+      font-size: 1.1rem;
+      word-break: break-word;
+    }
+
+    /* Confetti Styles */
+    .confetti-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      pointer-events: none;
+      z-index: 99;
+      overflow: hidden;
+      display: none;
+    }
+
+    .confetti-piece {
+      position: absolute;
+      width: 10px;
+      height: 20px;
+      top: -20px;
+      opacity: 0.85;
+      animation: fall linear infinite;
+    }
+
+    @keyframes fall {
+      0% {
+        transform: translateY(0) rotate(0deg);
+      }
+      100% {
+        transform: translateY(105vh) rotate(720deg);
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <header>
+    <h1>Position Assignment</h1>
+    <p>Enter your list below to assign randomly ordered rankings and positions.</p>
+  </header>
+
+  <div class="container">
+    <div class="input-section">
+      <h3>Enter Items (one per line)</h3>
+      <textarea id="items-input" placeholder="Participant 1&#10;Participant 2&#10;Participant 3&#10;Participant 4"></textarea>
+      <button id="generate-btn">Assign Positions</button>
+    </div>
+
+    <div class="results-section">
+      <div class="results-header">
+        <h3>Final Rankings</h3>
+      </div>
+      <div class="ranking-list" id="ranking-list">
+        <div class="placeholder-text">Enter items and click "Assign Positions" to reveal the order!</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="confetti-container" id="confetti-container"></div>
+
+  <script>
+    const itemsInput = document.getElementById('items-input');
+    const generateBtn = document.getElementById('generate-btn');
+    const rankingList = document.getElementById('ranking-list');
+    const confettiContainer = document.getElementById('confetti-container');
+
+    // Fisher-Yates Array Shuffle algorithm
+    function shuffle(array) {
+      const arr = [...array];
+      for (let i = arr.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [arr[i], arr[j]] = [arr[j], arr[i]];
+      }
+      return arr;
+    }
+
+    generateBtn.addEventListener('click', () => {
+      const items = itemsInput.value
+        .split('\n')
+        .map(i => i.trim())
+        .filter(i => i.length > 0);
+
+      if (items.length < 2) {
+        alert('Please enter at least 2 items to assign positions.');
+        return;
+      }
+
+      // Disable inputs during animation
+      generateBtn.disabled = true;
+      clearConfetti();
+      rankingList.innerHTML = '';
+
+      // Shuffle items for random positioning
+      const shuffled = shuffle(items);
+
+      // Pre-render hidden rank cards
+      shuffled.forEach((item, index) => {
+        const card = document.createElement('div');
+        card.className = `rank-card ${index === 0 ? 'top-rank' : ''}`;
+
+        const badge = document.createElement('div');
+        badge.className = 'badge';
+        badge.innerText = `#${index + 1}`;
+
+        const name = document.createElement('div');
+        name.className = 'item-name';
+        name.innerText = item;
+
+        card.appendChild(badge);
+        card.appendChild(name);
+        rankingList.appendChild(card);
+      });
+
+      // Staggered reveal starting from Position #1 downwards
+      const cards = rankingList.querySelectorAll('.rank-card');
+      const delayStep = 500; // milliseconds between reveals
+
+      cards.forEach((card, i) => {
+        setTimeout(() => {
+          card.classList.add('visible');
+
+          // Trigger confetti when Position #1 is revealed
+          if (i === 0) {
+            startConfetti();
+          }
+
+          // Re-enable button after the last item is revealed
+          if (i === cards.length - 1) {
+            setTimeout(() => {
+              generateBtn.disabled = false;
+            }, 300);
+          }
+        }, i * delayStep);
+      });
+    });
+
+    function startConfetti() {
+      confettiContainer.innerHTML = '';
+      confettiContainer.style.display = 'block';
+
+      const confettiColors = ['#f43f5e', '#ec4899', '#3b82f6', '#0ea5e9', '#10b981', '#eab308', '#a855f7'];
+      const numberOfPieces = 100;
+
+      for (let i = 0; i < numberOfPieces; i++) {
+        const piece = document.createElement('div');
+        piece.classList.add('confetti-piece');
+
+        piece.style.left = `${Math.random() * 100}vw`;
+        piece.style.backgroundColor = confettiColors[Math.floor(Math.random() * confettiColors.length)];
+
+        const sizeWidth = Math.random() * 8 + 6;
+        const sizeHeight = Math.random() * 12 + 8;
+        piece.style.width = `${sizeWidth}px`;
+        piece.style.height = `${sizeHeight}px`;
+
+        const duration = Math.random() * 3 + 2;
+        const delay = Math.random() * 1.5;
+        piece.style.animationDuration = `${duration}s`;
+        piece.style.animationDelay = `${delay}s`;
+
+        confettiContainer.appendChild(piece);
+      }
+    }
+
+    function clearConfetti() {
+      confettiContainer.style.display = 'none';
+      confettiContainer.innerHTML = '';
+    }
+  </script>
+</body>
+
+</html>
