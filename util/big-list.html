@@ -255,6 +255,7 @@
     const generateBtn = document.getElementById('generate-btn');
     const rankingList = document.getElementById('ranking-list');
     const confettiContainer = document.getElementById('confetti-container');
+    let confettiTimeout = null;
 
     // Fisher-Yates Array Shuffle algorithm
     function shuffle(array) {
@@ -327,7 +328,7 @@
     });
 
     function startConfetti() {
-      confettiContainer.innerHTML = '';
+      clearConfetti();
       confettiContainer.style.display = 'block';
 
       const confettiColors = ['#f43f5e', '#ec4899', '#3b82f6', '#0ea5e9', '#10b981', '#eab308', '#a855f7'];
@@ -352,9 +353,18 @@
 
         confettiContainer.appendChild(piece);
       }
+
+      // Automatically clean up confetti after 5 seconds
+      confettiTimeout = setTimeout(() => {
+        clearConfetti();
+      }, 5000);
     }
 
     function clearConfetti() {
+      if (confettiTimeout) {
+        clearTimeout(confettiTimeout);
+        confettiTimeout = null;
+      }
       confettiContainer.style.display = 'none';
       confettiContainer.innerHTML = '';
     }
