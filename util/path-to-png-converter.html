@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SVG Path to PNG Converter</title>
+  <style>
+    :root {
+      --primary: #6366f1;
+      --primary-hover: #4f46e5;
+      --bg: #f8fafc;
+      --card-bg: #ffffff;
+      --text: #0f172a;
+      --border: #e2e8f0;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+      padding: 2rem;
+      overflow-x: hidden;
+    }
+
+    header {
+      margin-bottom: 2rem;
+      text-align: center;
+    }
+
+    h1 {
+      font-size: 2.5rem;
+      color: var(--primary);
+      margin-bottom: 0.5rem;
+    }
+
+    header p {
+      color: #64748b;
+    }
+
+    .container {
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+      max-width: 680px;
+      width: 100%;
+      background: var(--card-bg);
+      padding: 2rem;
+      border-radius: 16px;
+      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+      z-index: 10;
+    }
+
+    label {
+      display: block;
+      font-weight: 600;
+      margin-bottom: 0.35rem;
+    }
+
+    textarea {
+      width: 100%;
+      height: 110px;
+      padding: 1rem;
+      border: 2px solid var(--border);
+      border-radius: 8px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      font-size: 0.9rem;
+      resize: vertical;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    textarea:focus {
+      border-color: var(--primary);
+    }
+
+    .row {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .field {
+      flex: 1;
+      min-width: 120px;
+    }
+
+    input[type="number"],
+    input[type="text"] {
+      width: 100%;
+      padding: 0.65rem 0.75rem;
+      border: 2px solid var(--border);
+      border-radius: 8px;
+      font-size: 1rem;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    input[type="number"]:focus,
+    input[type="text"]:focus {
+      border-color: var(--primary);
+    }
+
+    input[type="color"] {
+      width: 100%;
+      height: 42px;
+      padding: 0.25rem;
+      border: 2px solid var(--border);
+      border-radius: 8px;
+      background: white;
+      cursor: pointer;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    input[type="color"]:focus {
+      border-color: var(--primary);
+    }
+
+    .preview-box {
+      margin-top: 0.25rem;
+      padding: 1.5rem;
+      border: 2px dashed var(--border);
+      border-radius: 8px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: #f1f5f9;
+      min-height: 200px;
+    }
+
+    canvas {
+      max-width: 100%;
+      height: auto;
+      background: transparent;
+    }
+
+    button {
+      background-color: var(--primary);
+      color: white;
+      border: none;
+      padding: 0.75rem 1.5rem;
+      font-size: 1rem;
+      font-weight: 600;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background-color 0.2s, transform 0.1s;
+      align-self: flex-start;
+    }
+
+    button:hover {
+      background-color: var(--primary-hover);
+    }
+
+    button:active {
+      transform: scale(0.98);
+    }
+
+    #offscreen {
+      position: absolute;
+      visibility: hidden;
+      pointer-events: none;
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <h1>Path to PNG</h1>
+    <p>Paste an SVG path, tweak size and colors, then download a PNG.</p>
+  </header>
+
+  <div class="container">
+    <div>
+      <label for="pathInput">Path Data (d attribute)</label>
+      <textarea
+        id="pathInput">M514 425L285 55a28 28 0 00-50 0L6 425c-14 23 0 55 25 55h458c25 0 40-32 25-55m-254-25c-17 0-30-13-30-30s13-30 30-30 30 13 30 30-13 30-30 30m30-90c0 6-4 10-10 10h-40c-6 0-10-4-10-10V180c0-6 4-10 10-10h40c6 0 10 4 10 10z</textarea>
+    </div>
+
+    <div class="row">
+      <div class="field">
+        <label for="width">PNG Width (px)</label>
+        <input type="number" id="width" value="512" min="16" />
+      </div>
+      <div class="field">
+        <label for="height">PNG Height (px)</label>
+        <input type="number" id="height" value="512" min="16" />
+      </div>
+      <div class="field">
+        <label for="padding">Padding (px)</label>
+        <input type="number" id="padding" value="20" min="0" />
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="field">
+        <label for="fillColor">Fill Color</label>
+        <input type="color" id="fillColor" value="#000000" />
+      </div>
+      <div class="field">
+        <label for="strokeColor">Stroke Color</label>
+        <input type="color" id="strokeColor" value="#000000" />
+      </div>
+      <div class="field">
+        <label for="strokeWidth">Stroke Width</label>
+        <input type="number" id="strokeWidth" value="0" min="0" />
+      </div>
+    </div>
+
+    <div class="preview-box">
+      <canvas id="outputCanvas"></canvas>
+    </div>
+
+    <button id="downloadBtn">Download PNG</button>
+  </div>
+
+  <svg id="offscreen">
+    <path id="measurePath"></path>
+  </svg>
+
+  <script>
+    const pathInput = document.getElementById('pathInput');
+    const widthInput = document.getElementById('width');
+    const heightInput = document.getElementById('height');
+    const paddingInput = document.getElementById('padding');
+    const fillInput = document.getElementById('fillColor');
+    const strokeInput = document.getElementById('strokeColor');
+    const strokeWidthInput = document.getElementById('strokeWidth');
+    const canvas = document.getElementById('outputCanvas');
+    const downloadBtn = document.getElementById('downloadBtn');
+    const measurePath = document.getElementById('measurePath');
+
+    function render() {
+      const d = pathInput.value.trim();
+      if (!d) return;
+
+      measurePath.setAttribute('d', d);
+      const bbox = measurePath.getBBox();
+
+      if (!bbox.width || !bbox.height) return;
+
+      const outWidth = parseInt(widthInput.value, 10) || 512;
+      const outHeight = parseInt(heightInput.value, 10) || 512;
+      const pad = parseInt(paddingInput.value, 10) || 0;
+
+      const viewBoxX = bbox.x - pad;
+      const viewBoxY = bbox.y - pad;
+      const viewBoxW = bbox.width + pad * 2;
+      const viewBoxH = bbox.height + pad * 2;
+
+      const svgContent = `
+        <svg xmlns="http://www.w3.org/2000/svg"
+             width="${outWidth}" height="${outHeight}"
+             viewBox="${viewBoxX} ${viewBoxY} ${viewBoxW} ${viewBoxH}">
+          <path d="${d}"
+                fill="${fillInput.value}"
+                stroke="${strokeInput.value}"
+                stroke-width="${strokeWidthInput.value}" />
+        </svg>
+      `;
+
+      const blob = new Blob([svgContent], { type: 'image/svg+xml;charset=utf-8' });
+      const url = URL.createObjectURL(blob);
+      const img = new Image();
+
+      img.onload = () => {
+        canvas.width = outWidth;
+        canvas.height = outHeight;
+        const ctx = canvas.getContext('2d');
+        ctx.clearRect(0, 0, outWidth, outHeight);
+        ctx.drawImage(img, 0, 0);
+        URL.revokeObjectURL(url);
+      };
+      img.src = url;
+    }
+
+    [
+      pathInput,
+      widthInput,
+      heightInput,
+      paddingInput,
+      fillInput,
+      strokeInput,
+      strokeWidthInput
+    ].forEach((el) => el.addEventListener('input', render));
+
+    downloadBtn.addEventListener('click', () => {
+      const link = document.createElement('a');
+      link.download = 'path-export.png';
+      link.href = canvas.toDataURL('image/png');
+      link.click();
+    });
+
+    render();
+  </script>
+</body>
+
+</html>
