@@ -12,8 +12,12 @@
     "label": "JPG to PNG Converter"
   },
   {
-      "path": "util/remove-bg.html",
-      "label": "Remove Background"
+    "path": "util/path-to-png-converter.html",
+    "label": "Path to PNG Converter"
+  },
+  {
+    "path": "util/remove-bg.html",
+    "label": "Remove Background"
   },
   {
     "path": "tec/pages/leasemanagement/briefing.html",
