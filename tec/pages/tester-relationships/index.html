@@ -1,0 +1,779 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>2026 Nov · Tester relationships</title>
+  <style>
+:root {
+  --bg: #f4f6f8;
+  --surface: #ffffff;
+  --ink: #1a2332;
+  --muted: #5b6b7c;
+  --line: #d7dee7;
+  --accent: #0b5fff;
+  --accent-soft: #e8f0ff;
+  --member: #0f766e;
+  --ask: #a16207;
+  --ai: #6d28d9;
+  --standalone: #334155;
+  --done: #64748b;
+  --todo: #475569;
+  --progress: #0369a1;
+  --uat: #b45309;
+  --radius: 10px;
+  --shadow: 0 1px 2px rgba(16, 24, 40, 0.06), 0 8px 24px rgba(16, 24, 40, 0.04);
+  font-family: "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  padding: 0;
+  background: var(--bg);
+  color: var(--ink);
+  line-height: 1.45;
+}
+
+body { min-height: 100vh; }
+
+.site-header {
+  background: linear-gradient(135deg, #0f172a 0%, #1e3a5f 55%, #0b5fff 140%);
+  color: #fff;
+  padding: 1.5rem 1.25rem 1.75rem;
+}
+
+.header-inner {
+  max-width: 1100px;
+  margin: 0 auto;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem 1.5rem;
+  justify-content: space-between;
+  align-items: flex-end;
+}
+
+.eyebrow {
+  margin: 0 0 0.35rem;
+  font-size: 0.75rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  opacity: 0.8;
+}
+
+h1 {
+  margin: 0;
+  font-size: clamp(1.45rem, 3vw, 1.9rem);
+  font-weight: 650;
+}
+
+.subtitle {
+  margin: 0.4rem 0 0;
+  max-width: 42rem;
+  color: rgba(255, 255, 255, 0.82);
+  font-size: 0.95rem;
+}
+
+.header-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.meta-pill {
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 999px;
+  padding: 0.35rem 0.75rem;
+  font-size: 0.8rem;
+}
+
+.layout {
+  max-width: 1100px;
+  margin: -0.75rem auto 2.5rem;
+  padding: 0 1.25rem;
+  display: grid;
+  gap: 1rem;
+}
+
+.panel {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 1rem 1.1rem 1.15rem;
+}
+
+.controls {
+  display: grid;
+  gap: 0.9rem;
+}
+
+.control-block { display: grid; gap: 0.4rem; }
+
+.control-label {
+  font-size: 0.72rem;
+  font-weight: 650;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.segmented {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+}
+
+.seg {
+  appearance: none;
+  border: 1px solid var(--line);
+  background: #fff;
+  color: var(--ink);
+  border-radius: 999px;
+  padding: 0.4rem 0.8rem;
+  font: inherit;
+  font-size: 0.88rem;
+  cursor: pointer;
+}
+
+.seg:hover { border-color: #9fb2c7; }
+
+.seg.active {
+  background: var(--accent-soft);
+  border-color: #9bbcff;
+  color: #083db5;
+  font-weight: 600;
+}
+
+.callout {
+  border-left: 4px solid var(--uat);
+  background: #fffbeb;
+}
+
+.callout h2 { margin-top: 0; }
+
+#uat-list {
+  margin: 0.5rem 0 0;
+  padding-left: 1.1rem;
+}
+
+#uat-list li { margin: 0.25rem 0; }
+
+h2 {
+  margin: 0 0 0.35rem;
+  font-size: 1.05rem;
+}
+
+.muted {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.88rem;
+}
+
+.cluster-section { margin-top: 0.15rem; }
+
+.cluster-head {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 0.85rem;
+  align-items: baseline;
+  margin-bottom: 0.65rem;
+}
+
+.cluster-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  border-radius: 999px;
+  padding: 0.2rem 0.55rem;
+}
+
+.cluster-badge.member-data { background: #ccfbf1; color: var(--member); }
+.cluster-badge.asknicely,
+.cluster-badge.asknicely-epic-peers { background: #fef3c7; color: var(--ask); }
+.cluster-badge.ai { background: #ede9fe; color: var(--ai); }
+.cluster-badge.standalone { background: #e2e8f0; color: var(--standalone); }
+
+.count-chip {
+  font-size: 0.8rem;
+  color: var(--muted);
+}
+
+.tree {
+  background: #f8fafc;
+  border: 1px dashed #cbd5e1;
+  border-radius: 8px;
+  padding: 0.75rem 0.9rem;
+  margin: 0.6rem 0 0.9rem;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 0.8rem;
+  overflow-x: auto;
+}
+
+.tree ul {
+  list-style: none;
+  margin: 0;
+  padding-left: 1.1rem;
+}
+
+.tree > ul { padding-left: 0; }
+
+.tree li {
+  position: relative;
+  margin: 0.15rem 0;
+  padding-left: 0.15rem;
+}
+
+.tree .node-key { font-weight: 650; }
+.tree a { color: inherit; }
+
+.table-wrap { overflow-x: auto; }
+
+table.tickets {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.88rem;
+}
+
+table.tickets th,
+table.tickets td {
+  text-align: left;
+  padding: 0.55rem 0.5rem;
+  border-bottom: 1px solid var(--line);
+  vertical-align: top;
+}
+
+table.tickets th {
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--muted);
+  font-weight: 650;
+  white-space: nowrap;
+}
+
+table.tickets tr:last-child td { border-bottom: none; }
+
+table.tickets a {
+  color: var(--accent);
+  text-decoration: none;
+  font-weight: 650;
+}
+
+table.tickets a:hover { text-decoration: underline; }
+
+.status-chip {
+  display: inline-block;
+  border-radius: 999px;
+  padding: 0.12rem 0.5rem;
+  font-size: 0.75rem;
+  font-weight: 650;
+  white-space: nowrap;
+}
+
+.status-chip.todo { background: #e2e8f0; color: var(--todo); }
+.status-chip.progress { background: #e0f2fe; color: var(--progress); }
+.status-chip.done { background: #f1f5f9; color: var(--done); }
+.status-chip.uat { background: #ffedd5; color: var(--uat); }
+
+.peer-note {
+  margin: 0.75rem 0 0.35rem;
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+
+.detail-list {
+  margin: 0.75rem 0 0;
+  padding-left: 1.2rem;
+}
+
+.detail-list li {
+  margin: 0.45rem 0;
+  font-size: 0.88rem;
+  word-break: break-word;
+}
+
+.detail-list a { color: var(--accent); }
+
+.footnote {
+  text-align: center;
+  color: var(--muted);
+  padding: 1rem;
+}
+
+.site-footer {
+  max-width: 1100px;
+  margin: 0 auto 2rem;
+  padding: 0 1.25rem;
+  color: var(--muted);
+  font-size: 0.8rem;
+}
+
+.site-footer p { margin: 0; }
+
+@media (max-width: 640px) {
+  .site-header { padding: 1.15rem 1rem 1.4rem; }
+  .layout { padding: 0 0.85rem; }
+  .panel { padding: 0.9rem; }
+  table.tickets th:nth-child(n+5),
+  table.tickets td:nth-child(n+5) {
+    /* keep all columns; allow horizontal scroll via .table-wrap */
+  }
+}
+
+
+.controls-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem 1rem;
+  align-items: center;
+  justify-content: space-between;
+}
+.btn-refresh {
+  appearance: none;
+  border: 1px solid var(--line);
+  background: #fff;
+  color: var(--ink);
+  border-radius: 999px;
+  padding: 0.45rem 1rem;
+  font: inherit;
+  font-size: 0.88rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+.btn-refresh:hover { border-color: #9fb2c7; background: var(--accent-soft); color: #083db5; }
+.btn-refresh:disabled { opacity: 0.6; cursor: wait; }
+.refresh-note {
+  margin: 0;
+  font-size: 0.85rem;
+  color: var(--muted);
+  flex: 1 1 12rem;
+}
+
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="header-inner">
+      <div>
+        <p class="eyebrow">DEV1 · Board 268 · Sprint 2026 Nov</p>
+        <h1>Tester relationships</h1>
+        <p class="subtitle">Ivan Chan as Tester — incomplete work and hub trees for the November sprint.</p>
+      </div>
+      <div class="header-meta" id="header-meta">
+        <span class="meta-pill" id="fetched-at">Loading…</span>
+        <span class="meta-pill" id="ticket-count"></span>
+      </div>
+    </div>
+  </header>
+
+  <main class="layout">
+    <section class="panel controls" aria-label="Filters">
+      <div class="control-block">
+        <span class="control-label">Cluster</span>
+        <div class="segmented" role="tablist" id="cluster-filter">
+          <button type="button" class="seg active" data-cluster="all" aria-pressed="true">All</button>
+          <button type="button" class="seg" data-cluster="member-data" aria-pressed="false">Member Data</button>
+          <button type="button" class="seg" data-cluster="asknicely" aria-pressed="false">AskNicely</button>
+          <button type="button" class="seg" data-cluster="ai" aria-pressed="false">AI</button>
+          <button type="button" class="seg" data-cluster="standalone" aria-pressed="false">Standalone</button>
+        </div>
+      </div>
+      <div class="control-block">
+        <span class="control-label">Status</span>
+        <div class="segmented" role="tablist" id="status-filter">
+          <button type="button" class="seg active" data-status="open" aria-pressed="true">Open only</button>
+          <button type="button" class="seg" data-status="all" aria-pressed="false">Include Done</button>
+        </div>
+      </div>
+      <div class="controls-row">
+        <button type="button" class="btn-refresh" id="refresh-btn">Refresh data</button>
+        <p class="refresh-note" id="refresh-note" role="status"></p>
+      </div>
+    </section>
+
+    <section class="panel callout" id="uat-callout" hidden>
+      <h2>UAT / ready for deployment</h2>
+      <p class="muted">Tickets currently in UAT, Ready for UAT, or Ready for deployment.</p>
+      <ul id="uat-list"></ul>
+    </section>
+
+    <div id="cluster-sections"></div>
+
+    <section class="panel" id="detail-section">
+      <h2>Ticket detail</h2>
+      <p class="muted">Display line format: Type Key (url) - Name · Assignee · Tester · Report to Reporter</p>
+      <ol id="detail-list" class="detail-list"></ol>
+    </section>
+
+    <p class="footnote" id="empty-state" hidden>No tickets match the current filters.</p>
+  </main>
+
+  <footer class="site-footer">
+    <p>Static board: <code>index.html</code> + <code>tickets.json</code>. Replace the JSON when Jira moves, then use Refresh data — no credentials in the browser.</p>
+  </footer>
+
+  <script>
+(() => {
+  "use strict";
+
+  const DATA_URL = "./tickets.json";
+
+  const CLUSTER_META = {
+    "member-data": {
+      id: "member-data",
+      label: "Member Data",
+      caption: "Hub DEV1-2709 Parent-Child / subtask tree, plus Member Data epic DEV1-2339 orphans.",
+      hubKey: "DEV1-2709",
+      filterIds: ["member-data"],
+    },
+    asknicely: {
+      id: "asknicely",
+      label: "AskNicely",
+      caption: "Hub DEV1-2737 tree. Epic DEV1-2 peers without a link to 2737 are listed as AskNicely · epic peers.",
+      hubKey: "DEV1-2737",
+      filterIds: ["asknicely", "asknicely-epic-peers"],
+    },
+    ai: {
+      id: "ai",
+      label: "AI",
+      caption: "Epic DEV1-1321 (Parent-Child / subtasks under that epic).",
+      hubKey: "DEV1-2379",
+      epicKey: "DEV1-1321",
+      filterIds: ["ai"],
+    },
+    standalone: {
+      id: "standalone",
+      label: "Standalone",
+      caption: "Tester-sprint tickets outside the Member Data, AskNicely, and AI hubs — epic shown as secondary label.",
+      hubKey: null,
+      filterIds: ["standalone"],
+    },
+  };
+
+  const SECTION_ORDER = ["member-data", "asknicely", "ai", "standalone"];
+
+  const state = {
+    data: null,
+    cluster: "all",
+    status: "open",
+  };
+
+  const el = {
+    fetchedAt: document.getElementById("fetched-at"),
+    ticketCount: document.getElementById("ticket-count"),
+    clusterFilter: document.getElementById("cluster-filter"),
+    statusFilter: document.getElementById("status-filter"),
+    refreshBtn: document.getElementById("refresh-btn"),
+    refreshNote: document.getElementById("refresh-note"),
+    uatCallout: document.getElementById("uat-callout"),
+    uatList: document.getElementById("uat-list"),
+    sections: document.getElementById("cluster-sections"),
+    detailList: document.getElementById("detail-list"),
+    emptyState: document.getElementById("empty-state"),
+  };
+
+  function escapeHtml(value) {
+    return String(value ?? "")
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;");
+  }
+
+  function dash(value) {
+    const v = (value ?? "").toString().trim();
+    return v ? v : "—";
+  }
+
+  function isUatLike(status) {
+    return /uat|ready for deployment/i.test(status || "");
+  }
+
+  function statusClass(ticket) {
+    if (isUatLike(ticket.status)) return "uat";
+    if (ticket.statusCategory === "Done") return "done";
+    if (ticket.statusCategory === "In Progress") return "progress";
+    return "todo";
+  }
+
+  function matchesClusterFilter(ticket, clusterFilter) {
+    if (clusterFilter === "all") return true;
+    const meta = CLUSTER_META[clusterFilter];
+    if (!meta) return ticket.cluster === clusterFilter;
+    return meta.filterIds.includes(ticket.cluster);
+  }
+
+  function matchesStatusFilter(ticket, statusFilter) {
+    if (statusFilter === "all") return true;
+    return ticket.statusCategory !== "Done";
+  }
+
+  function filteredTickets() {
+    return (state.data?.tickets || []).filter(
+      (t) => matchesClusterFilter(t, state.cluster) && matchesStatusFilter(t, state.status)
+    );
+  }
+
+  function byKey(tickets) {
+    const map = new Map();
+    for (const t of tickets) map.set(t.key, t);
+    return map;
+  }
+
+  function setActiveSegment(container, attr, value) {
+    for (const btn of container.querySelectorAll(".seg")) {
+      const active = btn.dataset[attr] === value;
+      btn.classList.toggle("active", active);
+      btn.setAttribute("aria-pressed", active ? "true" : "false");
+    }
+  }
+
+  function formatFetchedAt(iso) {
+    if (!iso) return "Fetched: unknown";
+    try {
+      const d = new Date(iso);
+      if (Number.isNaN(d.getTime())) return `Fetched: ${iso}`;
+      return `Fetched: ${iso} (Asia/Hong_Kong)`;
+    } catch {
+      return `Fetched: ${iso}`;
+    }
+  }
+
+  function renderUat(allVisible) {
+    const uat = allVisible
+      .filter((t) => isUatLike(t.status))
+      .sort((a, b) => a.key.localeCompare(b.key));
+    if (!uat.length) {
+      el.uatCallout.hidden = true;
+      el.uatList.innerHTML = "";
+      return;
+    }
+    el.uatCallout.hidden = false;
+    el.uatList.innerHTML = uat
+      .map(
+        (t) =>
+          `<li><a href="${escapeHtml(t.url)}" target="_blank" rel="noopener">${escapeHtml(t.key)}</a> · ${escapeHtml(t.status)} · ${escapeHtml(t.summary)}</li>`
+      )
+      .join("");
+  }
+
+  function renderTree(hubKey, tickets) {
+    if (!hubKey) return "";
+    const map = byKey(tickets);
+    const hub = map.get(hubKey) || (state.data.tickets || []).find((t) => t.key === hubKey);
+    if (!hub) return "";
+
+    const fullMap = byKey(state.data.tickets || []);
+
+    function childKeys(ticket) {
+      const keys = [];
+      for (const k of ticket.parentChildChildren || []) keys.push({ key: k, kind: "child" });
+      for (const k of ticket.subtasks || []) keys.push({ key: k, kind: "subtask" });
+      return keys;
+    }
+
+    function renderNode(key, depth, visited) {
+      if (visited.has(key)) return "";
+      visited.add(key);
+      const ticket = map.get(key) || fullMap.get(key);
+      if (!ticket) return "";
+      if (key !== hubKey && !map.has(key)) {
+        const kids = childKeys(fullMap.get(key) || ticket)
+          .map((c) => renderNode(c.key, depth + 1, visited))
+          .filter(Boolean)
+          .join("");
+        return kids;
+      }
+      const label = `${escapeHtml(ticket.type)} <span class="node-key"><a href="${escapeHtml(ticket.url)}" target="_blank" rel="noopener">${escapeHtml(ticket.key)}</a></span> — ${escapeHtml(ticket.summary)} <span class="status-chip ${statusClass(ticket)}">${escapeHtml(ticket.status)}</span>`;
+      const kids = childKeys(ticket)
+        .map((c) => renderNode(c.key, depth + 1, visited))
+        .filter(Boolean)
+        .join("");
+      if (!kids) return `<li>${label}</li>`;
+      return `<li>${label}<ul>${kids}</ul></li>`;
+    }
+
+    const body = renderNode(hubKey, 0, new Set());
+    if (!body) return "";
+    return `<div class="tree" aria-label="Relationship tree"><ul>${body}</ul></div>`;
+  }
+
+  function renderTable(tickets) {
+    if (!tickets.length) {
+      return `<p class="muted">No tickets in this section for the current filters.</p>`;
+    }
+    const rows = tickets
+      .slice()
+      .sort((a, b) => a.key.localeCompare(b.key))
+      .map((t) => {
+        const epicNote =
+          t.cluster === "standalone" && t.epicKey
+            ? `<div class="muted">Epic ${escapeHtml(t.epicKey)}${t.epicSummary ? ` · ${escapeHtml(t.epicSummary)}` : ""}</div>`
+            : t.cluster === "asknicely-epic-peers"
+              ? `<div class="muted">AskNicely · epic peers${t.epicKey ? ` (${escapeHtml(t.epicKey)})` : ""}</div>`
+              : "";
+        return `<tr>
+          <td>${escapeHtml(t.type)}</td>
+          <td><a href="${escapeHtml(t.url)}" target="_blank" rel="noopener">${escapeHtml(t.key)}</a></td>
+          <td>${escapeHtml(t.summary)}${epicNote}</td>
+          <td>${escapeHtml(dash(t.assignee))}</td>
+          <td>${escapeHtml(dash(t.tester))}</td>
+          <td>${escapeHtml(dash(t.reporter))}</td>
+          <td><span class="status-chip ${statusClass(t)}">${escapeHtml(t.status)}</span></td>
+        </tr>`;
+      })
+      .join("");
+    return `<div class="table-wrap"><table class="tickets">
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Key</th>
+          <th>Name</th>
+          <th>Assignee</th>
+          <th>Tester</th>
+          <th>Reporter</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>${rows}</tbody>
+    </table></div>`;
+  }
+
+  function ticketsForSection(sectionId, allVisible) {
+    const meta = CLUSTER_META[sectionId];
+    return allVisible.filter((t) => meta.filterIds.includes(t.cluster));
+  }
+
+  function renderSections(allVisible) {
+    const show = SECTION_ORDER.filter((id) => {
+      if (state.cluster === "all") return true;
+      return state.cluster === id;
+    });
+
+    const html = show
+      .map((id) => {
+        const meta = CLUSTER_META[id];
+        const tickets = ticketsForSection(id, allVisible);
+        const hubTickets = tickets;
+        const tree =
+          id === "standalone"
+            ? ""
+            : renderTree(meta.hubKey, hubTickets.length ? hubTickets : tickets);
+
+        return `<section class="panel cluster-section" data-cluster="${escapeHtml(id)}">
+          <div class="cluster-head">
+            <span class="cluster-badge ${escapeHtml(id)}">${escapeHtml(meta.label)}</span>
+            <h2>${escapeHtml(meta.label)}</h2>
+            <span class="count-chip">${tickets.length} ticket${tickets.length === 1 ? "" : "s"}</span>
+          </div>
+          <p class="muted">${escapeHtml(meta.caption)}</p>
+          ${tree}
+          ${id === "asknicely" && tickets.some((t) => t.cluster === "asknicely-epic-peers")
+            ? `<p class="peer-note">Rows tagged “AskNicely · epic peers” share epic DEV1-2 but are not linked to hub DEV1-2737.</p>`
+            : ""}
+          ${renderTable(tickets)}
+        </section>`;
+      })
+      .join("");
+
+    el.sections.innerHTML = html;
+  }
+
+  function renderDetail(allVisible) {
+    const sorted = allVisible.slice().sort((a, b) => a.key.localeCompare(b.key));
+    if (!sorted.length) {
+      el.detailList.innerHTML = "";
+      return;
+    }
+    el.detailList.innerHTML = sorted
+      .map((t) => {
+        const line = escapeHtml(t.displayLine || "");
+        const linked = line.replace(
+          /(https:\/\/executivecentre\.atlassian\.net\/browse\/DEV1-\d+)/g,
+          '<a href="$1" target="_blank" rel="noopener">$1</a>'
+        );
+        return `<li>${linked}</li>`;
+      })
+      .join("");
+  }
+
+  function renderLoadError(message) {
+    el.fetchedAt.textContent = "Could not load data";
+    el.ticketCount.textContent = "";
+    el.uatCallout.hidden = true;
+    el.emptyState.hidden = true;
+    el.sections.innerHTML = `<section class="panel"><p>${escapeHtml(message)}</p></section>`;
+    el.detailList.innerHTML = "";
+  }
+
+  function render() {
+    if (!state.data) return;
+    const visible = filteredTickets();
+    el.fetchedAt.textContent = formatFetchedAt(state.data.fetchedAt);
+    el.ticketCount.textContent = `${visible.length} shown · ${state.data.tickets.length} in feed`;
+    el.emptyState.hidden = visible.length > 0;
+    renderUat(visible);
+    renderSections(visible);
+    renderDetail(visible);
+  }
+
+  function wireFilters() {
+    el.clusterFilter.addEventListener("click", (e) => {
+      const btn = e.target.closest(".seg");
+      if (!btn) return;
+      state.cluster = btn.dataset.cluster;
+      setActiveSegment(el.clusterFilter, "cluster", state.cluster);
+      render();
+    });
+    el.statusFilter.addEventListener("click", (e) => {
+      const btn = e.target.closest(".seg");
+      if (!btn) return;
+      state.status = btn.dataset.status;
+      setActiveSegment(el.statusFilter, "status", state.status);
+      render();
+    });
+  }
+
+  function setRefreshNoteLoaded() {
+    el.refreshNote.textContent =
+      "Showing tickets.json beside this page. Replace that file when Jira changes, publish, then click Refresh data.";
+  }
+
+  async function loadTickets({ quiet = false } = {}) {
+    el.refreshBtn.disabled = true;
+    if (!quiet) el.refreshNote.textContent = "Loading tickets.json…";
+    try {
+      const res = await fetch(`${DATA_URL}?t=${Date.now()}`, { cache: "no-store" });
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      state.data = await res.json();
+      setRefreshNoteLoaded();
+      render();
+    } catch (err) {
+      renderLoadError(
+        `Could not load <code>./tickets.json</code>. Serve this folder over HTTP (GitHub Pages). ${escapeHtml(err.message || err)}`
+      );
+      el.refreshNote.textContent =
+        "Could not load tickets.json. Check the file sits next to this page and you are viewing over HTTP (GitHub Pages).";
+    } finally {
+      el.refreshBtn.disabled = false;
+    }
+  }
+
+  function boot() {
+    wireFilters();
+    el.refreshBtn.addEventListener("click", () => loadTickets());
+    loadTickets({ quiet: true });
+  }
+
+  boot();
+})();
+  </script>
+</body>
+</html>
