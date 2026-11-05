@@ -1,0 +1,48 @@
+name: Refresh Jira Tester relationships
+
+on:
+  schedule:
+    # Every 30 minutes
+    - cron: "*/30 * * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: refresh-jira-tester-relationships
+  cancel-in-progress: true
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Fetch Jira tickets
+        env:
+          JIRA_BASE_URL: https://executivecentre.atlassian.net
+          JIRA_EMAIL: ${{ secrets.JIRA_EMAIL }}
+          JIRA_API_TOKEN: ${{ secrets.JIRA_API_TOKEN }}
+          JIRA_SPRINT_ID: "3326"
+          IVAN_ACCOUNT_ID: "712020:9556c036-6acf-4d45-bf4f-b39fbbca9aa4"
+        run: node scripts/fetch-jira-tester-relationships.mjs
+
+      - name: Commit updated JSON if changed
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add tec/pages/tester-relationships/data/tickets.json
+          if git diff --staged --quiet; then
+            echo "No changes to tickets.json"
+          else
+            git commit -m "chore(tester-relationships): refresh Jira tickets.json"
+            git push
+          fi

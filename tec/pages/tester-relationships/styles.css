@@ -1,0 +1,321 @@
+:root {
+  --bg: #f4f6f8;
+  --surface: #ffffff;
+  --ink: #1a2332;
+  --muted: #5b6b7c;
+  --line: #d7dee7;
+  --accent: #0b5fff;
+  --accent-soft: #e8f0ff;
+  --member: #0f766e;
+  --ask: #a16207;
+  --ai: #6d28d9;
+  --standalone: #334155;
+  --done: #64748b;
+  --todo: #475569;
+  --progress: #0369a1;
+  --uat: #b45309;
+  --radius: 10px;
+  --shadow: 0 1px 2px rgba(16, 24, 40, 0.06), 0 8px 24px rgba(16, 24, 40, 0.04);
+  font-family: "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  padding: 0;
+  background: var(--bg);
+  color: var(--ink);
+  line-height: 1.45;
+}
+
+body { min-height: 100vh; }
+
+.site-header {
+  background: linear-gradient(135deg, #0f172a 0%, #1e3a5f 55%, #0b5fff 140%);
+  color: #fff;
+  padding: 1.5rem 1.25rem 1.75rem;
+}
+
+.header-inner {
+  max-width: 1100px;
+  margin: 0 auto;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem 1.5rem;
+  justify-content: space-between;
+  align-items: flex-end;
+}
+
+.eyebrow {
+  margin: 0 0 0.35rem;
+  font-size: 0.75rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  opacity: 0.8;
+}
+
+h1 {
+  margin: 0;
+  font-size: clamp(1.45rem, 3vw, 1.9rem);
+  font-weight: 650;
+}
+
+.subtitle {
+  margin: 0.4rem 0 0;
+  max-width: 42rem;
+  color: rgba(255, 255, 255, 0.82);
+  font-size: 0.95rem;
+}
+
+.header-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.meta-pill {
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 999px;
+  padding: 0.35rem 0.75rem;
+  font-size: 0.8rem;
+}
+
+.layout {
+  max-width: 1100px;
+  margin: -0.75rem auto 2.5rem;
+  padding: 0 1.25rem;
+  display: grid;
+  gap: 1rem;
+}
+
+.panel {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 1rem 1.1rem 1.15rem;
+}
+
+.controls {
+  display: grid;
+  gap: 0.9rem;
+}
+
+.control-block { display: grid; gap: 0.4rem; }
+
+.control-label {
+  font-size: 0.72rem;
+  font-weight: 650;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.segmented {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+}
+
+.seg {
+  appearance: none;
+  border: 1px solid var(--line);
+  background: #fff;
+  color: var(--ink);
+  border-radius: 999px;
+  padding: 0.4rem 0.8rem;
+  font: inherit;
+  font-size: 0.88rem;
+  cursor: pointer;
+}
+
+.seg:hover { border-color: #9fb2c7; }
+
+.seg.active {
+  background: var(--accent-soft);
+  border-color: #9bbcff;
+  color: #083db5;
+  font-weight: 600;
+}
+
+.callout {
+  border-left: 4px solid var(--uat);
+  background: #fffbeb;
+}
+
+.callout h2 { margin-top: 0; }
+
+#uat-list {
+  margin: 0.5rem 0 0;
+  padding-left: 1.1rem;
+}
+
+#uat-list li { margin: 0.25rem 0; }
+
+h2 {
+  margin: 0 0 0.35rem;
+  font-size: 1.05rem;
+}
+
+.muted {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.88rem;
+}
+
+.cluster-section { margin-top: 0.15rem; }
+
+.cluster-head {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 0.85rem;
+  align-items: baseline;
+  margin-bottom: 0.65rem;
+}
+
+.cluster-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  border-radius: 999px;
+  padding: 0.2rem 0.55rem;
+}
+
+.cluster-badge.member-data { background: #ccfbf1; color: var(--member); }
+.cluster-badge.asknicely,
+.cluster-badge.asknicely-epic-peers { background: #fef3c7; color: var(--ask); }
+.cluster-badge.ai { background: #ede9fe; color: var(--ai); }
+.cluster-badge.standalone { background: #e2e8f0; color: var(--standalone); }
+
+.count-chip {
+  font-size: 0.8rem;
+  color: var(--muted);
+}
+
+.tree {
+  background: #f8fafc;
+  border: 1px dashed #cbd5e1;
+  border-radius: 8px;
+  padding: 0.75rem 0.9rem;
+  margin: 0.6rem 0 0.9rem;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 0.8rem;
+  overflow-x: auto;
+}
+
+.tree ul {
+  list-style: none;
+  margin: 0;
+  padding-left: 1.1rem;
+}
+
+.tree > ul { padding-left: 0; }
+
+.tree li {
+  position: relative;
+  margin: 0.15rem 0;
+  padding-left: 0.15rem;
+}
+
+.tree .node-key { font-weight: 650; }
+.tree a { color: inherit; }
+
+.table-wrap { overflow-x: auto; }
+
+table.tickets {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.88rem;
+}
+
+table.tickets th,
+table.tickets td {
+  text-align: left;
+  padding: 0.55rem 0.5rem;
+  border-bottom: 1px solid var(--line);
+  vertical-align: top;
+}
+
+table.tickets th {
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--muted);
+  font-weight: 650;
+  white-space: nowrap;
+}
+
+table.tickets tr:last-child td { border-bottom: none; }
+
+table.tickets a {
+  color: var(--accent);
+  text-decoration: none;
+  font-weight: 650;
+}
+
+table.tickets a:hover { text-decoration: underline; }
+
+.status-chip {
+  display: inline-block;
+  border-radius: 999px;
+  padding: 0.12rem 0.5rem;
+  font-size: 0.75rem;
+  font-weight: 650;
+  white-space: nowrap;
+}
+
+.status-chip.todo { background: #e2e8f0; color: var(--todo); }
+.status-chip.progress { background: #e0f2fe; color: var(--progress); }
+.status-chip.done { background: #f1f5f9; color: var(--done); }
+.status-chip.uat { background: #ffedd5; color: var(--uat); }
+
+.peer-note {
+  margin: 0.75rem 0 0.35rem;
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+
+.detail-list {
+  margin: 0.75rem 0 0;
+  padding-left: 1.2rem;
+}
+
+.detail-list li {
+  margin: 0.45rem 0;
+  font-size: 0.88rem;
+  word-break: break-word;
+}
+
+.detail-list a { color: var(--accent); }
+
+.footnote {
+  text-align: center;
+  color: var(--muted);
+  padding: 1rem;
+}
+
+.site-footer {
+  max-width: 1100px;
+  margin: 0 auto 2rem;
+  padding: 0 1.25rem;
+  color: var(--muted);
+  font-size: 0.8rem;
+}
+
+.site-footer p { margin: 0; }
+
+@media (max-width: 640px) {
+  .site-header { padding: 1.15rem 1rem 1.4rem; }
+  .layout { padding: 0 0.85rem; }
+  .panel { padding: 0.9rem; }
+  table.tickets th:nth-child(n+5),
+  table.tickets td:nth-child(n+5) {
+    /* keep all columns; allow horizontal scroll via .table-wrap */
+  }
+}

@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>2026 Nov · Tester relationships</title>
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body>
+  <header class="site-header">
+    <div class="header-inner">
+      <div>
+        <p class="eyebrow">DEV1 · Board 268 · Sprint 2026 Nov</p>
+        <h1>Tester relationships</h1>
+        <p class="subtitle">Ivan Chan as Tester — incomplete work and hub trees, refreshed from Jira into static JSON.</p>
+      </div>
+      <div class="header-meta" id="header-meta">
+        <span class="meta-pill" id="fetched-at">Loading…</span>
+        <span class="meta-pill" id="ticket-count"></span>
+      </div>
+    </div>
+  </header>
+
+  <main class="layout">
+    <section class="panel controls" aria-label="Filters">
+      <div class="control-block">
+        <span class="control-label">Cluster</span>
+        <div class="segmented" role="tablist" id="cluster-filter">
+          <button type="button" class="seg active" data-cluster="all" aria-pressed="true">All</button>
+          <button type="button" class="seg" data-cluster="member-data" aria-pressed="false">Member Data</button>
+          <button type="button" class="seg" data-cluster="asknicely" aria-pressed="false">AskNicely</button>
+          <button type="button" class="seg" data-cluster="ai" aria-pressed="false">AI</button>
+          <button type="button" class="seg" data-cluster="standalone" aria-pressed="false">Standalone</button>
+        </div>
+      </div>
+      <div class="control-block">
+        <span class="control-label">Status</span>
+        <div class="segmented" role="tablist" id="status-filter">
+          <button type="button" class="seg active" data-status="open" aria-pressed="true">Open only</button>
+          <button type="button" class="seg" data-status="all" aria-pressed="false">Include Done</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel callout" id="uat-callout" hidden>
+      <h2>UAT / ready for deployment</h2>
+      <p class="muted">Tickets currently in UAT, Ready for UAT, or Ready for deployment (from live data).</p>
+      <ul id="uat-list"></ul>
+    </section>
+
+    <div id="cluster-sections"></div>
+
+    <section class="panel" id="detail-section">
+      <h2>Ticket detail</h2>
+      <p class="muted">Display line format: Type Key (url) - Name · Assignee · Tester · Report to Reporter</p>
+      <ol id="detail-list" class="detail-list"></ol>
+    </section>
+
+    <p class="footnote" id="empty-state" hidden>No tickets match the current filters.</p>
+  </main>
+
+  <footer class="site-footer">
+    <p>Static GitHub Pages board. Jira credentials stay in Actions secrets — never in the browser.</p>
+  </footer>
+
+  <script src="./app.js" defer></script>
+</body>
+</html>
