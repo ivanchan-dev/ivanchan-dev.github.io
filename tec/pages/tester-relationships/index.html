@@ -4,7 +4,359 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>2026 Nov · Tester relationships</title>
-  <link rel="stylesheet" href="./styles.css" />
+  <style>
+:root {
+  --bg: #f4f6f8;
+  --surface: #ffffff;
+  --ink: #1a2332;
+  --muted: #5b6b7c;
+  --line: #d7dee7;
+  --accent: #0b5fff;
+  --accent-soft: #e8f0ff;
+  --member: #0f766e;
+  --ask: #a16207;
+  --ai: #6d28d9;
+  --standalone: #334155;
+  --done: #64748b;
+  --todo: #475569;
+  --progress: #0369a1;
+  --uat: #b45309;
+  --radius: 10px;
+  --shadow: 0 1px 2px rgba(16, 24, 40, 0.06), 0 8px 24px rgba(16, 24, 40, 0.04);
+  font-family: "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  padding: 0;
+  background: var(--bg);
+  color: var(--ink);
+  line-height: 1.45;
+}
+
+body { min-height: 100vh; }
+
+.site-header {
+  background: linear-gradient(135deg, #0f172a 0%, #1e3a5f 55%, #0b5fff 140%);
+  color: #fff;
+  padding: 1.5rem 1.25rem 1.75rem;
+}
+
+.header-inner {
+  max-width: 1100px;
+  margin: 0 auto;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem 1.5rem;
+  justify-content: space-between;
+  align-items: flex-end;
+}
+
+.eyebrow {
+  margin: 0 0 0.35rem;
+  font-size: 0.75rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  opacity: 0.8;
+}
+
+h1 {
+  margin: 0;
+  font-size: clamp(1.45rem, 3vw, 1.9rem);
+  font-weight: 650;
+}
+
+.subtitle {
+  margin: 0.4rem 0 0;
+  max-width: 42rem;
+  color: rgba(255, 255, 255, 0.82);
+  font-size: 0.95rem;
+}
+
+.header-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.meta-pill {
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 999px;
+  padding: 0.35rem 0.75rem;
+  font-size: 0.8rem;
+}
+
+.layout {
+  max-width: 1100px;
+  margin: -0.75rem auto 2.5rem;
+  padding: 0 1.25rem;
+  display: grid;
+  gap: 1rem;
+}
+
+.panel {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 1rem 1.1rem 1.15rem;
+}
+
+.controls {
+  display: grid;
+  gap: 0.9rem;
+}
+
+.control-block { display: grid; gap: 0.4rem; }
+
+.control-label {
+  font-size: 0.72rem;
+  font-weight: 650;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.segmented {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+}
+
+.seg {
+  appearance: none;
+  border: 1px solid var(--line);
+  background: #fff;
+  color: var(--ink);
+  border-radius: 999px;
+  padding: 0.4rem 0.8rem;
+  font: inherit;
+  font-size: 0.88rem;
+  cursor: pointer;
+}
+
+.seg:hover { border-color: #9fb2c7; }
+
+.seg.active {
+  background: var(--accent-soft);
+  border-color: #9bbcff;
+  color: #083db5;
+  font-weight: 600;
+}
+
+.callout {
+  border-left: 4px solid var(--uat);
+  background: #fffbeb;
+}
+
+.callout h2 { margin-top: 0; }
+
+#uat-list {
+  margin: 0.5rem 0 0;
+  padding-left: 1.1rem;
+}
+
+#uat-list li { margin: 0.25rem 0; }
+
+h2 {
+  margin: 0 0 0.35rem;
+  font-size: 1.05rem;
+}
+
+.muted {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.88rem;
+}
+
+.cluster-section { margin-top: 0.15rem; }
+
+.cluster-head {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 0.85rem;
+  align-items: baseline;
+  margin-bottom: 0.65rem;
+}
+
+.cluster-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  border-radius: 999px;
+  padding: 0.2rem 0.55rem;
+}
+
+.cluster-badge.member-data { background: #ccfbf1; color: var(--member); }
+.cluster-badge.asknicely,
+.cluster-badge.asknicely-epic-peers { background: #fef3c7; color: var(--ask); }
+.cluster-badge.ai { background: #ede9fe; color: var(--ai); }
+.cluster-badge.standalone { background: #e2e8f0; color: var(--standalone); }
+
+.count-chip {
+  font-size: 0.8rem;
+  color: var(--muted);
+}
+
+.tree {
+  background: #f8fafc;
+  border: 1px dashed #cbd5e1;
+  border-radius: 8px;
+  padding: 0.75rem 0.9rem;
+  margin: 0.6rem 0 0.9rem;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 0.8rem;
+  overflow-x: auto;
+}
+
+.tree ul {
+  list-style: none;
+  margin: 0;
+  padding-left: 1.1rem;
+}
+
+.tree > ul { padding-left: 0; }
+
+.tree li {
+  position: relative;
+  margin: 0.15rem 0;
+  padding-left: 0.15rem;
+}
+
+.tree .node-key { font-weight: 650; }
+.tree a { color: inherit; }
+
+.table-wrap { overflow-x: auto; }
+
+table.tickets {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.88rem;
+}
+
+table.tickets th,
+table.tickets td {
+  text-align: left;
+  padding: 0.55rem 0.5rem;
+  border-bottom: 1px solid var(--line);
+  vertical-align: top;
+}
+
+table.tickets th {
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--muted);
+  font-weight: 650;
+  white-space: nowrap;
+}
+
+table.tickets tr:last-child td { border-bottom: none; }
+
+table.tickets a {
+  color: var(--accent);
+  text-decoration: none;
+  font-weight: 650;
+}
+
+table.tickets a:hover { text-decoration: underline; }
+
+.status-chip {
+  display: inline-block;
+  border-radius: 999px;
+  padding: 0.12rem 0.5rem;
+  font-size: 0.75rem;
+  font-weight: 650;
+  white-space: nowrap;
+}
+
+.status-chip.todo { background: #e2e8f0; color: var(--todo); }
+.status-chip.progress { background: #e0f2fe; color: var(--progress); }
+.status-chip.done { background: #f1f5f9; color: var(--done); }
+.status-chip.uat { background: #ffedd5; color: var(--uat); }
+
+.peer-note {
+  margin: 0.75rem 0 0.35rem;
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+
+.detail-list {
+  margin: 0.75rem 0 0;
+  padding-left: 1.2rem;
+}
+
+.detail-list li {
+  margin: 0.45rem 0;
+  font-size: 0.88rem;
+  word-break: break-word;
+}
+
+.detail-list a { color: var(--accent); }
+
+.footnote {
+  text-align: center;
+  color: var(--muted);
+  padding: 1rem;
+}
+
+.site-footer {
+  max-width: 1100px;
+  margin: 0 auto 2rem;
+  padding: 0 1.25rem;
+  color: var(--muted);
+  font-size: 0.8rem;
+}
+
+.site-footer p { margin: 0; }
+
+@media (max-width: 640px) {
+  .site-header { padding: 1.15rem 1rem 1.4rem; }
+  .layout { padding: 0 0.85rem; }
+  .panel { padding: 0.9rem; }
+  table.tickets th:nth-child(n+5),
+  table.tickets td:nth-child(n+5) {
+    /* keep all columns; allow horizontal scroll via .table-wrap */
+  }
+}
+
+
+.controls-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem 1rem;
+  align-items: center;
+  justify-content: space-between;
+}
+.btn-refresh {
+  appearance: none;
+  border: 1px solid var(--line);
+  background: #fff;
+  color: var(--ink);
+  border-radius: 999px;
+  padding: 0.45rem 1rem;
+  font: inherit;
+  font-size: 0.88rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+.btn-refresh:hover { border-color: #9fb2c7; background: var(--accent-soft); color: #083db5; }
+.btn-refresh:disabled { opacity: 0.6; cursor: wait; }
+.refresh-note {
+  margin: 0;
+  font-size: 0.85rem;
+  color: var(--muted);
+  flex: 1 1 12rem;
+}
+
+  </style>
 </head>
 <body>
   <header class="site-header">
@@ -12,7 +364,7 @@
       <div>
         <p class="eyebrow">DEV1 · Board 268 · Sprint 2026 Nov</p>
         <h1>Tester relationships</h1>
-        <p class="subtitle">Ivan Chan as Tester — incomplete work and hub trees, refreshed from Jira into static JSON.</p>
+        <p class="subtitle">Ivan Chan as Tester — incomplete work and hub trees for the November sprint.</p>
       </div>
       <div class="header-meta" id="header-meta">
         <span class="meta-pill" id="fetched-at">Loading…</span>
@@ -40,11 +392,15 @@
           <button type="button" class="seg" data-status="all" aria-pressed="false">Include Done</button>
         </div>
       </div>
+      <div class="controls-row">
+        <button type="button" class="btn-refresh" id="refresh-btn">Refresh data</button>
+        <p class="refresh-note" id="refresh-note" role="status"></p>
+      </div>
     </section>
 
     <section class="panel callout" id="uat-callout" hidden>
       <h2>UAT / ready for deployment</h2>
-      <p class="muted">Tickets currently in UAT, Ready for UAT, or Ready for deployment (from live data).</p>
+      <p class="muted">Tickets currently in UAT, Ready for UAT, or Ready for deployment.</p>
       <ul id="uat-list"></ul>
     </section>
 
@@ -60,9 +416,360 @@
   </main>
 
   <footer class="site-footer">
-    <p>Static GitHub Pages board. Jira credentials stay in Actions secrets — never in the browser.</p>
+    <p>Single-file GitHub Pages board. Optional <code>tickets.json</code> beside this page supplies refresh data — no Atlassian credentials in the browser.</p>
   </footer>
 
-  <script src="./app.js" defer></script>
+  <script>
+(() => {
+  "use strict";
+
+  const EMBEDDED_SNAPSHOT = {"fetchedAt":"2026-11-05T14:17:52+08:00","meta":{"site":"https://executivecentre.atlassian.net","project":"DEV1","boardId":268,"sprint":{"id":3326,"name":"2026 Nov"},"testerAccountId":"712020:9556c036-6acf-4d45-bf4f-b39fbbca9aa4","jql":"project = DEV1 AND cf[11310] = \"712020:9556c036-6acf-4d45-bf4f-b39fbbca9aa4\" AND sprint = 3326 ORDER BY key ASC","fields":{"tester":"customfield_11310","epicLink":"customfield_10016","sprint":"customfield_10020"}},"tickets":[{"key":"DEV1-1214","url":"https://executivecentre.atlassian.net/browse/DEV1-1214","type":"Bug","summary":"Lead Conversion for existing Accounts cannot be selected","status":"Backlog","statusCategory":"To Do","assignee":"Ryan Wong","tester":"Ivan Chan","reporter":"Ivan Chan","assigneeAccountId":"60a62a79b050a700694dcfe5","testerAccountId":"712020:9556c036-6acf-4d45-bf4f-b39fbbca9aa4","reporterAccountId":"712020:9556c036-6acf-4d45-bf4f-b39fbbca9aa4","epicKey":"DEV1-2","epicSummary":"BAU (Support / Maintenance)","parentKey":"DEV1-2","hubKey":null,"subtaskOf":null,"parentChildChildren":[],"subtasks":[],"cluster":"asknicely-epic-peers","inSprint3326":true,"inTesterSet":true,"source":"jql","displayLine":"Bug DEV1-1214 (https://executivecentre.atlassian.net/browse/DEV1-1214) - Lead Conversion for existing Accounts cannot be selected · Ryan Wong · Ivan Chan · Report to Ivan Chan"},{"key":"DEV1-2378","url":"https://executivecentre.atlassian.net/browse/DEV1-2378","type":"Story","summary":"Broker Gable M&E Integration","status":"On Hold","statusCategory":"In Progress","assignee":"Twinkle Li","tester":"Ivan Chan","reporter":"Twinkle Li","assigneeAccountId":"712020:50b71b9b-15c1-481e-9b92-1e7601a4ca2a","testerAccountId":"712020:9556c036-6acf-4d45-bf4f-b39fbbca9aa4","reporterAccountId":"712020:50b71b9b-15c1-481e-9b92-1e7601a4ca2a","epicKey":"DEV1-1348","epicSummary":"Broker Integrations","parentKey":"DEV1-1348","hubKey":null,"subtaskOf":null,"parentChildChildren":[],"subtasks":[],"cluster":"standalone","inSprint3326":true,"inTesterSet":true,"source":"jql","displayLine":"Story DEV1-2378 (https://executivecentre.atlassian.net/browse/DEV1-2378) - Broker Gable M&E Integration · Twinkle Li · Ivan Chan · Report to Twinkle Li"},{"key":"DEV1-2379","url":"https://executivecentre.atlassian.net/browse/DEV1-2379","type":"Story","summary":"Compliance Contract Review AI Tool","status":"In Progress","statusCategory":"In Progress","assignee":"Ivan Chan","tester":"Ivan Chan","reporter":"Twinkle Li","assigneeAccountId":"712020:9556c036-6acf-4d45-bf4f-b39fbbca9aa4","testerAccountId":"712020:9556c036-6acf-4d45-bf4f-b39fbbca9aa4","reporterAccountId":"712020:50b71b9b-15c1-481e-9b92-1e7601a4ca2a","epicKey":"DEV1-1321","epicSummary":"AI Related (SF)","parentKey":"DEV1-1321","hubKey":null,"subtaskOf":null,"parentChildChildren":["DEV1-2766"],"subtasks":[],"cluster":"ai","inSprint3326":true,"inTesterSet":true,"source":"jql","displayLine":"Story DEV1-2379 (https://executivecentre.atlassian.net/browse/DEV1-2379) - Compliance Contract Review AI Tool · Ivan Chan · Ivan Chan · Report to Twinkle Li"},{"key":"DEV1-2543","url":"https://executivecentre.atlassian.net/browse/DEV1-2543","type":"Story","summary":"Third Party BP Commission Report Sending ","status":"In Progress","statusCategory":"In Progress","assignee":"Ivan Chan","tester":"Ivan Chan","reporter":"Twinkle Li","assigneeAccountId":"712020:9556c036-6acf-4d45-bf4f-b39fbbca9aa4","testerAccountId":"712020:9556c036-6acf-4d45-bf4f-b39fbbca9aa4","reporterAccountId":"712020:50b71b9b-15c1-481e-9b92-1e7601a4ca2a","epicKey":"DEV1-2195","epicSummary":"Beverage Package Rollouts","parentKey":"DEV1-2195","hubKey":null,"subtaskOf":null,"parentChildChildren":[],"subtasks":[],"cluster":"standalone","inSprint3326":true,"inTesterSet":true,"source":"jql","displayLine":"Story DEV1-2543 (https://executivecentre.atlassian.net/browse/DEV1-2543) - Third Party BP Commission Report Sending  · Ivan Chan · Ivan Chan · Report to Twinkle Li"},{"key":"DEV1-2698","url":"https://executivecentre.atlassian.net/browse/DEV1-2698","type":"Task","summary":"Allow Same Lock-in End Date as Signed End Date","status":"On Hold","statusCategory":"In Progress","assignee":"Ivan Chan","tester":"Ivan Chan","reporter":"Ivan Chan","assigneeAccountId":"712020:9556c036-6acf-4d45-bf4f-b39fbbca9aa4","testerAccountId":"712020:9556c036-6acf-4d45-bf4f-b39fbbca9aa4","reporterAccountId":"712020:9556c036-6acf-4d45-bf4f-b39fbbca9aa4","epicKey":"DEV1-2","epicSummary":"BAU (Support / Maintenance)","parentKey":"DEV1-2","hubKey":null,"subtaskOf":null,"parentChildChildren":[],"subtasks":[],"cluster":"asknicely-epic-peers","inSprint3326":true,"inTesterSet":true,"source":"jql","displayLine":"Task DEV1-2698 (https://executivecentre.atlassian.net/browse/DEV1-2698) - Allow Same Lock-in End Date as Signed End Date · Ivan Chan · Ivan Chan · Report to Ivan Chan"},{"key":"DEV1-2709","url":"https://executivecentre.atlassian.net/browse/DEV1-2709","type":"Story","summary":"Member Data Enhancements","status":"In Progress","statusCategory":"In Progress","assignee":"Ivan Chan","tester":"Ivan Chan","reporter":"Twinkle Li","assigneeAccountId":"712020:9556c036-6acf-4d45-bf4f-b39fbbca9aa4","testerAccountId":"712020:9556c036-6acf-4d45-bf4f-b39fbbca9aa4","reporterAccountId":"712020:50b71b9b-15c1-481e-9b92-1e7601a4ca2a","epicKey":"DEV1-2339","epicSummary":"Data Team Support / Requests","parentKey":"DEV1-2339","hubKey":null,"subtaskOf":null,"parentChildChildren":["DEV1-2746","DEV1-2720","DEV1-2745","DEV1-2779","DEV1-2781"],"subtasks":["DEV1-2725"],"cluster":"member-data","inSprint3326":true,"inTesterSet":true,"source":"jql","displayLine":"Story DEV1-2709 (https://executivecentre.atlassian.net/browse/DEV1-2709) - Member Data Enhancements · Ivan Chan · Ivan Chan · Report to Twinkle Li"},{"key":"DEV1-2715","url":"https://executivecentre.atlassian.net/browse/DEV1-2715","type":"Bug","summary":"City Level Products Cannot be Immediately Synced to Product Cache","status":"Ready for deployment","statusCategory":"In Progress","assignee":"Ming Zhu","tester":"Ivan Chan","reporter":"Ivan Chan","assigneeAccountId":"5e1d3cd6ac570b0caa851701","testerAccountId":"712020:9556c036-6acf-4d45-bf4f-b39fbbca9aa4","reporterAccountId":"712020:9556c036-6acf-4d45-bf4f-b39fbbca9aa4","epicKey":"DEV1-2","epicSummary":"BAU (Support / Maintenance)","parentKey":"DEV1-2","hubKey":null,"subtaskOf":null,"parentChildChildren":[],"subtasks":[],"cluster":"asknicely-epic-peers","inSprint3326":true,"inTesterSet":true,"source":"jql","displayLine":"Bug DEV1-2715 (https://executivecentre.atlassian.net/browse/DEV1-2715) - City Level Products Cannot be Immediately Synced to Product Cache · Ming Zhu · Ivan Chan · Report to Ivan Chan"},{"key":"DEV1-2720","url":"https://executivecentre.atlassian.net/browse/DEV1-2720","type":"Task","summary":"Evaluate further impacts on existing or upcoming online and 3rd-party integrated channels ","status":"Done","statusCategory":"Done","assignee":"Ivan Chan","tester":null,"reporter":"Twinkle Li","assigneeAccountId":"712020:9556c036-6acf-4d45-bf4f-b39fbbca9aa4","testerAccountId":null,"reporterAccountId":"712020:50b71b9b-15c1-481e-9b92-1e7601a4ca2a","epicKey":"DEV1-2339","epicSummary":"Data Team Support / Requests","parentKey":"DEV1-2339","hubKey":"DEV1-2709","subtaskOf":null,"parentChildChildren":[],"subtasks":[],"cluster":"member-data","inSprint3326":false,"inTesterSet":false,"source":"hub-expand","displayLine":"Task DEV1-2720 (https://executivecentre.atlassian.net/browse/DEV1-2720) - Evaluate further impacts on existing or upcoming online and 3rd-party integrated channels  · Ivan Chan · — · Report to Twinkle Li"},{"key":"DEV1-2725","url":"https://executivecentre.atlassian.net/browse/DEV1-2725","type":"Sub-task","summary":"Technical review and evaluation","status":"Done","statusCategory":"Done","assignee":"Ryan Wong","tester":"Ivan Chan","reporter":"Twinkle Li","assigneeAccountId":"60a62a79b050a700694dcfe5","testerAccountId":"712020:9556c036-6acf-4d45-bf4f-b39fbbca9aa4","reporterAccountId":"712020:50b71b9b-15c1-481e-9b92-1e7601a4ca2a","epicKey":"DEV1-2339","epicSummary":"Data Team Support / Requests","parentKey":"DEV1-2709","hubKey":null,"subtaskOf":"DEV1-2709","parentChildChildren":[],"subtasks":[],"cluster":"member-data","inSprint3326":true,"inTesterSet":true,"source":"jql","displayLine":"Sub-task DEV1-2725 (https://executivecentre.atlassian.net/browse/DEV1-2725) - Technical review and evaluation · Ryan Wong · Ivan Chan · Report to Twinkle Li"},{"key":"DEV1-2737","url":"https://executivecentre.atlassian.net/browse/DEV1-2737","type":"Story","summary":"AskNicely Terminated Contacts Issue","status":"In Progress","statusCategory":"In Progress","assignee":"Ivan Chan","tester":"Ivan Chan","reporter":"Ivan Chan","assigneeAccountId":"712020:9556c036-6acf-4d45-bf4f-b39fbbca9aa4","testerAccountId":"712020:9556c036-6acf-4d45-bf4f-b39fbbca9aa4","reporterAccountId":"712020:9556c036-6acf-4d45-bf4f-b39fbbca9aa4","epicKey":"DEV1-2","epicSummary":"BAU (Support / Maintenance)","parentKey":"DEV1-2","hubKey":null,"subtaskOf":null,"parentChildChildren":["DEV1-2738","DEV1-2751"],"subtasks":[],"cluster":"asknicely","inSprint3326":true,"inTesterSet":true,"source":"jql","displayLine":"Story DEV1-2737 (https://executivecentre.atlassian.net/browse/DEV1-2737) - AskNicely Terminated Contacts Issue · Ivan Chan · Ivan Chan · Report to Ivan Chan"},{"key":"DEV1-2738","url":"https://executivecentre.atlassian.net/browse/DEV1-2738","type":"Task","summary":"Terminated Contact AskNicely Patch","status":"Done","statusCategory":"Done","assignee":"Ivan Chan","tester":"Ivan Chan","reporter":"Ivan Chan","assigneeAccountId":"712020:9556c036-6acf-4d45-bf4f-b39fbbca9aa4","testerAccountId":"712020:9556c036-6acf-4d45-bf4f-b39fbbca9aa4","reporterAccountId":"712020:9556c036-6acf-4d45-bf4f-b39fbbca9aa4","epicKey":"DEV1-2","epicSummary":"BAU (Support / Maintenance)","parentKey":"DEV1-2","hubKey":"DEV1-2737","subtaskOf":null,"parentChildChildren":[],"subtasks":[],"cluster":"asknicely","inSprint3326":false,"inTesterSet":true,"source":"hub-expand","displayLine":"Task DEV1-2738 (https://executivecentre.atlassian.net/browse/DEV1-2738) - Terminated Contact AskNicely Patch · Ivan Chan · Ivan Chan · Report to Ivan Chan"},{"key":"DEV1-2745","url":"https://executivecentre.atlassian.net/browse/DEV1-2745","type":"Task","summary":"Core - Member Data Enhancements","status":"UAT","statusCategory":"In Progress","assignee":"Ming Zhu","tester":"Ivan Chan","reporter":"Twinkle Li","assigneeAccountId":"5e1d3cd6ac570b0caa851701","testerAccountId":"712020:9556c036-6acf-4d45-bf4f-b39fbbca9aa4","reporterAccountId":"712020:50b71b9b-15c1-481e-9b92-1e7601a4ca2a","epicKey":"DEV1-2339","epicSummary":"Data Team Support / Requests","parentKey":"DEV1-2339","hubKey":"DEV1-2709","subtaskOf":null,"parentChildChildren":[],"subtasks":["DEV1-2787"],"cluster":"member-data","inSprint3326":true,"inTesterSet":true,"source":"jql","displayLine":"Task DEV1-2745 (https://executivecentre.atlassian.net/browse/DEV1-2745) - Core - Member Data Enhancements · Ming Zhu · Ivan Chan · Report to Twinkle Li"},{"key":"DEV1-2746","url":"https://executivecentre.atlassian.net/browse/DEV1-2746","type":"Task","summary":"SF - Member Data Enhancements","status":"Done","statusCategory":"Done","assignee":"Ryan Wong","tester":"Ming Zhu","reporter":"Ivan Chan","assigneeAccountId":"60a62a79b050a700694dcfe5","testerAccountId":"5e1d3cd6ac570b0caa851701","reporterAccountId":"712020:9556c036-6acf-4d45-bf4f-b39fbbca9aa4","epicKey":"DEV1-2339","epicSummary":"Data Team Support / Requests","parentKey":"DEV1-2339","hubKey":"DEV1-2709","subtaskOf":null,"parentChildChildren":[],"subtasks":[],"cluster":"member-data","inSprint3326":true,"inTesterSet":false,"source":"hub-expand","displayLine":"Task DEV1-2746 (https://executivecentre.atlassian.net/browse/DEV1-2746) - SF - Member Data Enhancements · Ryan Wong · Ming Zhu · Report to Ivan Chan"},{"key":"DEV1-2751","url":"https://executivecentre.atlassian.net/browse/DEV1-2751","type":"Task","summary":"Update AskNicely once Contact has no Active ACR","status":"In Progress","statusCategory":"In Progress","assignee":"Ivan Chan","tester":"Ivan Chan","reporter":"Ivan Chan","assigneeAccountId":"712020:9556c036-6acf-4d45-bf4f-b39fbbca9aa4","testerAccountId":"712020:9556c036-6acf-4d45-bf4f-b39fbbca9aa4","reporterAccountId":"712020:9556c036-6acf-4d45-bf4f-b39fbbca9aa4","epicKey":"DEV1-2","epicSummary":"BAU (Support / Maintenance)","parentKey":"DEV1-2","hubKey":"DEV1-2737","subtaskOf":null,"parentChildChildren":[],"subtasks":["DEV1-2755"],"cluster":"asknicely","inSprint3326":true,"inTesterSet":true,"source":"jql","displayLine":"Task DEV1-2751 (https://executivecentre.atlassian.net/browse/DEV1-2751) - Update AskNicely once Contact has no Active ACR · Ivan Chan · Ivan Chan · Report to Ivan Chan"},{"key":"DEV1-2752","url":"https://executivecentre.atlassian.net/browse/DEV1-2752","type":"Bug","summary":"[UAT] Missing City in City API","status":"UAT","statusCategory":"In Progress","assignee":"Ming Zhu","tester":"Ivan Chan","reporter":"Ivan Chan","assigneeAccountId":"5e1d3cd6ac570b0caa851701","testerAccountId":"712020:9556c036-6acf-4d45-bf4f-b39fbbca9aa4","reporterAccountId":"712020:9556c036-6acf-4d45-bf4f-b39fbbca9aa4","epicKey":"DEV1-2","epicSummary":"BAU (Support / Maintenance)","parentKey":"DEV1-2","hubKey":null,"subtaskOf":null,"parentChildChildren":[],"subtasks":[],"cluster":"asknicely-epic-peers","inSprint3326":true,"inTesterSet":true,"source":"jql","displayLine":"Bug DEV1-2752 (https://executivecentre.atlassian.net/browse/DEV1-2752) - [UAT] Missing City in City API · Ming Zhu · Ivan Chan · Report to Ivan Chan"},{"key":"DEV1-2755","url":"https://executivecentre.atlassian.net/browse/DEV1-2755","type":"Sub-task","summary":"Make sure \"Has Active ACR\" does not trigger Contact/ACR Replication Layer sync","status":"Done","statusCategory":"Done","assignee":"Ryan Wong","tester":"Ivan Chan","reporter":"Ivan Chan","assigneeAccountId":"60a62a79b050a700694dcfe5","testerAccountId":"712020:9556c036-6acf-4d45-bf4f-b39fbbca9aa4","reporterAccountId":"712020:9556c036-6acf-4d45-bf4f-b39fbbca9aa4","epicKey":"DEV1-2","epicSummary":"BAU (Support / Maintenance)","parentKey":"DEV1-2751","hubKey":null,"subtaskOf":"DEV1-2751","parentChildChildren":[],"subtasks":[],"cluster":"asknicely","inSprint3326":true,"inTesterSet":true,"source":"jql","displayLine":"Sub-task DEV1-2755 (https://executivecentre.atlassian.net/browse/DEV1-2755) - Make sure \"Has Active ACR\" does not trigger Contact/ACR Replication Layer sync · Ryan Wong · Ivan Chan · Report to Ivan Chan"},{"key":"DEV1-2766","url":"https://executivecentre.atlassian.net/browse/DEV1-2766","type":"Task","summary":"Opportunity AI Compliance Checklist","status":"In Progress","statusCategory":"In Progress","assignee":"Hugo Lo","tester":"Ivan Chan","reporter":"Ivan Chan","assigneeAccountId":"6270a3032db308007023f08d","testerAccountId":"712020:9556c036-6acf-4d45-bf4f-b39fbbca9aa4","reporterAccountId":"712020:9556c036-6acf-4d45-bf4f-b39fbbca9aa4","epicKey":"DEV1-1321","epicSummary":"AI Related (SF)","parentKey":"DEV1-1321","hubKey":"DEV1-2379","subtaskOf":null,"parentChildChildren":[],"subtasks":["DEV1-2767"],"cluster":"ai","inSprint3326":true,"inTesterSet":true,"source":"jql","displayLine":"Task DEV1-2766 (https://executivecentre.atlassian.net/browse/DEV1-2766) - Opportunity AI Compliance Checklist · Hugo Lo · Ivan Chan · Report to Ivan Chan"},{"key":"DEV1-2767","url":"https://executivecentre.atlassian.net/browse/DEV1-2767","type":"Sub-task","summary":"Plan out Opportunity AI Checklist Implementation","status":"In Progress","statusCategory":"In Progress","assignee":"Hugo Lo","tester":null,"reporter":"Ivan Chan","assigneeAccountId":"6270a3032db308007023f08d","testerAccountId":null,"reporterAccountId":"712020:9556c036-6acf-4d45-bf4f-b39fbbca9aa4","epicKey":"DEV1-1321","epicSummary":"AI Related (SF)","parentKey":"DEV1-2766","hubKey":null,"subtaskOf":"DEV1-2766","parentChildChildren":[],"subtasks":[],"cluster":"ai","inSprint3326":true,"inTesterSet":false,"source":"hub-expand","displayLine":"Sub-task DEV1-2767 (https://executivecentre.atlassian.net/browse/DEV1-2767) - Plan out Opportunity AI Checklist Implementation · Hugo Lo · — · Report to Ivan Chan"},{"key":"DEV1-2779","url":"https://executivecentre.atlassian.net/browse/DEV1-2779","type":"Task","summary":"New e-Form Submission API ","status":"UAT","statusCategory":"In Progress","assignee":"Hugo Lo","tester":"Ivan Chan","reporter":"Twinkle Li","assigneeAccountId":"6270a3032db308007023f08d","testerAccountId":"712020:9556c036-6acf-4d45-bf4f-b39fbbca9aa4","reporterAccountId":"712020:50b71b9b-15c1-481e-9b92-1e7601a4ca2a","epicKey":"DEV1-2339","epicSummary":"Data Team Support / Requests","parentKey":"DEV1-2339","hubKey":"DEV1-2709","subtaskOf":null,"parentChildChildren":[],"subtasks":[],"cluster":"member-data","inSprint3326":true,"inTesterSet":true,"source":"jql","displayLine":"Task DEV1-2779 (https://executivecentre.atlassian.net/browse/DEV1-2779) - New e-Form Submission API  · Hugo Lo · Ivan Chan · Report to Twinkle Li"},{"key":"DEV1-2781","url":"https://executivecentre.atlassian.net/browse/DEV1-2781","type":"Task","summary":"Guest API to handle new create fields for Person Customer","status":"UAT","statusCategory":"In Progress","assignee":"Enoch Yeung","tester":"Ivan Chan","reporter":"Ivan Chan","assigneeAccountId":"633f86af3ac41ebde76eba46","testerAccountId":"712020:9556c036-6acf-4d45-bf4f-b39fbbca9aa4","reporterAccountId":"712020:9556c036-6acf-4d45-bf4f-b39fbbca9aa4","epicKey":"DEV1-2","epicSummary":"BAU (Support / Maintenance)","parentKey":"DEV1-2","hubKey":"DEV1-2709","subtaskOf":null,"parentChildChildren":[],"subtasks":[],"cluster":"member-data","inSprint3326":true,"inTesterSet":true,"source":"jql","displayLine":"Task DEV1-2781 (https://executivecentre.atlassian.net/browse/DEV1-2781) - Guest API to handle new create fields for Person Customer · Enoch Yeung · Ivan Chan · Report to Ivan Chan"},{"key":"DEV1-2782","url":"https://executivecentre.atlassian.net/browse/DEV1-2782","type":"Bug","summary":"Day Pass Purchase not Completed","status":"UAT","statusCategory":"In Progress","assignee":"Ming Zhu","tester":"Ivan Chan","reporter":"Ivan Chan","assigneeAccountId":"5e1d3cd6ac570b0caa851701","testerAccountId":"712020:9556c036-6acf-4d45-bf4f-b39fbbca9aa4","reporterAccountId":"712020:9556c036-6acf-4d45-bf4f-b39fbbca9aa4","epicKey":"DEV1-2","epicSummary":"BAU (Support / Maintenance)","parentKey":"DEV1-2","hubKey":null,"subtaskOf":null,"parentChildChildren":[],"subtasks":[],"cluster":"asknicely-epic-peers","inSprint3326":true,"inTesterSet":true,"source":"jql","displayLine":"Bug DEV1-2782 (https://executivecentre.atlassian.net/browse/DEV1-2782) - Day Pass Purchase not Completed · Ming Zhu · Ivan Chan · Report to Ivan Chan"},{"key":"DEV1-2787","url":"https://executivecentre.atlassian.net/browse/DEV1-2787","type":"Sub-task","summary":"Core - Member Data Enhancements - Guest Creation","status":"Ready for UAT","statusCategory":"In Progress","assignee":"Hugo Lo","tester":"Ming Zhu","reporter":"Ming Zhu","assigneeAccountId":"6270a3032db308007023f08d","testerAccountId":"5e1d3cd6ac570b0caa851701","reporterAccountId":"5e1d3cd6ac570b0caa851701","epicKey":"DEV1-2339","epicSummary":"Data Team Support / Requests","parentKey":"DEV1-2745","hubKey":null,"subtaskOf":"DEV1-2745","parentChildChildren":[],"subtasks":[],"cluster":"member-data","inSprint3326":true,"inTesterSet":false,"source":"hub-expand","displayLine":"Sub-task DEV1-2787 (https://executivecentre.atlassian.net/browse/DEV1-2787) - Core - Member Data Enhancements - Guest Creation · Hugo Lo · Ming Zhu · Report to Ming Zhu"},{"key":"DEV1-2794","url":"https://executivecentre.atlassian.net/browse/DEV1-2794","type":"Task","summary":"Study Finance Admin Permissions","status":"In Progress","statusCategory":"In Progress","assignee":"Ryan Wong","tester":"Ivan Chan","reporter":"Twinkle Li","assigneeAccountId":"60a62a79b050a700694dcfe5","testerAccountId":"712020:9556c036-6acf-4d45-bf4f-b39fbbca9aa4","reporterAccountId":"712020:50b71b9b-15c1-481e-9b92-1e7601a4ca2a","epicKey":"DEV1-2178","epicSummary":"BAU (New Request)","parentKey":"DEV1-2178","hubKey":null,"subtaskOf":null,"parentChildChildren":[],"subtasks":[],"cluster":"standalone","inSprint3326":true,"inTesterSet":true,"source":"jql","displayLine":"Task DEV1-2794 (https://executivecentre.atlassian.net/browse/DEV1-2794) - Study Finance Admin Permissions · Ryan Wong · Ivan Chan · Report to Twinkle Li"}]};
+  const SIDEcar_URL = "./tickets.json";
+
+  const CLUSTER_META = {
+    "member-data": {
+      id: "member-data",
+      label: "Member Data",
+      caption: "Hub DEV1-2709 Parent-Child / subtask tree, plus Member Data epic DEV1-2339 orphans.",
+      hubKey: "DEV1-2709",
+      filterIds: ["member-data"],
+    },
+    asknicely: {
+      id: "asknicely",
+      label: "AskNicely",
+      caption: "Hub DEV1-2737 tree. Epic DEV1-2 peers without a link to 2737 are listed as AskNicely · epic peers.",
+      hubKey: "DEV1-2737",
+      filterIds: ["asknicely", "asknicely-epic-peers"],
+    },
+    ai: {
+      id: "ai",
+      label: "AI",
+      caption: "Epic DEV1-1321 (Parent-Child / subtasks under that epic).",
+      hubKey: "DEV1-2379",
+      epicKey: "DEV1-1321",
+      filterIds: ["ai"],
+    },
+    standalone: {
+      id: "standalone",
+      label: "Standalone",
+      caption: "Tester-sprint tickets outside the Member Data, AskNicely, and AI hubs — epic shown as secondary label.",
+      hubKey: null,
+      filterIds: ["standalone"],
+    },
+  };
+
+  const SECTION_ORDER = ["member-data", "asknicely", "ai", "standalone"];
+
+  const state = {
+    data: structuredClone(EMBEDDED_SNAPSHOT),
+    dataSource: "embedded",
+    cluster: "all",
+    status: "open",
+  };
+
+  const el = {
+    fetchedAt: document.getElementById("fetched-at"),
+    ticketCount: document.getElementById("ticket-count"),
+    clusterFilter: document.getElementById("cluster-filter"),
+    statusFilter: document.getElementById("status-filter"),
+    refreshBtn: document.getElementById("refresh-btn"),
+    refreshNote: document.getElementById("refresh-note"),
+    uatCallout: document.getElementById("uat-callout"),
+    uatList: document.getElementById("uat-list"),
+    sections: document.getElementById("cluster-sections"),
+    detailList: document.getElementById("detail-list"),
+    emptyState: document.getElementById("empty-state"),
+  };
+
+  function escapeHtml(value) {
+    return String(value ?? "")
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;");
+  }
+
+  function dash(value) {
+    const v = (value ?? "").toString().trim();
+    return v ? v : "—";
+  }
+
+  function isUatLike(status) {
+    return /uat|ready for deployment/i.test(status || "");
+  }
+
+  function statusClass(ticket) {
+    if (isUatLike(ticket.status)) return "uat";
+    if (ticket.statusCategory === "Done") return "done";
+    if (ticket.statusCategory === "In Progress") return "progress";
+    return "todo";
+  }
+
+  function matchesClusterFilter(ticket, clusterFilter) {
+    if (clusterFilter === "all") return true;
+    const meta = CLUSTER_META[clusterFilter];
+    if (!meta) return ticket.cluster === clusterFilter;
+    return meta.filterIds.includes(ticket.cluster);
+  }
+
+  function matchesStatusFilter(ticket, statusFilter) {
+    if (statusFilter === "all") return true;
+    return ticket.statusCategory !== "Done";
+  }
+
+  function filteredTickets() {
+    return (state.data?.tickets || []).filter(
+      (t) => matchesClusterFilter(t, state.cluster) && matchesStatusFilter(t, state.status)
+    );
+  }
+
+  function byKey(tickets) {
+    const map = new Map();
+    for (const t of tickets) map.set(t.key, t);
+    return map;
+  }
+
+  function setActiveSegment(container, attr, value) {
+    for (const btn of container.querySelectorAll(".seg")) {
+      const active = btn.dataset[attr] === value;
+      btn.classList.toggle("active", active);
+      btn.setAttribute("aria-pressed", active ? "true" : "false");
+    }
+  }
+
+  function formatFetchedAt(iso) {
+    if (!iso) return "Fetched: unknown";
+    try {
+      const d = new Date(iso);
+      if (Number.isNaN(d.getTime())) return `Fetched: ${iso}`;
+      return `Fetched: ${iso} (Asia/Hong_Kong)`;
+    } catch {
+      return `Fetched: ${iso}`;
+    }
+  }
+
+  function sourceLabel() {
+    return state.dataSource === "sidecar" ? " · from tickets.json" : " · embedded snapshot";
+  }
+
+  function renderUat(allVisible) {
+    const uat = allVisible
+      .filter((t) => isUatLike(t.status))
+      .sort((a, b) => a.key.localeCompare(b.key));
+    if (!uat.length) {
+      el.uatCallout.hidden = true;
+      el.uatList.innerHTML = "";
+      return;
+    }
+    el.uatCallout.hidden = false;
+    el.uatList.innerHTML = uat
+      .map(
+        (t) =>
+          `<li><a href="${escapeHtml(t.url)}" target="_blank" rel="noopener">${escapeHtml(t.key)}</a> · ${escapeHtml(t.status)} · ${escapeHtml(t.summary)}</li>`
+      )
+      .join("");
+  }
+
+  function renderTree(hubKey, tickets) {
+    if (!hubKey) return "";
+    const map = byKey(tickets);
+    const hub = map.get(hubKey) || (state.data.tickets || []).find((t) => t.key === hubKey);
+    if (!hub) return "";
+
+    const fullMap = byKey(state.data.tickets || []);
+
+    function childKeys(ticket) {
+      const keys = [];
+      for (const k of ticket.parentChildChildren || []) keys.push({ key: k, kind: "child" });
+      for (const k of ticket.subtasks || []) keys.push({ key: k, kind: "subtask" });
+      return keys;
+    }
+
+    function renderNode(key, depth, visited) {
+      if (visited.has(key)) return "";
+      visited.add(key);
+      const ticket = map.get(key) || fullMap.get(key);
+      if (!ticket) return "";
+      if (key !== hubKey && !map.has(key)) {
+        const kids = childKeys(fullMap.get(key) || ticket)
+          .map((c) => renderNode(c.key, depth + 1, visited))
+          .filter(Boolean)
+          .join("");
+        return kids;
+      }
+      const label = `${escapeHtml(ticket.type)} <span class="node-key"><a href="${escapeHtml(ticket.url)}" target="_blank" rel="noopener">${escapeHtml(ticket.key)}</a></span> — ${escapeHtml(ticket.summary)} <span class="status-chip ${statusClass(ticket)}">${escapeHtml(ticket.status)}</span>`;
+      const kids = childKeys(ticket)
+        .map((c) => renderNode(c.key, depth + 1, visited))
+        .filter(Boolean)
+        .join("");
+      if (!kids) return `<li>${label}</li>`;
+      return `<li>${label}<ul>${kids}</ul></li>`;
+    }
+
+    const body = renderNode(hubKey, 0, new Set());
+    if (!body) return "";
+    return `<div class="tree" aria-label="Relationship tree"><ul>${body}</ul></div>`;
+  }
+
+  function renderTable(tickets) {
+    if (!tickets.length) {
+      return `<p class="muted">No tickets in this section for the current filters.</p>`;
+    }
+    const rows = tickets
+      .slice()
+      .sort((a, b) => a.key.localeCompare(b.key))
+      .map((t) => {
+        const epicNote =
+          t.cluster === "standalone" && t.epicKey
+            ? `<div class="muted">Epic ${escapeHtml(t.epicKey)}${t.epicSummary ? ` · ${escapeHtml(t.epicSummary)}` : ""}</div>`
+            : t.cluster === "asknicely-epic-peers"
+              ? `<div class="muted">AskNicely · epic peers${t.epicKey ? ` (${escapeHtml(t.epicKey)})` : ""}</div>`
+              : "";
+        return `<tr>
+          <td>${escapeHtml(t.type)}</td>
+          <td><a href="${escapeHtml(t.url)}" target="_blank" rel="noopener">${escapeHtml(t.key)}</a></td>
+          <td>${escapeHtml(t.summary)}${epicNote}</td>
+          <td>${escapeHtml(dash(t.assignee))}</td>
+          <td>${escapeHtml(dash(t.tester))}</td>
+          <td>${escapeHtml(dash(t.reporter))}</td>
+          <td><span class="status-chip ${statusClass(t)}">${escapeHtml(t.status)}</span></td>
+        </tr>`;
+      })
+      .join("");
+    return `<div class="table-wrap"><table class="tickets">
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Key</th>
+          <th>Name</th>
+          <th>Assignee</th>
+          <th>Tester</th>
+          <th>Reporter</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>${rows}</tbody>
+    </table></div>`;
+  }
+
+  function ticketsForSection(sectionId, allVisible) {
+    const meta = CLUSTER_META[sectionId];
+    return allVisible.filter((t) => meta.filterIds.includes(t.cluster));
+  }
+
+  function renderSections(allVisible) {
+    const show = SECTION_ORDER.filter((id) => {
+      if (state.cluster === "all") return true;
+      return state.cluster === id;
+    });
+
+    const html = show
+      .map((id) => {
+        const meta = CLUSTER_META[id];
+        const tickets = ticketsForSection(id, allVisible);
+        const hubTickets = tickets;
+        const tree =
+          id === "standalone"
+            ? ""
+            : renderTree(meta.hubKey, hubTickets.length ? hubTickets : tickets);
+
+        return `<section class="panel cluster-section" data-cluster="${escapeHtml(id)}">
+          <div class="cluster-head">
+            <span class="cluster-badge ${escapeHtml(id)}">${escapeHtml(meta.label)}</span>
+            <h2>${escapeHtml(meta.label)}</h2>
+            <span class="count-chip">${tickets.length} ticket${tickets.length === 1 ? "" : "s"}</span>
+          </div>
+          <p class="muted">${escapeHtml(meta.caption)}</p>
+          ${tree}
+          ${id === "asknicely" && tickets.some((t) => t.cluster === "asknicely-epic-peers")
+            ? `<p class="peer-note">Rows tagged “AskNicely · epic peers” share epic DEV1-2 but are not linked to hub DEV1-2737.</p>`
+            : ""}
+          ${renderTable(tickets)}
+        </section>`;
+      })
+      .join("");
+
+    el.sections.innerHTML = html;
+  }
+
+  function renderDetail(allVisible) {
+    const sorted = allVisible.slice().sort((a, b) => a.key.localeCompare(b.key));
+    if (!sorted.length) {
+      el.detailList.innerHTML = "";
+      return;
+    }
+    el.detailList.innerHTML = sorted
+      .map((t) => {
+        const line = escapeHtml(t.displayLine || "");
+        const linked = line.replace(
+          /(https:\/\/executivecentre\.atlassian\.net\/browse\/DEV1-\d+)/g,
+          '<a href="$1" target="_blank" rel="noopener">$1</a>'
+        );
+        return `<li>${linked}</li>`;
+      })
+      .join("");
+  }
+
+  function render() {
+    if (!state.data) return;
+    const visible = filteredTickets();
+    el.fetchedAt.textContent = formatFetchedAt(state.data.fetchedAt) + sourceLabel();
+    el.ticketCount.textContent = `${visible.length} shown · ${state.data.tickets.length} in feed`;
+    el.emptyState.hidden = visible.length > 0;
+    renderUat(visible);
+    renderSections(visible);
+    renderDetail(visible);
+  }
+
+  function wireFilters() {
+    el.clusterFilter.addEventListener("click", (e) => {
+      const btn = e.target.closest(".seg");
+      if (!btn) return;
+      state.cluster = btn.dataset.cluster;
+      setActiveSegment(el.clusterFilter, "cluster", state.cluster);
+      render();
+    });
+    el.statusFilter.addEventListener("click", (e) => {
+      const btn = e.target.closest(".seg");
+      if (!btn) return;
+      state.status = btn.dataset.status;
+      setActiveSegment(el.statusFilter, "status", state.status);
+      render();
+    });
+  }
+
+  async function refreshFromSidecar() {
+    el.refreshBtn.disabled = true;
+    el.refreshNote.textContent = "Checking for tickets.json…";
+    try {
+      const res = await fetch(`${SIDEcar_URL}?t=${Date.now()}`, { cache: "no-store" });
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      state.data = await res.json();
+      state.dataSource = "sidecar";
+      el.refreshNote.textContent =
+        "Loaded tickets.json beside this page. Jira tokens stay off GitHub Pages — publish an updated JSON when the sprint moves.";
+      render();
+    } catch (err) {
+      state.data = structuredClone(EMBEDDED_SNAPSHOT);
+      state.dataSource = "embedded";
+      el.refreshNote.textContent =
+        "Using embedded snapshot (no tickets.json found). Add tec/pages/tester-relationships/tickets.json on publish for refresh without editing HTML.";
+      render();
+    } finally {
+      el.refreshBtn.disabled = false;
+    }
+  }
+
+  function boot() {
+    wireFilters();
+    el.refreshBtn.addEventListener("click", refreshFromSidecar);
+    el.refreshNote.textContent =
+      "First paint uses the embedded sprint snapshot. Refresh tries optional tickets.json next to this page.";
+    render();
+  }
+
+  boot();
+})();
+  </script>
 </body>
 </html>
