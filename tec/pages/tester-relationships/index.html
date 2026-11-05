@@ -416,7 +416,7 @@ table.tickets a:hover { text-decoration: underline; }
   </main>
 
   <footer class="site-footer">
-    <p>Static board: <code>index.html</code> + <code>tickets.json</code>. Jira credentials live in GitHub Actions secrets only — never in the browser.</p>
+    <p>Static board: <code>index.html</code> + <code>tickets.json</code>. Replace the JSON when Jira moves, then use Refresh data — no credentials in the browser.</p>
   </footer>
 
   <script>
@@ -424,8 +424,6 @@ table.tickets a:hover { text-decoration: underline; }
   "use strict";
 
   const DATA_URL = "./tickets.json";
-  const WORKFLOW_URL =
-    "https://github.com/ivanchan-dev/ivanchan-dev.github.io/actions/workflows/refresh-jira-tester-relationships.yml";
 
   const CLUSTER_META = {
     "member-data": {
@@ -744,10 +742,8 @@ table.tickets a:hover { text-decoration: underline; }
   }
 
   function setRefreshNoteLoaded() {
-    el.refreshNote.innerHTML =
-      'Data from <code>tickets.json</code> (updated by GitHub Actions). Need a fresh pull from Jira? <a href="' +
-      WORKFLOW_URL +
-      '" target="_blank" rel="noopener">Run the refresh workflow</a>, wait for the commit, then click Refresh data.';
+    el.refreshNote.textContent =
+      "Showing tickets.json beside this page. Replace that file when Jira changes, publish, then click Refresh data.";
   }
 
   async function loadTickets({ quiet = false } = {}) {
@@ -763,10 +759,8 @@ table.tickets a:hover { text-decoration: underline; }
       renderLoadError(
         `Could not load <code>./tickets.json</code>. Serve this folder over HTTP (GitHub Pages). ${escapeHtml(err.message || err)}`
       );
-      el.refreshNote.innerHTML =
-        'Could not load <code>tickets.json</code>. After the Actions workflow commits an update, try Refresh — or <a href="' +
-        WORKFLOW_URL +
-        '" target="_blank" rel="noopener">run the workflow manually</a>.';
+      el.refreshNote.textContent =
+        "Could not load tickets.json. Check the file sits next to this page and you are viewing over HTTP (GitHub Pages).";
     } finally {
       el.refreshBtn.disabled = false;
     }
